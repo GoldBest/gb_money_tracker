@@ -1,0 +1,25 @@
+{
+  "name": "gb-money-tracker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:bot": "npm --prefix backend run dev:bot",
+    "bot": "npm --prefix backend run bot",
+    "test:bot": "node test-bot.js",
+    "setup:bot": "./setup-bot.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  },
+  "dependencies": {
+    "axios": "^1.11.0"
+  }
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест экспорта</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+        .error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        .success {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Тест API экспорта</h1>
+        <p>Эта страница тестирует API экспорта напрямую</p>
+        
+        <div>
+            <button class="test-button" onclick="testExportInfo()">Тест Export Info</button>
+            <button class="test-button" onclick="testTransactions()">Тест Transactions</button>
+            <button class="test-button" onclick="testStats()">Тест Stats</button>
+            <button class="test-button" onclick="testAll()">Тест Всего</button>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:3001';
+        const TEST_USER_ID = 3; // ID из предыдущего теста
+
+        function showResult(message, type = 'info') {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<div class="result ${type}">${message}</div>`;
+        }
+
+        async function testExportInfo() {
+            try {
+                showResult('🔄 Тестирование Export Info...', 'info');
+                
+                const periods = ['week', 'month', 'quarter', 'year', 'all'];
+                let results = [];
+                
+                for (const period of periods) {
+                    const response = await fetch(`${BASE_URL}/api/users/${TEST_USER_ID}/export-info?period=${period}`);
+                    const data = await response.json();
+                    results.push(`${period}: ${data.total_transactions} транзакций`);
+                }
+                
+                showResult(`✅ Export Info работает!<br>${results.join('<br>')}`, 'success');
+            } catch (error) {
+                showResult(`❌ Ошибка Export Info: ${error.message}`, 'error');
+            }
+        }
+
+        async function testTransactions() {
+            try {
+                showResult('🔄 Тестирование Transactions...', 'info');
+                
+                const periods = ['week', 'month', 'quarter', 'year', 'all'];
+                let results = [];
+                
+                for (const period of periods) {
+                    const response = await fetch(`${BASE_URL}/api/users/${TEST_USER_ID}/transactions?period=${period}&limit=10000`);
+                    const data = await response.json();
+                    results.push(`${period}: ${data.length} транзакций`);
+                }
+                
+                showResult(`✅ Transactions работает!<br>${results.join('<br>')}`, 'success');
+            } catch (error) {
+                showResult(`❌ Ошибка Transactions: ${error.message}`, 'error');
+            }
+        }
+
+        async function testStats() {
+            try {
+                showResult('🔄 Тестирование Stats...', 'info');
+                
+                const periods = ['week', 'month', 'quarter', 'year', 'all'];
+                let results = [];
+                
+                for (const period of periods) {
+                    const response = await fetch(`${BASE_URL}/api/users/${TEST_USER_ID}/stats?period=${period}`);
+                    const data = await response.json();
+                    results.push(`${period}: ${data.total_transactions} транзакций, баланс: ${data.balance}`);
+                }
+                
+                showResult(`✅ Stats работает!<br>${results.join('<br>')}`, 'success');
+            } catch (error) {
+                showResult(`❌ Ошибка Stats: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAll() {
+            try {
+                showResult('🔄 Тестирование всех API...', 'info');
+                
+                await testExportInfo();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                await testTransactions();
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                await testStats();
+                
+                showResult('🎉 Все API работают корректно!', 'success');
+            } catch (error) {
+                showResult(`❌ Ошибка при тестировании: ${error.message}`, 'error');
+            }
+        }
+
+        // Автоматический тест при загрузке страницы
+        window.addEventListener('load', () => {
+            showResult('🚀 Страница загружена. Нажмите кнопки для тестирования API.', 'info');
+        });
+    </script>
+</body>
+</html>

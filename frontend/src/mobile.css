@@ -1,0 +1,725 @@
+/* Mobile-specific styles for better responsiveness */
+
+/* Safe area insets for modern mobile devices */
+@supports (padding: max(0px)) {
+  .app {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+  
+  .app-nav {
+    padding-left: max(0.5rem, env(safe-area-inset-left));
+    padding-right: max(0.5rem, env(safe-area-inset-right));
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Enhanced mobile navigation */
+@media (max-width: 768px) {
+  .app-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .nav-tab {
+    min-height: 64px;
+    padding: 0.75rem 0.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .nav-tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent-color);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: -1;
+  }
+  
+  .nav-tab.active::before {
+    opacity: 0.1;
+  }
+  
+  .nav-tab:active {
+    transform: scale(0.95);
+  }
+  
+  .nav-icon {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .nav-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+  
+  /* Add bottom padding to main content to account for fixed nav */
+  .app-main {
+    padding-bottom: 5rem;
+  }
+  
+  /* Floating action button for quick access */
+  .floating-action-button {
+    position: fixed;
+    bottom: 5rem;
+    right: 1rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .floating-action-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  .floating-action-button:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Improved touch targets for mobile */
+@media (max-width: 768px) {
+  .action-button,
+  .button {
+    min-height: 48px;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-weight: 500;
+  }
+  
+  .edit-button,
+  .delete-button {
+    min-width: 48px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  
+  .theme-toggle {
+    min-width: 48px;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+  
+  /* Better spacing for mobile */
+  .dashboard,
+  .transaction-list,
+  .statistics {
+    gap: 1rem;
+  }
+  
+  .balance-card {
+    margin: 0 -0.75rem;
+    border-radius: 0;
+    padding: 1.5rem;
+  }
+  
+  .stats-grid {
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stat-card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .recent-categories {
+    margin: 0 -0.75rem;
+    border-radius: 0;
+    padding: 1rem;
+  }
+}
+
+/* Enhanced form handling for mobile */
+@media (max-width: 768px) {
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+    -webkit-appearance: none;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  .type-selector {
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .type-button {
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 12px;
+    font-weight: 500;
+    min-height: 56px;
+  }
+  
+  .form-actions {
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .form-actions .button {
+    flex: 1;
+    min-height: 56px;
+  }
+}
+
+/* Enhanced modal handling for mobile */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0;
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .modal {
+    margin: 0;
+    border-radius: 0;
+    max-height: 100vh;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-header {
+    position: sticky;
+    top: 0;
+    background: var(--bg-primary);
+    z-index: 1;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+  
+  .close-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+  
+  .close-button:hover {
+    background: var(--border-color);
+  }
+  
+  .transaction-form {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+  }
+}
+
+/* Landscape mode optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+  .app-header {
+    padding: 0.5rem;
+  }
+  
+  .app-header h1 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .balance-card {
+    padding: 1rem;
+  }
+  
+  .balance-amount {
+    font-size: 1.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .stat-card {
+    padding: 0.5rem;
+  }
+  
+  .stat-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .nav-tab {
+    padding: 0.5rem 0.25rem;
+    min-height: 48px;
+  }
+  
+  .nav-label {
+    font-size: 0.625rem;
+  }
+  
+  /* Adjust main content padding for landscape */
+  .app-main {
+    padding-bottom: 4rem;
+  }
+}
+
+/* Small screen optimizations */
+@media (max-width: 360px) {
+  .app-main {
+    padding: 0.5rem;
+  }
+  
+  .balance-card {
+    padding: 1rem;
+  }
+  
+  .balance-amount {
+    font-size: 1.25rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .stat-card {
+    padding: 0.75rem;
+  }
+  
+  .stat-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .action-button {
+    min-width: 100%;
+    font-size: 0.875rem;
+  }
+  
+  .nav-tab {
+    min-width: 60px;
+    font-size: 0.75rem;
+    min-height: 56px;
+  }
+  
+  .nav-icon {
+    font-size: 1rem;
+  }
+  
+  .nav-label {
+    font-size: 0.625rem;
+  }
+  
+  /* Adjust floating action button position */
+  .floating-action-button {
+    bottom: 4.5rem;
+    right: 0.75rem;
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .app {
+    max-width: 100%;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  
+  .stats-overview {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .action-button {
+    min-width: 250px;
+  }
+  
+  /* Show floating action button on tablets */
+  .floating-action-button {
+    display: flex;
+  }
+}
+
+/* High DPI and retina displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .app-header {
+    background: var(--accent-gradient);
+  }
+  
+  .balance-card {
+    background: var(--accent-gradient);
+  }
+  
+  .action-button.primary {
+    background: var(--accent-gradient);
+  }
+  
+  .stat-icon.positive {
+    background: linear-gradient(135deg, var(--success-color) 0%, #059669 100%);
+  }
+  
+  .stat-icon.negative {
+    background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+  }
+}
+
+/* Dark mode optimizations for OLED screens */
+@media (prefers-color-scheme: dark) {
+  .dark .app {
+    background: #000000;
+  }
+  
+  .dark .bg-primary {
+    background: #000000;
+  }
+  
+  .dark .bg-secondary {
+    background: #111111;
+  }
+  
+  .dark .bg-card {
+    background: #1a1a1a;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .balance-card::before {
+    animation: none;
+  }
+  
+  .action-button::before {
+    transition: none;
+  }
+  
+  .stat-card:hover,
+  .category-item:hover {
+    transform: none;
+  }
+}
+
+/* Focus styles for accessibility */
+.nav-tab:focus,
+.action-button:focus,
+.button:focus,
+.edit-button:focus,
+.delete-button:focus,
+.theme-toggle:focus,
+.floating-action-button:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Loading states for better UX */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-spinner-large {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Pull to refresh improvements */
+.pull-to-refresh-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.refresh-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--bg-primary);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  z-index: 100;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.refresh-indicator.active {
+  transform: translateY(0);
+}
+
+.refresh-icon {
+  margin-right: 0.5rem;
+  color: var(--accent-color);
+}
+
+.refresh-text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Swipe gestures support */
+.swipeable {
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Enhanced swipe navigation */
+@media (max-width: 768px) {
+  .swipeable-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .swipeable-content {
+    transition: transform 0.3s ease;
+  }
+  
+  .swipeable-content.swiping {
+    transition: none;
+  }
+  
+  .swipeable-content.swipe-left {
+    transform: translateX(-100%);
+  }
+  
+  .swipeable-content.swipe-right {
+    transform: translateX(100%);
+  }
+}
+
+/* Better navigation for one-handed use */
+@media (max-width: 768px) {
+  .app-nav {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+  
+  .nav-tab {
+    position: relative;
+  }
+  
+  .nav-tab:active {
+    background: var(--bg-secondary);
+    transform: scale(0.95);
+  }
+  
+  /* Add haptic feedback simulation */
+  .nav-tab:active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent-color);
+    opacity: 0.1;
+    animation: haptic-pulse 0.15s ease;
+  }
+}
+
+@keyframes haptic-pulse {
+  0% { opacity: 0; }
+  50% { opacity: 0.2; }
+  100% { opacity: 0; }
+}
+
+/* Improved scrolling performance */
+.app-main,
+.transaction-list,
+.statistics {
+  will-change: scroll-position;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Better text rendering on mobile */
+@media (max-width: 768px) {
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}
+
+/* Enhanced card interactions */
+@media (max-width: 768px) {
+  .stat-card,
+  .category-item,
+  .transaction-item {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .stat-card:active,
+  .category-item:active,
+  .transaction-item:active {
+    transform: scale(0.98);
+    background: var(--bg-secondary);
+  }
+  
+  .stat-card:active::after,
+  .category-item:active::after,
+  .transaction-item:active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent-color);
+    opacity: 0.05;
+    border-radius: inherit;
+  }
+}
+
+/* Improved search and filter handling */
+@media (max-width: 768px) {
+  .search-filters {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .search-box {
+    width: 100%;
+  }
+  
+  .filter-toggle {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .filter-panel {
+    padding: 1rem;
+    border-radius: 12px;
+    margin-top: 1rem;
+  }
+}
+
+/* Better chart handling on mobile */
+@media (max-width: 768px) {
+  .chart-container {
+    padding: 1rem;
+    border-radius: 12px;
+    overflow-x: auto;
+  }
+  
+  .chart-container svg {
+    min-width: 300px;
+  }
+  
+  .chart-controls {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .chart-button {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem;
+  }
+}
