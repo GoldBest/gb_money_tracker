@@ -85,6 +85,7 @@ YC_FOLDER_ID=b1gdvm21sspiapg1g55p
 YC_SA_ID=aje1rlqa4l9tui4pf8s0
 YC_SA_KEY_FILE=yandex-cloud-key.json
 EXTERNAL_IP=62.84.114.186
+DOMAIN=gbmt.gbdev.ru
 EOF
 
 # Собираем frontend
@@ -97,9 +98,37 @@ cd ..
 # Настраиваем Nginx
 echo "🌐 Настраиваем Nginx..."
 sudo tee /etc/nginx/sites-available/tg-money-miniapp > /dev/null << 'EOF'
+# HTTP - редирект на HTTPS
 server {
     listen 80;
-    server_name 62.84.114.186;
+    server_name gbmt.gbdev.ru 62.84.114.186;
+    
+    # Редирект на HTTPS
+    return 301 https://$server_name$request_uri;
+}
+
+# HTTPS - основная конфигурация
+server {
+    listen 443 ssl http2;
+    server_name gbmt.gbdev.ru;
+    
+    # SSL сертификаты
+    ssl_certificate /etc/letsencrypt/live/gbmt.gbdev.ru/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/gbmt.gbdev.ru/privkey.pem;
+    
+    # SSL настройки
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+    
+    # Security headers
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Frame-Options DENY always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 
     # Frontend
     location / {
@@ -132,13 +161,54 @@ server {
         return 200 "healthy\n";
         add_header Content-Type text/plain;
     }
+    
+    # Robots.txt
+    location /robots.txt {
+        return 200 "User-agent: *\nDisallow: /\n";
+        add_header Content-Type text/plain;
+    }
 }
 EOF
 
 # Активируем сайт
 sudo ln -sf /etc/nginx/sites-available/tg-money-miniapp /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
+
+# Настраиваем SSL сертификат
+echo "🔒 Настраиваем SSL сертификат..."
+sudo apt install -y certbot python3-certbot-nginx
+
+# Создаем временную конфигурацию для получения сертификата
+sudo tee /etc/nginx/sites-available/tg-money-miniapp-temp > /dev/null << 'EOF'
+server {
+    listen 80;
+    server_name gbmt.gbdev.ru;
+    
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+    
+    location / {
+        return 301 https://$server_name$request_uri;
+    }
+}
+EOF
+
+sudo ln -sf /etc/nginx/sites-available/tg-money-miniapp-temp /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
+
+# Получаем SSL сертификат
+echo "📜 Получаем SSL сертификат от Let's Encrypt..."
+sudo certbot certonly --webroot -w /var/www/html -d gbmt.gbdev.ru --non-interactive --agree-tos --email admin@gbdev.ru
+
+# Возвращаем основную конфигурацию
+sudo rm -f /etc/nginx/sites-enabled/tg-money-miniapp-temp
+sudo ln -sf /etc/nginx/sites-available/tg-money-miniapp /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+
+# Настраиваем автоматическое обновление сертификата
+echo "🔄 Настраиваем автоматическое обновление SSL..."
+sudo crontab -l 2>/dev/null | { cat; echo "0 12 * * * /usr/bin/certbot renew --quiet && sudo systemctl reload nginx"; } | sudo crontab -
 
 # Создаем systemd сервис для backend
 echo "🔧 Создаем systemd сервис для backend..."
@@ -210,9 +280,10 @@ echo "✅ Автоматический запуск при перезагруз�
 echo "✅ Скрипт обновления: ./update-app.sh"
 echo ""
 echo "🌐 Доступные URL:"
-echo "Frontend: http://62.84.114.186"
-echo "Backend API: http://62.84.114.186/api"
-echo "Health check: http://62.84.114.186/health"
+echo "Frontend: https://gbmt.gbdev.ru"
+echo "Backend API: https://gbmt.gbdev.ru/api"
+echo "Health check: https://gbmt.gbdev.ru/health"
+echo "HTTP редирект: http://gbmt.gbdev.ru → https://gbmt.gbdev.ru"
 echo ""
 echo "🔧 Управление:"
 echo "Проверить статус: sudo systemctl status tg-money-backend"

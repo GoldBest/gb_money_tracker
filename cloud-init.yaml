@@ -1,0 +1,12 @@
+#cloud-config
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCzQOY4DNk8jSGi6OEe3FydBiNCxhGuHKW4R+WLnssxaeZAB4r0xzIaKHiJuaimUH3QQp3TL3k8Y8kj6y6kzB24m1tiT4nUkv9HLc8OQEtnjnElA4jXp+MCFEpXjRYQZJ2dEiHUEZkKG8fmL3WhFgmgnI6VQBGegqHkhBF3BoI4Vgf59QvJqnXDH9QbSTRi58mxIAVuV676dJv2UCzNYaslzpksaoWYRHqI9d3zjQnQN68egXXe/s0dMUQGNZnn+ubYW3eHtvJCSXD6j3/ZzfGsIKzW8FvxC88c8830xFkyXNZfgrqhk8nVjB81KmlhIuyFQZLsuMrWMrf/dYaPAl6hBjdXT/V+6MWKsV0QbqlugTwy344xvyWk/ay/eBBTM+6FWsupV2a852SL9m/EF29YPfl/2XZX6oW3W621IBK/tkcfNEyhg0VYHG0vcznb/8X2IxrS6I8kOeMMo6ZenURozPykfkvqu+cfRz53FbEug1GSPbW0RR9aUTfCdv4lPE= antonparfenov@Mini.local
+    lock_passwd: false
+    passwd: $6$rounds=656000$YQKzQOY4DNk8jSGi$QKzQOY4DNk8jSGi6OEe3FydBiNCxhGuHKW4R+WLnssxaeZAB4r0xzIaKHiJuaimUH3QQp3TL3k8Y8kj6y6kzB24m1tiT4nUkv9HLc8OQEtnjnElA4jXp+MCFEpXjRYQZJ2dEiHUEZkKG8fmL3WhFgmgnI6VQBGegqHkhBF3BoI4Vgf59QvJqnXDH9QbSTRi58mxIAVuV676dJv2UCzNYaslzpksaoWYRHqI9d3zjQnQN68egXXe/s0dMUQGNZnn+ubYW3eHtvJCSXD6j3/ZzfGsIKzW8FvxC88c8830xFkyXNZfgrqhk8nVjB81KmlhIuyFQZLsuMrWMrf/dYaPAl6hBjdXT/V+6MWKsV0QbqlugTwy344xvyWk/ay/eBBTM+6FWsupV2a852SL9m/EF29YPfl/2XZX6oW3W621IBK/tkcfNEyhg0VYHG0vcznb/8X2IxrS6I8kOeMMo6ZenURozPykfkvqu+cfRz53FbEug1GSPbW0RR9aUTfCdv4lPE=
+
+ssh_pwauth: true
+disable_root: false
