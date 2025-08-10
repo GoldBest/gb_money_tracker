@@ -15,16 +15,18 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     // Передаем переменные окружения в frontend
-    define: {
-      'process.env': env
-    },
-    // Настройки для переменных окружения
     envPrefix: 'VITE_',
     // Загружаем переменные из корневого .env
     envDir: '../../',
     server: {
       port: parseInt(env.FRONTEND_PORT) || 5176,
       host: true,
+      allowedHosts: [
+        'localhost',
+        '127.0.0.1',
+        '.ngrok-free.app',
+        'b3cb74bc71fa.ngrok-free.app'
+      ],
       proxy: {
         '/api': {
           target: env.BACKEND_API_URL || 'http://localhost:3001',
@@ -47,6 +49,7 @@ export default defineConfig(({ command, mode }) => {
     },
     // Переменные окружения для frontend
     define: {
+      'process.env': env,
       __APP_VERSION__: JSON.stringify(env.npm_package_version || '1.0.0'),
       __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
       __ENVIRONMENT__: JSON.stringify(mode),
