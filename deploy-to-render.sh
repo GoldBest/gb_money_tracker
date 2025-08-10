@@ -63,12 +63,12 @@ fi
 
 # Проверяем, что render.yaml валиден
 echo "🔍 Проверяю render.yaml..."
-if ! command -v render &> /dev/null; then
-    echo "⚠️  Render CLI не установлен. Установите его для валидации:"
-    echo "   brew install render (macOS)"
-    echo "   или скачайте с https://render.com/docs/install-cli"
+if ! command -v yamllint &> /dev/null; then
+    echo "⚠️  yamllint не установлен. Установите его для валидации:"
+    echo "   brew install yamllint (macOS)"
+    echo "   или pip install yamllint"
 else
-    if render validate render.yaml; then
+    if yamllint render.yaml; then
         echo "✅ render.yaml валиден"
     else
         echo "❌ render.yaml содержит ошибки"
