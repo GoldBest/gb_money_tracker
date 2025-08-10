@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useTelegram } from '../contexts/TelegramContext'
-import { X, Plus } from 'lucide-react'
+import { X, Plus, DollarSign, Tag, FileText, Calendar, TrendingDown, TrendingUp } from 'lucide-react'
 
-
-const TransactionForm = ({ onClose, onSuccess }) => {
+const TransactionForm = ({ onSubmit, onCancel }) => {
   const { user, api } = useTelegram()
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
@@ -11,7 +10,8 @@ const TransactionForm = ({ onClose, onSuccess }) => {
     amount: '',
     description: '',
     type: 'expense',
-    category_id: ''
+    category_id: '',
+    date: new Date().toISOString().split('T')[0]
   })
   const [hasChanges, setHasChanges] = useState(false)
 
@@ -73,7 +73,7 @@ const TransactionForm = ({ onClose, onSuccess }) => {
         window.showTelegramAlert('Транзакция успешно создана!')
       }
       
-      onSuccess()
+      onSubmit()
     } catch (error) {
       console.error('Error creating transaction:', error)
       window.showTelegramAlert('Ошибка при создании транзакции')
@@ -92,124 +92,160 @@ const TransactionForm = ({ onClose, onSuccess }) => {
         'У вас есть несохраненные изменения. Закрыть форму?',
         (confirmed) => {
           if (confirmed) {
-            onClose()
+            onCancel()
           }
         }
       )
     } else {
-      onClose()
+      onCancel()
     }
   }
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <div className="modal-header">
-          <h2>Новая транзакция</h2>
-          <button className="close-button button-animation" onClick={handleClose}>
-            <X size={20} />
+    <form onSubmit={handleSubmit} className="transaction-form">
+      {/* Type Selector */}
+      <div className="apple-form-group">
+        <label>Тип транзакции</label>
+        <div style={{ display: 'flex', gap: 'var(--apple-spacing-sm)' }}>
+          <button
+            type="button"
+            className={`apple-button ${formData.type === 'expense' ? 'primary' : 'secondary'}`}
+            onClick={() => handleInputChange('type', 'expense')}
+            style={{ flex: 1 }}
+          >
+            <TrendingDown size={16} />
+            Расход
+          </button>
+          <button
+            type="button"
+            className={`apple-button ${formData.type === 'income' ? 'primary' : 'secondary'}`}
+            onClick={() => handleInputChange('type', 'income')}
+            style={{ flex: 1 }}
+          >
+            <TrendingUp size={16} />
+            Доход
           </button>
         </div>
-
-        <form onSubmit={handleSubmit} className="transaction-form">
-          <div className="form-group">
-            <label>Тип</label>
-            <div className="type-selector">
-              <button
-                type="button"
-                className={`type-button button-animation ${formData.type === 'expense' ? 'active' : ''}`}
-                onClick={() => {
-                  handleInputChange('type', 'expense');
-                }}
-              >
-                Расход
-              </button>
-              <button
-                type="button"
-                className={`type-button button-animation ${formData.type === 'income' ? 'active' : ''}`}
-                onClick={() => {
-                  handleInputChange('type', 'income');
-                }}
-              >
-                Доход
-              </button>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Сумма *</label>
-            <input
-              type="number"
-              step="0.01"
-              value={formData.amount}
-              onChange={(e) => handleInputChange('amount', e.target.value)}
-              placeholder="0.00"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Категория *</label>
-            <select
-              value={formData.category_id}
-              onChange={(e) => handleInputChange('category_id', e.target.value)}
-              required
-            >
-              <option value="">Выберите категорию</option>
-              {categories.map(category => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Описание</label>
-            <input
-              type="text"
-              value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder="Краткое описание"
-            />
-          </div>
-
-          {/* Бюджетные предупреждения */}
-          {budgetWarnings.length > 0 && (
-            <div className="budget-warnings">
-              <h4>⚠️ Бюджетные предупреждения</h4>
-              {budgetWarnings.map((warning, index) => (
-                <div 
-                  key={index} 
-                  className={`warning-item ${warning.type === 'budget_exceeded' ? 'exceeded' : 'warning'}`}
-                >
-                  <div className="warning-icon">
-                    {warning.type === 'budget_exceeded' ? '🚨' : '⚠️'}
-                  </div>
-                  <div className="warning-content">
-                    <p className="warning-message">{warning.message}</p>
-                    <div className="warning-details">
-                      <span>Текущие траты: {warning.current.toLocaleString()} ₽</span>
-                      <span>Лимит: {warning.limit.toLocaleString()} ₽</span>
-                      <span>Новый итог: {warning.newTotal.toLocaleString()} ₽</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="form-actions">
-            <button type="button" className="button secondary button-animation" onClick={handleClose}>
-              Отмена
-            </button>
-            <button type="submit" className="button primary button-animation" disabled={loading}>
-              {loading ? 'Сохранение...' : 'Сохранить'}
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
+
+      {/* Amount Input */}
+      <div className="apple-form-group">
+        <label htmlFor="amount">
+          <DollarSign size={16} style={{ marginRight: 'var(--apple-spacing-xs)' }} />
+          Сумма
+        </label>
+        <input
+          id="amount"
+          type="number"
+          className="apple-input"
+          placeholder="0.00"
+          value={formData.amount}
+          onChange={(e) => handleInputChange('amount', e.target.value)}
+          step="0.01"
+          min="0"
+          required
+        />
+      </div>
+
+      {/* Description Input */}
+      <div className="apple-form-group">
+        <label htmlFor="description">
+          <FileText size={16} style={{ marginRight: 'var(--apple-spacing-xs)' }} />
+          Описание
+        </label>
+        <input
+          id="description"
+          type="text"
+          className="apple-input"
+          placeholder="Введите описание транзакции"
+          value={formData.description}
+          onChange={(e) => handleInputChange('description', e.target.value)}
+        />
+      </div>
+
+      {/* Category Select */}
+      <div className="apple-form-group">
+        <label htmlFor="category">
+          <Tag size={16} style={{ marginRight: 'var(--apple-spacing-xs)' }} />
+          Категория
+        </label>
+        <select
+          id="category"
+          className="apple-select"
+          value={formData.category_id}
+          onChange={(e) => handleInputChange('category_id', e.target.value)}
+          required
+        >
+          <option value="">Выберите категорию</option>
+          {categories.map(category => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Date Input */}
+      <div className="apple-form-group">
+        <label htmlFor="date">
+          <Calendar size={16} style={{ marginRight: 'var(--apple-spacing-xs)' }} />
+          Дата
+        </label>
+        <input
+          id="date"
+          type="date"
+          className="apple-input"
+          value={formData.date}
+          onChange={(e) => handleInputChange('date', e.target.value)}
+          required
+        />
+      </div>
+
+      {/* Budget Warnings */}
+      {budgetWarnings.length > 0 && (
+        <div className="apple-card" style={{ 
+          backgroundColor: 'var(--apple-accent-orange)', 
+          color: 'var(--apple-text-inverse)',
+          marginBottom: 'var(--apple-spacing-md)'
+        }}>
+          <h4 style={{ marginBottom: 'var(--apple-spacing-sm)' }}>⚠️ Предупреждения о бюджете</h4>
+          {budgetWarnings.map((warning, index) => (
+            <p key={index} style={{ fontSize: '14px', marginBottom: 'var(--apple-spacing-xs)' }}>
+              {warning.message}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {/* Form Actions */}
+      <div className="modal-footer" style={{ padding: 0, border: 'none' }}>
+        <button
+          type="button"
+          className="apple-button secondary"
+          onClick={handleClose}
+          disabled={loading}
+        >
+          Отмена
+        </button>
+        <button
+          type="submit"
+          className="apple-button primary"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <div className="loading-spinner" style={{ width: '16px', height: '16px', margin: 0 }} />
+              Сохранение...
+            </>
+          ) : (
+            <>
+              <Plus size={16} />
+              Сохранить
+            </>
+          )}
+        </button>
+      </div>
+    </form>
   )
 }
 

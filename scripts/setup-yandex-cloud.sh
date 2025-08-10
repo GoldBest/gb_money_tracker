@@ -27,29 +27,40 @@ if [ -z "$FOLDER_ID" ]; then
 fi
 echo "✅ Folder ID: $FOLDER_ID"
 
-# Создаем сервисный аккаунт
-echo "👤 Создаю сервисный аккаунт..."
+# Создаем или получаем существующий сервисный аккаунт
+echo "👤 Проверяю существующий сервисный аккаунт..."
 SA_NAME="gb-money-tracker"
-SA_ID=$(yc iam service-account create --name $SA_NAME --description "Service account for TG Money MiniApp" --format json | jq -r '.id')
+SA_ID=$(yc iam service-account list --format json | jq -r '.[] | select(.name == "'$SA_NAME'") | .id')
 
 if [ -z "$SA_ID" ] || [ "$SA_ID" = "null" ]; then
-    echo "❌ Не удалось создать сервисный аккаунт"
-    exit 1
+    echo "📝 Создаю новый сервисный аккаунт..."
+    SA_ID=$(yc iam service-account create --name $SA_NAME --description "Service account for TG Money MiniApp" --format json | jq -r '.id')
+    
+    if [ -z "$SA_ID" ] || [ "$SA_ID" = "null" ]; then
+        echo "❌ Не удалось создать сервисный аккаунт"
+        exit 1
+    fi
+    echo "✅ Новый сервисный аккаунт создан: $SA_ID"
+else
+    echo "✅ Использую существующий сервисный аккаунт: $SA_ID"
 fi
-
-echo "✅ Сервисный аккаунт создан: $SA_ID"
 
 # Создаем ключ для сервисного аккаунта
-echo "🔑 Создаю ключ для сервисного аккаунта..."
+echo "🔑 Проверяю существующий ключ..."
 KEY_FILE="yandex-cloud-key.json"
-yc iam service-account key create --id $SA_ID --output $KEY_FILE
 
-if [ ! -f "$KEY_FILE" ]; then
-    echo "❌ Не удалось создать ключ"
-    exit 1
+if [ -f "$KEY_FILE" ]; then
+    echo "✅ Использую существующий ключ: $KEY_FILE"
+else
+    echo "📝 Создаю новый ключ..."
+    yc iam key create --service-account-name $SA_NAME --output $KEY_FILE
+    
+    if [ ! -f "$KEY_FILE" ]; then
+        echo "❌ Не удалось создать ключ"
+        exit 1
+    fi
+    echo "✅ Новый ключ создан: $KEY_FILE"
 fi
-
-echo "✅ Ключ создан: $KEY_FILE"
 
 # Создаем Managed PostgreSQL
 echo "🗄️ Создаю Managed PostgreSQL..."

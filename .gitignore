@@ -34,3 +34,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Yandex Cloud credentials
+yandex-cloud-key.json
+.env.production

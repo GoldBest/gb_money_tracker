@@ -1,0 +1,560 @@
+/* Apple-style animations for GB Money Tracker */
+
+:root {
+  /* Apple animation timing functions */
+  --apple-ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --apple-ease-in: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  --apple-ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --apple-ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  
+  /* Animation durations */
+  --apple-duration-fast: 0.2s;
+  --apple-duration-normal: 0.3s;
+  --apple-duration-slow: 0.5s;
+  --apple-duration-slower: 0.8s;
+  
+  /* Spring animations */
+  --apple-spring-stiff: 300;
+  --apple-spring-damping: 30;
+  --apple-spring-mass: 0.8;
+}
+
+/* ===== ENTRANCE ANIMATIONS ===== */
+
+@keyframes appleSlideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes appleSlideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes appleSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes appleSlideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes appleScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes appleFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes appleBlurIn {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+/* ===== EXIT ANIMATIONS ===== */
+
+@keyframes appleSlideOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+}
+
+@keyframes appleSlideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+}
+
+@keyframes appleScaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes appleFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ===== INTERACTIVE ANIMATIONS ===== */
+
+@keyframes applePress {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes appleBounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes appleWiggle {
+  0%, 7% {
+    transform: rotateZ(0);
+  }
+  15% {
+    transform: rotateZ(-15deg);
+  }
+  20% {
+    transform: rotateZ(10deg);
+  }
+  25% {
+    transform: rotateZ(-10deg);
+  }
+  30% {
+    transform: rotateZ(6deg);
+  }
+  35% {
+    transform: rotateZ(-4deg);
+  }
+  40%, 100% {
+    transform: rotateZ(0);
+  }
+}
+
+@keyframes applePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes appleShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px);
+  }
+}
+
+/* ===== HOVER EFFECTS ===== */
+
+@keyframes appleHoverLift {
+  from {
+    transform: translateY(0) scale(1);
+    box-shadow: var(--apple-shadow-sm);
+  }
+  to {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--apple-shadow-lg);
+  }
+}
+
+@keyframes appleHoverGlow {
+  from {
+    box-shadow: var(--apple-shadow-sm);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(0, 122, 255, 0.3);
+  }
+}
+
+@keyframes appleHoverScale {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+/* ===== LOADING ANIMATIONS ===== */
+
+@keyframes appleSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes appleDots {
+  0%, 20% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  40% {
+    color: rgba(0, 0, 0, 0);
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  60% {
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+  80%, 100% {
+    text-shadow: 0.25em 0 0 rgba(0, 0, 0, 0), 0.5em 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes appleShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ===== MODAL ANIMATIONS ===== */
+
+@keyframes appleModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes appleModalSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+}
+
+@keyframes appleOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes appleOverlayFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ===== TRANSACTION ANIMATIONS ===== */
+
+@keyframes appleTransactionSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes appleTransactionSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes appleCategoryPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Entrance animations */
+.apple-animate-slide-in-up {
+  animation: appleSlideInUp var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-slide-in-down {
+  animation: appleSlideInDown var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-slide-in-left {
+  animation: appleSlideInLeft var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-slide-in-right {
+  animation: appleSlideInRight var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-scale-in {
+  animation: appleScaleIn var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-fade-in {
+  animation: appleFadeIn var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-blur-in {
+  animation: appleBlurIn var(--apple-duration-slow) var(--apple-ease-out);
+}
+
+/* Exit animations */
+.apple-animate-slide-out-up {
+  animation: appleSlideOutUp var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+.apple-animate-slide-out-down {
+  animation: appleSlideOutDown var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+.apple-animate-scale-out {
+  animation: appleScaleOut var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+.apple-animate-fade-out {
+  animation: appleFadeOut var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+/* Interactive animations */
+.apple-animate-press {
+  animation: applePress var(--apple-duration-fast) var(--apple-ease-out);
+}
+
+.apple-animate-bounce {
+  animation: appleBounce 1s var(--apple-ease-spring);
+}
+
+.apple-animate-wiggle {
+  animation: appleWiggle 0.6s var(--apple-ease-out);
+}
+
+.apple-animate-pulse {
+  animation: applePulse 2s var(--apple-ease-in-out) infinite;
+}
+
+.apple-animate-shake {
+  animation: appleShake 0.5s var(--apple-ease-out);
+}
+
+/* Loading animations */
+.apple-animate-spin {
+  animation: appleSpin 1s linear infinite;
+}
+
+.apple-animate-dots {
+  animation: appleDots 1.4s infinite;
+}
+
+.apple-animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: appleShimmer 1.5s infinite;
+}
+
+/* Modal animations */
+.apple-animate-modal-in {
+  animation: appleModalSlideIn var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-modal-out {
+  animation: appleModalSlideOut var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+.apple-animate-overlay-in {
+  animation: appleOverlayFadeIn var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-overlay-out {
+  animation: appleOverlayFadeOut var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+/* Transaction animations */
+.apple-animate-transaction-in {
+  animation: appleTransactionSlideIn var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-animate-transaction-out {
+  animation: appleTransactionSlideOut var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+.apple-animate-category-pulse {
+  animation: appleCategoryPulse var(--apple-duration-fast) var(--apple-ease-out);
+}
+
+/* ===== HOVER TRANSITIONS ===== */
+
+.apple-hover-lift {
+  transition: transform var(--apple-duration-normal) var(--apple-ease-out),
+              box-shadow var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-hover-lift:hover {
+  animation: appleHoverLift var(--apple-duration-normal) var(--apple-ease-out) forwards;
+}
+
+.apple-hover-glow {
+  transition: box-shadow var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-hover-glow:hover {
+  animation: appleHoverGlow var(--apple-duration-normal) var(--apple-ease-out) forwards;
+}
+
+.apple-hover-scale {
+  transition: transform var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-hover-scale:hover {
+  animation: appleHoverScale var(--apple-duration-normal) var(--apple-ease-out) forwards;
+}
+
+/* ===== STAGGERED ANIMATIONS ===== */
+
+.apple-stagger-1 { animation-delay: 0.1s; }
+.apple-stagger-2 { animation-delay: 0.2s; }
+.apple-stagger-3 { animation-delay: 0.3s; }
+.apple-stagger-4 { animation-delay: 0.4s; }
+.apple-stagger-5 { animation-delay: 0.5s; }
+
+/* ===== RESPONSIVE ANIMATIONS ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+.apple-will-change-transform {
+  will-change: transform;
+}
+
+.apple-will-change-opacity {
+  will-change: opacity;
+}
+
+.apple-will-change-transform-opacity {
+  will-change: transform, opacity;
+}
+
+/* ===== CUSTOM PROPERTIES FOR JS CONTROL ===== */
+
+.apple-animation-duration {
+  --apple-custom-duration: var(--apple-duration-normal);
+}
+
+.apple-animation-delay {
+  --apple-custom-delay: 0s;
+}
+
+.apple-animation-iteration {
+  --apple-custom-iteration: 1;
+}

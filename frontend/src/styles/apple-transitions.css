@@ -1,0 +1,617 @@
+/* Apple-style page transitions and animations */
+
+/* ===== PAGE TRANSITIONS ===== */
+
+.apple-page-transition {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Направления переходов */
+.apple-page-transition-right {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.apple-page-transition-left {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.apple-page-transition-up {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.apple-page-transition-down {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+/* Состояния переходов */
+.apple-page-transition-visible {
+  transform: translateX(0) translateY(0);
+  opacity: 1;
+  transition: transform var(--apple-transition-duration) var(--apple-ease-out),
+              opacity var(--apple-transition-duration) var(--apple-ease-out);
+}
+
+.apple-page-transition-hidden {
+  transition: transform var(--apple-transition-duration) var(--apple-ease-in),
+              opacity var(--apple-transition-duration) var(--apple-ease-in);
+}
+
+/* ===== TAB TRANSITIONS ===== */
+
+.apple-tab-transition {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.apple-tab-transition-right {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.apple-tab-transition-left {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.apple-tab-transition-up {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.apple-tab-transition-down {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+/* Состояния табов */
+.apple-tab-transition-entering {
+  transform: translateX(0) translateY(0);
+  opacity: 1;
+  transition: transform var(--apple-transition-duration) var(--apple-ease-out),
+              opacity var(--apple-transition-duration) var(--apple-ease-out);
+}
+
+.apple-tab-transition-leaving {
+  transition: transform var(--apple-transition-duration) var(--apple-ease-in),
+              opacity var(--apple-transition-duration) var(--apple-ease-in);
+}
+
+/* ===== STAGGERED LIST ANIMATIONS ===== */
+
+.apple-staggered-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--apple-spacing-md);
+}
+
+.apple-staggered-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: appleStaggeredItemIn 0.6s var(--apple-ease-out) forwards;
+  animation-delay: var(--apple-stagger-delay);
+}
+
+@keyframes appleStaggeredItemIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== FADE IN ANIMATIONS ===== */
+
+.apple-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity var(--apple-fade-duration) var(--apple-ease-out),
+              transform var(--apple-fade-duration) var(--apple-ease-out);
+  transition-delay: var(--apple-fade-delay);
+}
+
+.apple-fade-in-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.apple-fade-in-hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* ===== ANIMATED COUNTER ===== */
+
+.apple-animated-counter {
+  display: inline-block;
+  transition: transform var(--apple-counter-duration) var(--apple-ease-out);
+}
+
+.apple-animated-counter-animating {
+  transform: scale(1.1);
+  color: var(--apple-accent-blue);
+}
+
+.apple-animated-counter-idle {
+  transform: scale(1);
+}
+
+/* ===== ENHANCED CARD ANIMATIONS ===== */
+
+.apple-card {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.apple-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--apple-shadow-lg);
+}
+
+.apple-card:active {
+  transform: translateY(-2px) scale(1.01);
+  transition-duration: var(--apple-duration-fast);
+}
+
+/* ===== ENHANCED BUTTON ANIMATIONS ===== */
+
+.apple-button {
+  position: relative;
+  overflow: hidden;
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.apple-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width var(--apple-duration-normal) var(--apple-ease-out),
+              height var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.apple-button:active {
+  transform: scale(0.95);
+  transition-duration: var(--apple-duration-fast);
+}
+
+/* ===== ENHANCED INPUT ANIMATIONS ===== */
+
+.apple-input {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  border: 2px solid transparent;
+}
+
+.apple-input:focus {
+  transform: scale(1.02);
+  border-color: var(--apple-accent-blue);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+}
+
+/* ===== ENHANCED TRANSACTION ITEM ANIMATIONS ===== */
+
+.transaction-item {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: left center;
+}
+
+.transaction-item:hover {
+  transform: translateX(8px) scale(1.02);
+  box-shadow: var(--apple-shadow-md);
+}
+
+.transaction-item:active {
+  transform: translateX(4px) scale(1.01);
+  transition-duration: var(--apple-duration-fast);
+}
+
+/* ===== ENHANCED CATEGORY ANIMATIONS ===== */
+
+.transaction-category {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.transaction-category:hover {
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+.transaction-category:active {
+  transform: scale(1.05);
+  transition-duration: var(--apple-duration-fast);
+}
+
+/* ===== ENHANCED MODAL ANIMATIONS ===== */
+
+.modal-overlay {
+  animation: appleOverlayFadeIn var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.modal {
+  animation: appleModalSlideIn var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.modal.closing {
+  animation: appleModalSlideOut var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+/* ===== ENHANCED LOADING ANIMATIONS ===== */
+
+.loading-spinner {
+  animation: appleSpin 1s linear infinite;
+}
+
+.loading-spinner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 3px solid transparent;
+  border-top-color: var(--apple-accent-blue);
+  border-radius: 50%;
+  animation: appleSpin 1s linear infinite;
+}
+
+/* ===== ENHANCED TOAST ANIMATIONS ===== */
+
+.toast {
+  animation: appleSlideInUp var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.toast.removing {
+  animation: appleSlideOutUp var(--apple-duration-normal) var(--apple-ease-in);
+}
+
+/* ===== ENHANCED NAVIGATION ANIMATIONS ===== */
+
+.nav-tab {
+  position: relative;
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.nav-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--apple-accent-blue);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.nav-tab:hover::after {
+  width: 60%;
+}
+
+.nav-tab.active::after {
+  width: 100%;
+}
+
+.nav-tab:hover {
+  transform: translateY(-2px);
+  color: var(--apple-accent-blue);
+}
+
+/* ===== ENHANCED STATS GRID ANIMATIONS ===== */
+
+.stats-grid {
+  display: grid;
+  gap: var(--apple-spacing-md);
+}
+
+.stat-card {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: var(--apple-shadow-xl);
+}
+
+.stat-card:active {
+  transform: translateY(-3px) scale(1.01);
+  transition-duration: var(--apple-duration-fast);
+}
+
+/* ===== ENHANCED ICON ANIMATIONS ===== */
+
+.stat-icon {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.2) rotate(5deg);
+  color: var(--apple-accent-blue);
+}
+
+/* ===== ENHANCED BALANCE ANIMATIONS ===== */
+
+.balance-amount {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.balance-amount.positive {
+  color: var(--apple-accent-green);
+}
+
+.balance-amount.negative {
+  color: var(--apple-accent-red);
+}
+
+.balance-card:hover .balance-amount {
+  transform: scale(1.05);
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* ===== ENHANCED FORM ANIMATIONS ===== */
+
+.apple-form-group {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-form-group:focus-within {
+  transform: translateY(-2px);
+}
+
+.apple-form-group label {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.apple-form-group:focus-within label {
+  color: var(--apple-accent-blue);
+  transform: scale(1.02);
+}
+
+/* ===== ENHANCED SEARCH ANIMATIONS ===== */
+
+.search-input {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+}
+
+.search-input:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+}
+
+/* ===== ENHANCED FILTER ANIMATIONS ===== */
+
+.filter-button {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.filter-button:hover {
+  transform: scale(1.1);
+  background: var(--apple-accent-blue);
+  color: white;
+}
+
+.filter-button.active {
+  animation: applePulse 2s var(--apple-ease-in-out) infinite;
+}
+
+/* ===== ENHANCED EXPORT ANIMATIONS ===== */
+
+.export-button {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.export-button:hover {
+  transform: scale(1.05) rotate(5deg);
+  background: var(--apple-accent-green);
+  color: white;
+}
+
+.export-button:active {
+  transform: scale(0.95) rotate(0deg);
+  transition-duration: var(--apple-duration-fast);
+}
+
+/* ===== ENHANCED BACKUP ANIMATIONS ===== */
+
+.backup-button {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.backup-button:hover {
+  transform: scale(1.05) translateY(-2px);
+  background: var(--apple-accent-purple);
+  color: white;
+}
+
+/* ===== ENHANCED NOTIFICATION ANIMATIONS ===== */
+
+.notification-item {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: left center;
+}
+
+.notification-item:hover {
+  transform: translateX(8px) scale(1.02);
+  box-shadow: var(--apple-shadow-md);
+}
+
+.notification-item:active {
+  transform: translateX(4px) scale(1.01);
+  transition-duration: var(--apple-duration-fast);
+}
+
+/* ===== ENHANCED GOAL ANIMATIONS ===== */
+
+.goal-card {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.goal-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--apple-shadow-lg);
+}
+
+.goal-progress {
+  transition: width var(--apple-duration-slow) var(--apple-ease-out);
+}
+
+.goal-card:hover .goal-progress {
+  animation: applePulse 2s var(--apple-ease-in-out) infinite;
+}
+
+/* ===== ENHANCED CATEGORY MANAGER ANIMATIONS ===== */
+
+.category-item {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.category-item:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: var(--apple-shadow-md);
+}
+
+.category-item:active {
+  transform: scale(1.02) translateY(-1px);
+  transition-duration: var(--apple-duration-fast);
+}
+
+/* ===== ENHANCED BUDGET ALERT ANIMATIONS ===== */
+
+.budget-alert {
+  transition: all var(--apple-duration-normal) var(--apple-ease-out);
+  transform-origin: center;
+}
+
+.budget-alert:hover {
+  transform: scale(1.02) translateY(-2px);
+  box-shadow: var(--apple-shadow-md);
+}
+
+.budget-alert.warning {
+  animation: appleShake 0.5s var(--apple-ease-out);
+}
+
+.budget-alert.critical {
+  animation: applePulse 1s var(--apple-ease-in-out) infinite;
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+.apple-page-transition,
+.apple-tab-transition,
+.apple-fade-in,
+.apple-staggered-item {
+  will-change: transform, opacity;
+}
+
+.apple-card,
+.apple-button,
+.transaction-item,
+.stat-card {
+  will-change: transform, box-shadow;
+}
+
+/* ===== REDUCED MOTION SUPPORT ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .apple-page-transition,
+  .apple-tab-transition,
+  .apple-fade-in,
+  .apple-staggered-item,
+  .apple-card,
+  .apple-button,
+  .transaction-item,
+  .stat-card,
+  .nav-tab,
+  .modal,
+  .toast {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+}
+
+/* ===== RESPONSIVE ANIMATIONS ===== */
+
+@media (max-width: 768px) {
+  .apple-page-transition-right,
+  .apple-page-transition-left {
+    transform: translateY(100%);
+  }
+  
+  .apple-page-transition-up,
+  .apple-page-transition-down {
+    transform: translateX(100%);
+  }
+  
+  .apple-page-transition-visible {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+/* ===== DARK THEME ADJUSTMENTS ===== */
+
+.dark .apple-card:hover {
+  box-shadow: var(--apple-shadow-lg);
+}
+
+.dark .stat-card:hover {
+  box-shadow: var(--apple-shadow-xl);
+}
+
+.dark .transaction-item:hover {
+  box-shadow: var(--apple-shadow-md);
+}
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  .apple-page-transition,
+  .apple-tab-transition,
+  .apple-fade-in,
+  .apple-staggered-item {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ===== CUSTOM PROPERTIES FOR JS CONTROL ===== */
+
+.apple-page-transition,
+.apple-tab-transition,
+.apple-fade-in {
+  --apple-transition-duration: 300ms;
+  --apple-fade-duration: 300ms;
+  --apple-fade-delay: 0ms;
+  --apple-stagger-delay: 0ms;
+}

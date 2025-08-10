@@ -20,11 +20,34 @@ import AnimatedCard from './components/AnimatedCard'
 import AnimatedList from './components/AnimatedList'
 import AnimatedToast from './components/AnimatedToast'
 import AnimationDemo from './components/AnimationDemo'
+import ApplePageTransition, { 
+  AppleTabTransition, 
+  AppleStaggeredList, 
+  AppleFadeIn, 
+  AppleAnimatedCounter,
+  useAppleAnimation 
+} from './components/ApplePageTransition'
 
-import { Moon, Sun, Plus } from 'lucide-react'
-import './App.css'
+import { 
+  Moon, 
+  Sun, 
+  Plus, 
+  BarChart3, 
+  List, 
+  TrendingUp, 
+  Target, 
+  Tag, 
+  Wallet, 
+  Bell, 
+  HardDrive, 
+  Download,
+  Palette
+} from 'lucide-react'
+import './styles/apple-theme.css'
 import './mobile.css'
 import './styles/animations.css'
+import './styles/apple-animations.css'
+import './styles/apple-transitions.css'
 
 function AppContent() {
   const { isDark, toggleTheme } = useTheme()
@@ -34,16 +57,16 @@ function AppContent() {
   const [toasts, setToasts] = useState([])
 
   const tabs = [
-    { id: 'dashboard', label: 'Главная', icon: '📊' },
-    { id: 'transactions', label: 'Транзакции', icon: '📝' },
-    { id: 'statistics', label: 'Статистика', icon: '📈' },
-    { id: 'goals', label: 'Цели', icon: '🎯' },
-    { id: 'categories', label: 'Категории', icon: '🏷️' },
-    { id: 'budgets', label: 'Бюджеты', icon: '💰' },
-    { id: 'notifications', label: 'Уведомления', icon: '🔔' },
-    { id: 'backup', label: 'Резервные копии', icon: '💾' },
-    { id: 'export', label: 'Экспорт', icon: '📤' },
-    { id: 'demo', label: 'Демо', icon: '🎨' }
+    { id: 'dashboard', label: 'Главная', icon: <BarChart3 size={20} /> },
+    { id: 'transactions', label: 'Транзакции', icon: <List size={20} /> },
+    { id: 'statistics', label: 'Статистика', icon: <TrendingUp size={20} /> },
+    { id: 'goals', label: 'Цели', icon: <Target size={20} /> },
+    { id: 'categories', label: 'Категории', icon: <Tag size={20} /> },
+    { id: 'budgets', label: 'Бюджеты', icon: <Wallet size={20} /> },
+    { id: 'notifications', label: 'Уведомления', icon: <Bell size={20} /> },
+    { id: 'backup', label: 'Резервные копии', icon: <HardDrive size={20} /> },
+    { id: 'export', label: 'Экспорт', icon: <Download size={20} /> },
+    { id: 'demo', label: 'Демо', icon: <Palette size={20} /> }
   ]
 
   // Keyboard shortcuts
@@ -99,206 +122,172 @@ function AppContent() {
   const showToast = (message, type = 'info') => {
     const id = Date.now()
     setToasts(prev => [...prev, { id, message, type }])
+    setTimeout(() => removeToast(id), 5000)
   }
 
   const removeToast = (id) => {
     setToasts(prev => prev.filter(toast => toast.id !== id))
   }
 
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard':
+        return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+      case 'transactions':
+        return <TransactionList onEditTransaction={handleEditTransaction} />
+      case 'statistics':
+        return <Statistics />
+      case 'goals':
+        return <GoalManager />
+      case 'categories':
+        return <CategoryManager />
+      case 'budgets':
+        return <BudgetAlertManager />
+      case 'notifications':
+        return <NotificationManager />
+      case 'backup':
+        return <BackupManager />
+      case 'export':
+        return <ExportManager />
+      case 'demo':
+        return <AnimationDemo />
+      default:
+        return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+    }
+  }
+
   return (
-    <ErrorBoundary>
-      <TelegramProvider>
-        <div className="app">
+    <div className={`app ${isDark ? 'dark' : ''}`}>
+      <header className="app-header">
+        <h1>GB Money Tracker</h1>
+        <button 
+          className="theme-toggle" 
+          onClick={toggleTheme}
+          aria-label="Переключить тему"
+        >
+          {isDark ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
+      </header>
 
-          
-          <header className="app-header">
-            <h1>💰 GB Money Tracker</h1>
-            <AnimatedButton
-              variant="outline"
-              size="small"
-              onClick={toggleTheme}
-              title={`Переключить на ${isDark ? 'светлую' : 'темную'} тему`}
-              className="theme-toggle"
-              icon={isDark ? <Sun size={20} /> : <Moon size={20} />}
-            />
-          </header>
-
-          <main className="app-main">
-            <AnimatedTransition 
-              isVisible={activeTab === 'dashboard'} 
-              direction="right"
-              animationType="fade"
-              duration={0.4}
+      <nav className="app-nav">
+        <div className="nav-tabs">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
+              onClick={() => setActiveTab(tab.id)}
             >
-              {activeTab === 'dashboard' && (
-                <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
-              )}
-            </AnimatedTransition>
-            
-            <AnimatedTransition 
-              isVisible={activeTab === 'transactions'} 
-              direction="right"
-              animationType="slide"
-              duration={0.3}
-            >
-              {activeTab === 'transactions' && (
-                <TransactionList onEditTransaction={handleEditTransaction} />
-              )}
-            </AnimatedTransition>
-            
-            <AnimatedTransition 
-              isVisible={activeTab === 'statistics'} 
-              direction="right"
-              animationType="scale"
-              duration={0.4}
-            >
-              {activeTab === 'statistics' && (
-                <Statistics />
-              )}
-            </AnimatedTransition>
-
-            <AnimatedTransition 
-              isVisible={activeTab === 'goals'} 
-              direction="right"
-              animationType="parallax"
-              duration={0.5}
-            >
-              {activeTab === 'goals' && (
-                <GoalManager />
-              )}
-            </AnimatedTransition>
-
-            <AnimatedTransition 
-              isVisible={activeTab === 'categories'} 
-              direction="right"
-              animationType="slide"
-              duration={0.3}
-            >
-              {activeTab === 'categories' && (
-                <CategoryManager />
-              )}
-            </AnimatedTransition>
-
-            <AnimatedTransition 
-              isVisible={activeTab === 'budgets'} 
-              direction="right"
-              animationType="fade"
-              duration={0.4}
-            >
-              {activeTab === 'budgets' && (
-                <BudgetAlertManager />
-              )}
-            </AnimatedTransition>
-
-            <AnimatedTransition 
-              isVisible={activeTab === 'notifications'} 
-              direction="right"
-              animationType="scale"
-              duration={0.4}
-            >
-              {activeTab === 'notifications' && (
-                <NotificationManager />
-              )}
-            </AnimatedTransition>
-
-            <AnimatedTransition 
-              isVisible={activeTab === 'backup'} 
-              direction="right"
-              animationType="slide"
-              duration={0.3}
-            >
-              {activeTab === 'backup' && (
-                <BackupManager />
-              )}
-            </AnimatedTransition>
-
-            <AnimatedTransition 
-              isVisible={activeTab === 'export'} 
-              direction="right"
-              animationType="fade"
-              duration={0.4}
-            >
-              {activeTab === 'export' && (
-                <DataExporter />
-              )}
-            </AnimatedTransition>
-
-            <AnimatedTransition 
-              isVisible={activeTab === 'demo'} 
-              direction="right"
-              animationType="parallax"
-              duration={0.5}
-            >
-              {activeTab === 'demo' && (
-                <AnimationDemo />
-              )}
-            </AnimatedTransition>
-          </main>
-
-          <nav className="app-nav">
-            {tabs.map((tab, index) => (
-              <AnimatedButton
-                key={tab.id}
-                variant={activeTab === tab.id ? 'primary' : 'secondary'}
-                size="small"
-                onClick={() => setActiveTab(tab.id)}
-                className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
-                icon={<span className="nav-icon">{tab.icon}</span>}
-                iconPosition="left"
-              >
-                <span className="nav-label">{tab.label}</span>
-              </AnimatedButton>
-            ))}
-          </nav>
-
-          {showTransactionForm && (
-            <TransactionForm 
-              onClose={() => setShowTransactionForm(false)}
-              onSuccess={handleTransactionSuccess}
-            />
-          )}
-
-          {editingTransaction && (
-            <TransactionEditForm
-              transaction={editingTransaction}
-              onClose={() => setEditingTransaction(null)}
-              onSuccess={handleTransactionSuccess}
-            />
-          )}
-
-          {/* Floating Action Button for mobile */}
-          <AnimatedButton
-            variant="primary"
-            size="large"
-            onClick={() => setShowTransactionForm(true)}
-            title="Добавить транзакцию"
-            aria-label="Добавить транзакцию"
-            className="floating-action-button"
-          >
-            <Plus size={24} />
-          </AnimatedButton>
-
-          {/* Toast уведомления */}
-          {toasts.map(toast => (
-            <AnimatedToast
-              key={toast.id}
-              message={toast.message}
-              type={toast.type}
-              onClose={() => removeToast(toast.id)}
-              position="top-right"
-            />
+              <span className="nav-icon">{tab.icon}</span>
+              <span className="nav-label">{tab.label}</span>
+            </button>
           ))}
         </div>
-      </TelegramProvider>
-    </ErrorBoundary>
+      </nav>
+
+      <main className="app-main">
+        <AppleTabTransition 
+          key={activeTab}
+          activeTab={activeTab}
+          tabId={activeTab}
+          direction="right"
+          duration={300}
+        >
+          {renderContent()}
+        </AppleTabTransition>
+      </main>
+
+      {/* Floating Action Button */}
+      <button
+        className="apple-button primary"
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          width: '56px',
+          height: '56px',
+          borderRadius: '50%',
+          boxShadow: 'var(--apple-shadow-lg)',
+          zIndex: 1000
+        }}
+        onClick={() => setShowTransactionForm(true)}
+        aria-label="Добавить транзакцию"
+      >
+        <Plus size={24} />
+      </button>
+
+      {/* Transaction Form Modal */}
+      {showTransactionForm && (
+        <div className="modal-overlay" onClick={() => setShowTransactionForm(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Новая транзакция</h2>
+              <button 
+                className="close-button" 
+                onClick={() => setShowTransactionForm(false)}
+                aria-label="Закрыть"
+              >
+                <Plus size={20} style={{ transform: 'rotate(45deg)' }} />
+              </button>
+            </div>
+            <div className="modal-body">
+              <TransactionForm 
+                onSubmit={handleTransactionSuccess}
+                onCancel={() => setShowTransactionForm(false)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Transaction Modal */}
+      {editingTransaction && (
+        <div className="modal-overlay" onClick={() => setEditingTransaction(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Редактировать транзакцию</h2>
+              <button 
+                className="close-button" 
+                onClick={() => setEditingTransaction(null)}
+                aria-label="Закрыть"
+              >
+                <Plus size={20} style={{ transform: 'rotate(45deg)' }} />
+              </button>
+            </div>
+            <div className="modal-body">
+              <TransactionEditForm 
+                transaction={editingTransaction}
+                onSubmit={handleTransactionSuccess}
+                onCancel={() => setEditingTransaction(null)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast notifications */}
+      <div style={{ position: 'fixed', top: '100px', right: '24px', zIndex: 1001 }}>
+        {toasts.map(toast => (
+          <AnimatedToast
+            key={toast.id}
+            message={toast.message}
+            type={toast.type}
+            onClose={() => removeToast(toast.id)}
+          />
+        ))}
+      </div>
+    </div>
   )
 }
 
 function App() {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <TelegramProvider>
+          <AppContent />
+        </TelegramProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   )
 }
 
