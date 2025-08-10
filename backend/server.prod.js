@@ -11,8 +11,7 @@ app.use(cors({
   origin: [
     'http://localhost:5176',
     'http://localhost:8081',
-    'https://gb-money-tracker-frontend.onrender.com',
-    'https://*.onrender.com'
+    'https://gbmt.gbdev.ru'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors({
   origin: [
     'http://localhost:5176',
+    'http://localhost:8081/',
     'https://gbmt.gbdev.ru'
   ],
   credentials: true,

@@ -19,7 +19,6 @@ import AnimatedButton from './components/AnimatedButton'
 import AnimatedCard from './components/AnimatedCard'
 import AnimatedList from './components/AnimatedList'
 import AnimatedToast from './components/AnimatedToast'
-import AnimationDemo from './components/AnimationDemo'
 import ApplePageTransition, { 
   AppleTabTransition, 
   AppleStaggeredList, 
@@ -40,8 +39,7 @@ import {
   Wallet, 
   Bell, 
   HardDrive, 
-  Download,
-  Palette
+  Download
 } from 'lucide-react'
 import './styles/apple-theme.css'
 import './mobile.css'
@@ -65,8 +63,7 @@ function AppContent() {
     { id: 'budgets', label: 'Бюджеты', icon: <Wallet size={20} /> },
     { id: 'notifications', label: 'Уведомления', icon: <Bell size={20} /> },
     { id: 'backup', label: 'Резервные копии', icon: <HardDrive size={20} /> },
-    { id: 'export', label: 'Экспорт', icon: <Download size={20} /> },
-    { id: 'demo', label: 'Демо', icon: <Palette size={20} /> }
+    { id: 'export', label: 'Экспорт', icon: <Download size={20} /> }
   ]
 
   // Keyboard shortcuts
@@ -149,8 +146,6 @@ function AppContent() {
         return <BackupManager />
       case 'export':
         return <ExportManager />
-      case 'demo':
-        return <AnimationDemo />
       default:
         return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
     }
