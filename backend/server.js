@@ -1253,6 +1253,53 @@ app.get('/api/notification-settings', (req, res) => {
   }
 });
 
+// Delete notification
+app.delete('/api/notifications/:notificationId', (req, res) => {
+  try {
+    const { notificationId } = req.params;
+    const { user_id } = req.body;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    const stmt = db.prepare('DELETE FROM budget_alerts WHERE id = ? AND user_id = ?');
+    const result = stmt.run(notificationId, user_id);
+    
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Уведомление не найдено' });
+    }
+    
+    res.json({ success: true, message: 'Уведомление удалено' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Mark notification as read
+app.put('/api/notifications/:notificationId/read', (req, res) => {
+  try {
+    const { notificationId } = req.params;
+    const { user_id } = req.body;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // For budget alerts, we can mark them as "processed" by updating enabled status
+    const stmt = db.prepare('UPDATE budget_alerts SET enabled = 0 WHERE id = ? AND user_id = ?');
+    const result = stmt.run(notificationId, user_id);
+    
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Уведомление не найдено' });
+    }
+    
+    res.json({ success: true, message: 'Уведомление отмечено как прочитанное' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   try {

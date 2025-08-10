@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Bell, Settings, X, Check, AlertTriangle, Info } from 'lucide-react'
 import { hapticFeedback } from '../utils/haptic'
+import { getBaseURL } from '../config/api'
+import { useTelegram } from '../contexts/TelegramContext'
 
 const NotificationManager = () => {
+  const { user } = useTelegram()
   const [notifications, setNotifications] = useState([])
   const [showSettings, setShowSettings] = useState(false)
   const [settings, setSettings] = useState({
@@ -14,16 +17,20 @@ const NotificationManager = () => {
   })
 
   useEffect(() => {
-    loadNotifications()
-    loadSettings()
-  }, [])
+    if (user) {
+      loadNotifications()
+      loadSettings()
+    }
+  }, [user])
 
   const loadNotifications = async () => {
+    if (!user) return
+    
     try {
-      const response = await fetch('/api/notifications')
+      const response = await fetch(`${getBaseURL()}/api/notifications?user_id=${user.id}`)
       if (response.ok) {
         const data = await response.json()
-        setNotifications(data)
+        setNotifications(data.notifications || [])
       }
     } catch (error) {
       console.error('Error loading notifications:', error)
@@ -31,11 +38,13 @@ const NotificationManager = () => {
   }
 
   const loadSettings = async () => {
+    if (!user) return
+    
     try {
-      const response = await fetch('/api/notification-settings')
+      const response = await fetch(`${getBaseURL()}/api/notification-settings?user_id=${user.id}`)
       if (response.ok) {
         const data = await response.json()
-        setSettings(data)
+        setSettings(data.settings || [])
       }
     } catch (error) {
       console.error('Error loading settings:', error)
@@ -43,9 +52,15 @@ const NotificationManager = () => {
   }
 
   const markAsRead = async (notificationId) => {
+    if (!user) return
+    
     try {
-      const response = await fetch(`/api/notifications/${notificationId}/read`, {
-        method: 'PUT'
+      const response = await fetch(`${getBaseURL()}/api/notifications/${notificationId}/read`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: user.id })
       })
 
       if (response.ok) {
@@ -60,9 +75,15 @@ const NotificationManager = () => {
   }
 
   const deleteNotification = async (notificationId) => {
+    if (!user) return
+    
     try {
-      const response = await fetch(`/api/notifications/${notificationId}`, {
-        method: 'DELETE'
+      const response = await fetch(`${getBaseURL()}/api/notifications/${notificationId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: user.id })
       })
 
       if (response.ok) {
@@ -76,7 +97,7 @@ const NotificationManager = () => {
 
   const updateSettings = async (newSettings) => {
     try {
-      const response = await fetch('/api/notification-settings', {
+      const response = await fetch(`${getBaseURL()}/api/notification-settings`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
