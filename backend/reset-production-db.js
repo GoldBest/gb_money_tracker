@@ -6,13 +6,22 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-async function setupDatabase() {
+async function resetDatabase() {
   try {
-    console.log('🔌 Подключаемся к PostgreSQL...');
+    console.log('🗑️ Сбрасываем базу данных...');
     
-    // Создаем таблицы
+    // Удаляем существующие таблицы
+    await pool.query('DROP TABLE IF EXISTS budget_alerts CASCADE;');
+    await pool.query('DROP TABLE IF EXISTS goals CASCADE;');
+    await pool.query('DROP TABLE IF EXISTS transactions CASCADE;');
+    await pool.query('DROP TABLE IF EXISTS categories CASCADE;');
+    await pool.query('DROP TABLE IF EXISTS users CASCADE;');
+    
+    console.log('✅ Существующие таблицы удалены');
+    
+    // Создаем таблицы заново
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE users (
         id SERIAL PRIMARY KEY,
         telegram_id BIGINT UNIQUE NOT NULL,
         username VARCHAR(255),
@@ -23,7 +32,7 @@ async function setupDatabase() {
     `);
     
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS categories (
+      CREATE TABLE categories (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         type VARCHAR(50) NOT NULL CHECK (type IN ('income', 'expense')),
@@ -35,21 +44,21 @@ async function setupDatabase() {
     `);
     
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS transactions (
+      CREATE TABLE transactions (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         amount DECIMAL(10,2) NOT NULL,
         type VARCHAR(50) NOT NULL CHECK (type IN ('income', 'expense')),
         category_id INTEGER REFERENCES categories(id) ON DELETE SET NULL,
         description TEXT,
-        date DATE NOT NULL,
+        date DATE NOT NULL DEFAULT CURRENT_DATE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
     
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS budget_alerts (
+      CREATE TABLE budget_alerts (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
@@ -64,7 +73,7 @@ async function setupDatabase() {
     `);
     
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS goals (
+      CREATE TABLE goals (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         name VARCHAR(255) NOT NULL,
@@ -78,30 +87,30 @@ async function setupDatabase() {
     `);
     
     // Создаем индексы для производительности
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON transactions(user_id);');
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);');
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_transactions_type ON transactions(type);');
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_categories_user_id ON categories(user_id);');
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_budget_alerts_user_id ON budget_alerts(user_id);');
-    await pool.query('CREATE INDEX IF NOT EXISTS idx_goals_user_id ON goals(user_id);');
+    await pool.query('CREATE INDEX idx_transactions_user_id ON transactions(user_id);');
+    await pool.query('CREATE INDEX idx_transactions_date ON transactions(date);');
+    await pool.query('CREATE INDEX idx_transactions_type ON transactions(type);');
+    await pool.query('CREATE INDEX idx_categories_user_id ON categories(user_id);');
+    await pool.query('CREATE INDEX idx_budget_alerts_user_id ON budget_alerts(user_id);');
+    await pool.query('CREATE INDEX idx_goals_user_id ON goals(user_id);');
     
-    console.log('✅ База данных успешно настроена!');
+    console.log('✅ База данных успешно сброшена и пересоздана!');
     console.log('📊 Созданы таблицы: users, categories, transactions, budget_alerts, goals');
     console.log('🚀 Индексы созданы для оптимизации производительности');
     
   } catch (error) {
-    console.error('❌ Ошибка при настройке базы данных:', error);
+    console.error('❌ Ошибка при сбросе базы данных:', error);
     throw error;
   } finally {
     await pool.end();
   }
 }
 
-// Запускаем настройку, если файл вызван напрямую
+// Запускаем сброс, если файл вызван напрямую
 if (require.main === module) {
-  setupDatabase()
+  resetDatabase()
     .then(() => {
-      console.log('🎉 Настройка завершена успешно!');
+      console.log('🎉 Сброс завершен успешно!');
       process.exit(0);
     })
     .catch((error) => {
@@ -110,4 +119,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = setupDatabase;
+module.exports = resetDatabase;
