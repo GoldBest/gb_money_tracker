@@ -60,6 +60,28 @@ BOT_TOKEN=your_bot_token_here
 DATABASE_URL=postgresql://user:pass@host:port/db
 ```
 
+## 🐳 Docker для продакшн
+
+Проект использует Docker для контейнеризации:
+
+- **`docker-compose.prod.yml`** - продакшн конфигурация
+- **`Dockerfile`** - сборка backend контейнера
+- **Nginx** - веб-сервер для frontend
+
+### Команды Docker на сервере:
+```bash
+# Запуск приложения
+docker-compose -f docker-compose.prod.yml up -d
+
+# Просмотр логов
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Обновление приложения
+git pull origin main
+docker-compose -f docker-compose.prod.yml down
+docker-compose -f docker-compose.prod.yml up -d --build
+```
+
 ## 📚 Подробная инструкция:
 `docs/YANDEX_DEPLOYMENT_GUIDE.md`
 

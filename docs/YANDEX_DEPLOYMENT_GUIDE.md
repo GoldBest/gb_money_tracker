@@ -15,6 +15,13 @@
 - **Интеграция**: Хорошая интеграция с российскими сервисами
 - **Поддержка**: Русскоязычная поддержка
 
+## 🐳 Docker преимущества
+
+- **Консистентность**: Одинаковая среда разработки и продакшн
+- **Простота**: Легкий деплой и обновление
+- **Масштабируемость**: Простое масштабирование сервисов
+- **Изоляция**: Каждый сервис работает в своем контейнере
+
 ## ⚙️ Предварительные требования
 
 ### 1. Установка Yandex Cloud CLI
@@ -34,7 +41,7 @@ yc init
 # Следуйте инструкциям для настройки профиля
 ```
 
-### 3. Установка Docker
+### 3. Установка Docker (для локальной разработки)
 
 ```bash
 # macOS
@@ -187,7 +194,7 @@ sudo certbot --nginx -d your-domain.com
 
 ## 📊 Мониторинг и логирование
 
-### 1. Просмотр логов
+### 1. Просмотр логов Docker
 
 ```bash
 # Логи backend
@@ -198,12 +205,15 @@ docker-compose -f docker-compose.prod.yml logs frontend
 
 # Логи Nginx
 docker exec gb-money-tracker-frontend tail -f /var/log/nginx/access.log
+
+# Все логи
+docker-compose -f docker-compose.prod.yml logs -f
 ```
 
 ### 2. Мониторинг ресурсов
 
 ```bash
-# Использование ресурсов
+# Использование ресурсов Docker
 docker stats
 
 # Дисковое пространство
@@ -222,7 +232,7 @@ free -h
 cat > update.sh << 'EOF'
 #!/bin/bash
 cd /home/ubuntu/tg-money-miniapp
-git pull origin master
+git pull origin main
 cd frontend && npm run build && cd ..
 docker-compose -f docker-compose.prod.yml down
 docker-compose -f docker-compose.prod.yml up -d --build
@@ -238,7 +248,23 @@ chmod +x update.sh
 crontab -e
 
 # Обновление каждый день в 3:00
-0 3 * * * /home/ubuntu/tg-money-miniapp/update.sh
+0 3 * * * /home/ubuntu/tg-money-tracker/update.sh
+```
+
+### 3. Ручное обновление
+
+```bash
+# Остановка приложения
+docker-compose -f docker-compose.prod.yml down
+
+# Обновление кода
+git pull origin main
+
+# Пересборка frontend
+cd frontend && npm run build && cd ..
+
+# Запуск с пересборкой
+docker-compose -f docker-compose.prod.yml up -d --build
 ```
 
 ## 🚨 Устранение неполадок
@@ -246,7 +272,7 @@ crontab -e
 ### 1. Проблемы с подключением к БД
 
 ```bash
-# Проверяем подключение
+# Проверяем подключение через Docker
 docker exec gb-money-tracker-backend node -e "
 const { Client } = require('pg');
 const client = new Client(process.env.DATABASE_URL);
@@ -275,6 +301,21 @@ docker system prune -a
 
 # Перезапуск Docker
 sudo systemctl restart docker
+
+# Проверка статуса контейнеров
+docker-compose -f docker-compose.prod.yml ps
+```
+
+### 4. Проблемы с портами
+
+```bash
+# Проверка занятых портов
+sudo netstat -tlnp | grep :80
+sudo netstat -tlnp | grep :443
+
+# Остановка процессов на портах
+sudo fuser -k 80/tcp
+sudo fuser -k 443/tcp
 ```
 
 ## 💰 Стоимость
@@ -291,6 +332,7 @@ sudo systemctl restart docker
 - [Managed PostgreSQL](https://cloud.yandex.ru/docs/managed-postgresql/)
 - [Compute Instance](https://cloud.yandex.ru/docs/compute/)
 - [Docker Documentation](https://docs.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
 ## 🎯 Следующие шаги
 
@@ -299,5 +341,24 @@ sudo systemctl restart docker
 2. **Настройте мониторинг** (Prometheus + Grafana)
 3. **Настройте backup** базы данных
 4. **Настройте CI/CD** для автоматического деплоя
+
+## 🐳 Docker команды для продакшн
+
+```bash
+# Основные команды
+docker-compose -f docker-compose.prod.yml up -d          # Запуск
+docker-compose -f docker-compose.prod.yml down           # Остановка
+docker-compose -f docker-compose.prod.yml restart        # Перезапуск
+docker-compose -f docker-compose.prod.yml logs -f        # Логи
+docker-compose -f docker-compose.prod.yml ps             # Статус
+
+# Обновление
+docker-compose -f docker-compose.prod.yml pull           # Pull образов
+docker-compose -f docker-compose.prod.yml up -d --build  # Пересборка
+
+# Отладка
+docker-compose -f docker-compose.prod.yml exec backend bash  # Вход в backend
+docker-compose -f docker-compose.prod.yml exec frontend sh   # Вход в frontend
+```
 
 **Удачи с деплоем! 🚀**

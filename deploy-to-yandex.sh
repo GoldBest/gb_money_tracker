@@ -37,6 +37,12 @@ if [ ! -f "nginx.conf" ]; then
     exit 1
 fi
 
+# Проверяем docker-compose.prod.yml
+if [ ! -f "docker-compose.prod.yml" ]; then
+    echo "❌ Ошибка: docker-compose.prod.yml не найден"
+    exit 1
+fi
+
 echo "✅ Все проверки пройдены успешно!"
 
 # Создаем .env.example для production
@@ -91,9 +97,22 @@ echo ""
 echo "5. Создайте Compute Instance:"
 echo "   yc compute instance create --name gb-money-tracker"
 echo ""
-echo "6. Запустите приложение:"
+echo "6. На сервере установите Docker и запустите приложение:"
+echo "   curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh"
+echo "   git clone https://github.com/your-username/tg-money-miniapp.git"
+echo "   cd tg-money-miniapp"
 echo "   docker-compose -f docker-compose.prod.yml up -d"
 echo ""
+echo "🐳 Docker команды для управления:"
+echo "   # Просмотр логов"
+echo "   docker-compose -f docker-compose.prod.yml logs -f"
+echo ""
+echo "   # Обновление приложения"
+echo "   git pull origin main"
+echo "   docker-compose -f docker-compose.prod.yml down"
+echo "   docker-compose -f docker-compose.prod.yml up -d --build"
+echo ""
 echo "📚 Подробная инструкция: docs/YANDEX_DEPLOYMENT_GUIDE.md"
+echo "🐳 Docker разработка: docs/DOCKER_DEVELOPMENT.md"
 echo ""
 echo "💡 После деплоя не забудьте добавить BOT_TOKEN в переменные окружения!"
