@@ -142,10 +142,12 @@ curl https://gb-money-tracker-frontend.onrender.com
 
 ## 📈 Масштабирование
 
-### Free Plan Limitations
+### Starter Plan Features
 - **Backend**: 750 часов/месяц
 - **Frontend**: 100 GB bandwidth/месяц
 - **Database**: 1 GB storage
+- **Custom Domains**: Поддерживаются
+- **SSL Certificates**: Автоматически
 
 ### Upgrade Options
 - **Paid Plans**: От $7/месяц

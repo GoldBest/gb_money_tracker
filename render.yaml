@@ -3,7 +3,7 @@ services:
   - type: web
     name: gb-money-tracker-backend
     env: node
-    plan: free
+    plan: starter
     buildCommand: cd backend && npm install
     startCommand: cd backend && npm install pg && node server.prod.js
     envVars:
@@ -22,7 +22,7 @@ services:
   - type: web
     name: gb-money-tracker-frontend
     env: static
-    plan: free
+    plan: starter
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     envVars:
@@ -33,4 +33,4 @@ services:
 databases:
   - name: gb-money-tracker-db
     databaseName: gbmoneytracker
-    plan: free
+    plan: starter
