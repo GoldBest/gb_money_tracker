@@ -11,7 +11,7 @@ import {
   PiggyBank
 } from 'lucide-react'
 import NotificationManager from './NotificationManager'
-import PullToRefresh from './PullToRefresh'
+
 import { AppleFadeIn, AppleAnimatedCounter, AppleStaggeredList } from './ApplePageTransition'
 import { 
   AppleButton, 
@@ -67,10 +67,9 @@ const Dashboard = ({ onAddTransaction }) => {
 
   // Пустое состояние
   if (totalTransactions === 0) {
-    return (
-      <PullToRefresh onRefresh={loadStats}>
-        <div className="empty-state">
-          <AppleFadeIn delay={100}>
+      return (
+    <div className="empty-state">
+      <AppleFadeIn delay={100}>
             <div className="apple-card large text-center">
               <div className="mb-4">
                 <Wallet size={64} style={{ color: 'var(--apple-accent-blue)', opacity: 0.8 }} />
@@ -116,15 +115,13 @@ const Dashboard = ({ onAddTransaction }) => {
             </div>
           </AppleFadeIn>
         </div>
-      </PullToRefresh>
     )
   }
 
   return (
-    <PullToRefresh onRefresh={loadStats}>
-      <div className="dashboard">
-        {/* Balance Card */}
-        <AppleCard variant="gradient" size="large" className="mb-4">
+    <div className="dashboard">
+      {/* Balance Card */}
+      <AppleCard variant="gradient" size="large" className="mb-4">
           <h2>Текущий баланс</h2>
           <div className={`balance-amount ${balance >= 0 ? 'positive' : 'negative'}`}>
             {balance >= 0 ? '+' : ''}{balance.toLocaleString('ru-RU')} ₽
@@ -278,7 +275,6 @@ const Dashboard = ({ onAddTransaction }) => {
         {/* Notification Manager */}
         <NotificationManager />
       </div>
-    </PullToRefresh>
   )
 }
 

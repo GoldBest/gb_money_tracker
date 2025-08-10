@@ -85,30 +85,7 @@
     width: 100%;
   }
   
-  /* Floating action button for quick access */
-  .floating-action-button {
-    position: fixed;
-    bottom: 5.5rem;
-    right: 1rem;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    box-shadow: var(--apple-shadow-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    z-index: 999;
-  }
   
-  .floating-action-button:active {
-    transform: scale(0.95);
-    box-shadow: var(--apple-shadow-md);
-  }
   
   /* Settings menu mobile optimizations */
   .settings-menu {
@@ -492,14 +469,7 @@
     font-size: 0.625rem;
   }
   
-  /* Adjust floating action button position */
-  .floating-action-button {
-    bottom: 4.5rem;
-    right: 0.75rem;
-    width: 48px;
-    height: 48px;
-    font-size: 1.25rem;
-  }
+
 }
 
 /* Tablet optimizations - FULL WIDTH */
@@ -524,10 +494,7 @@
     width: 100%;
   }
   
-  /* Show floating action button on tablets */
-  .floating-action-button {
-    display: flex;
-  }
+
 }
 
 /* High DPI and retina displays */
@@ -603,10 +570,7 @@
 .edit-button:focus,
 .delete-button:focus,
 .theme-toggle:focus,
-.floating-action-button:focus {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-}
+
 
 /* Loading states for better UX */
 .loading-overlay {
@@ -633,43 +597,7 @@
   animation: spin 1s linear infinite;
 }
 
-/* Pull to refresh improvements - FULL WIDTH */
-.pull-to-refresh-container {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
 
-.refresh-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  background: var(--bg-primary);
-  transform: translateY(-100%);
-  transition: transform 0.3s ease;
-  z-index: 100;
-  border-bottom: 1px solid var(--border-color);
-  width: 100%;
-}
-
-.refresh-indicator.active {
-  transform: translateY(0);
-}
-
-.refresh-icon {
-  margin-right: 0.5rem;
-  color: var(--accent-color);
-}
-
-.refresh-text {
-  color: var(--text-secondary);
-  font-size: 0.875rem;
-}
 
 /* Swipe gestures support - FULL WIDTH */
 .swipeable {

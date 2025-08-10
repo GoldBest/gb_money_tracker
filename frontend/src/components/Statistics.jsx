@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTelegram } from '../contexts/TelegramContext'
 import { TrendingUp, TrendingDown, Calendar, Download } from 'lucide-react'
 import { CategoryPieChart, TrendLineChart, ComparisonBarChart } from './Charts'
-import PullToRefresh from './PullToRefresh'
+
 const Statistics = () => {
   const { user, api } = useTelegram()
   const [stats, setStats] = useState(null)
@@ -153,8 +153,7 @@ const Statistics = () => {
   const comparisonData = prepareComparisonData()
 
   return (
-    <PullToRefresh onRefresh={loadStats}>
-      <div className="statistics">
+    <div className="statistics">
         <div className="stats-header">
           <h2>Статистика</h2>
           <div className="stats-actions">
@@ -283,8 +282,7 @@ const Statistics = () => {
           <p>Добавьте транзакции, чтобы увидеть статистику</p>
         </div>
       )}
-      </div>
-    </PullToRefresh>
+    </div>
   )
 }
 

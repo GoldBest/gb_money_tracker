@@ -199,40 +199,6 @@
   transform: rotate(180deg);
 }
 
-/* Анимации для плавающей кнопки */
-.floating-action-button {
-  animation: bounce 2s infinite;
-}
 
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-}
 
-/* Анимации для pull-to-refresh */
-.pull-to-refresh {
-  transition: transform 0.2s ease;
-}
 
-.pull-to-refresh.refreshing {
-  animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}

@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import PullToRefresh from './PullToRefresh'
+
 
 const TransactionList = ({ onEditTransaction }) => {
   const { user, api } = useTelegram()
@@ -119,8 +119,7 @@ const TransactionList = ({ onEditTransaction }) => {
   }
 
   return (
-    <PullToRefresh onRefresh={loadTransactions}>
-      <div className="transaction-list">
+    <div className="transaction-list">
         {/* Header */}
         <div className="apple-card mb-4">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--apple-spacing-md)' }}>
@@ -280,7 +279,6 @@ const TransactionList = ({ onEditTransaction }) => {
           </div>
         )}
       </div>
-    </PullToRefresh>
   )
 }
 

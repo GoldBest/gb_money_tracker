@@ -231,24 +231,7 @@ function AppContent() {
         </AppleTabTransition>
       </main>
 
-      {/* Floating Action Button */}
-      <button
-        className="apple-button primary"
-        style={{
-          position: 'fixed',
-          bottom: '24px',
-          right: '24px',
-          width: '56px',
-          height: '56px',
-          borderRadius: '50%',
-          boxShadow: 'var(--apple-shadow-lg)',
-          zIndex: 1000
-        }}
-        onClick={() => setShowTransactionForm(true)}
-        aria-label="Добавить транзакцию"
-      >
-        <Plus size={24} />
-      </button>
+
 
       {/* Transaction Form Modal */}
       {showTransactionForm && (

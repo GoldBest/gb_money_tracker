@@ -361,10 +361,7 @@ select:focus {
   -webkit-touch-callout: none;
 }
 
-.pull-to-refresh {
-  touch-action: pan-y;
-  overflow: hidden;
-}
+
 
 /* ===== ACCESSIBILITY ===== */
 
