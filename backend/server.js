@@ -69,17 +69,50 @@ db.exec(`
   );
 `);
 
-// Default categories
+// Default categories for new users
 const defaultCategories = [
+  // Income categories
   { name: 'Зарплата', type: 'income', color: '#10B981' },
+  { name: 'Подработка', type: 'income', color: '#059669' },
+  { name: 'Инвестиции', type: 'income', color: '#047857' },
+  { name: 'Подарки', type: 'income', color: '#065F46' },
+  { name: 'Возврат', type: 'income', color: '#064E3B' },
+  { name: 'Проценты', type: 'income', color: '#0D9488' },
+  { name: 'Продажи', type: 'income', color: '#14B8A6' },
+  
+  // Essential expense categories
   { name: 'Продукты', type: 'expense', color: '#EF4444' },
   { name: 'Транспорт', type: 'expense', color: '#F59E0B' },
-  { name: 'Развлечения', type: 'expense', color: '#8B5CF6' },
+  { name: 'Коммунальные', type: 'expense', color: '#DC2626' },
+  { name: 'Интернет/Телефон', type: 'expense', color: '#B91C1C' },
   { name: 'Здоровье', type: 'expense', color: '#06B6D4' },
+  { name: 'Лекарства', type: 'expense', color: '#0891B2' },
+  { name: 'Страховка', type: 'expense', color: '#0EA5E9' },
+  
+  // Lifestyle expense categories
+  { name: 'Развлечения', type: 'expense', color: '#8B5CF6' },
+  { name: 'Рестораны', type: 'expense', color: '#7C3AED' },
+  { name: 'Кафе', type: 'expense', color: '#9333EA' },
   { name: 'Одежда', type: 'expense', color: '#EC4899' },
-  { name: 'Дом', type: 'expense', color: '#84CC16' },
-  { name: 'Другое', type: 'income', color: '#6B7280' },
-  { name: 'Другое', type: 'expense', color: '#6B7280' }
+  { name: 'Красота', type: 'expense', color: '#DB2777' },
+  { name: 'Спорт', type: 'expense', color: '#BE185D' },
+  { name: 'Кино/Театр', type: 'expense', color: '#A855F7' },
+  { name: 'Хобби', type: 'expense', color: '#C084FC' },
+  
+  // Home and other categories
+  { name: 'Дом/Ремонт', type: 'expense', color: '#84CC16' },
+  { name: 'Мебель', type: 'expense', color: '#65A30D' },
+  { name: 'Техника', type: 'expense', color: '#4D7C0F' },
+  { name: 'Образование', type: 'expense', color: '#3F6212' },
+  { name: 'Книги', type: 'expense', color: '#166534' },
+  { name: 'Путешествия', type: 'expense', color: '#15803D' },
+  { name: 'Отель', type: 'expense', color: '#16A34A' },
+  { name: 'Подарки', type: 'expense', color: '#22C55E' },
+  { name: 'Благотворительность', type: 'expense', color: '#4ADE80' },
+  
+  // Other categories
+  { name: 'Прочее', type: 'income', color: '#6B7280' },
+  { name: 'Прочее', type: 'expense', color: '#6B7280' }
 ];
 
 // API Routes
@@ -128,6 +161,61 @@ app.post('/api/categories', (req, res) => {
     const result = stmt.run(name, type, color, user_id);
     const category = db.prepare('SELECT * FROM categories WHERE id = ?').get(result.lastInsertRowid);
     res.json(category);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create default categories for existing user
+app.post('/api/users/:userId/categories/default', (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Check if user exists
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+    
+    // Check if user already has categories
+    const existingCategories = db.prepare('SELECT COUNT(*) as count FROM categories WHERE user_id = ?').get(userId);
+    if (existingCategories.count > 0) {
+      return res.status(400).json({ 
+        error: 'У пользователя уже есть категории',
+        message: 'Базовые категории создаются только для пользователей без существующих категорий'
+      });
+    }
+    
+    // Create default categories
+    const categoryStmt = db.prepare('INSERT INTO categories (name, type, color, user_id) VALUES (?, ?, ?, ?)');
+    const createdCategories = [];
+    
+    defaultCategories.forEach(category => {
+      const result = categoryStmt.run(category.name, category.type, category.color, userId);
+      const newCategory = db.prepare('SELECT * FROM categories WHERE id = ?').get(result.lastInsertRowid);
+      createdCategories.push(newCategory);
+    });
+    
+    res.json({
+      success: true,
+      message: `Создано ${createdCategories.length} базовых категорий`,
+      categories: createdCategories
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get default categories (for reference)
+app.get('/api/categories/default', (req, res) => {
+  try {
+    res.json({
+      success: true,
+      categories: defaultCategories,
+      total: defaultCategories.length,
+      income_count: defaultCategories.filter(c => c.type === 'income').length,
+      expense_count: defaultCategories.filter(c => c.type === 'expense').length
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -730,10 +818,17 @@ app.post('/api/backups/import', (req, res) => {
       const transactionStmt = db.prepare('INSERT INTO transactions (amount, description, type, category_id, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?)');
       backupData.transactions.forEach(transaction => {
         const newCategoryId = categoryMap.get(transaction.category_id);
-        newCategoryId,
-        user_id,
-        transaction.created_at
-      );
+        if (newCategoryId) {
+          transactionStmt.run(
+            transaction.amount,
+            transaction.description,
+            transaction.type,
+            newCategoryId,
+            user_id,
+            transaction.created_at
+          );
+        }
+      });
     });
     
     // Execute transaction
@@ -984,6 +1079,26 @@ app.patch('/api/budget-alerts/:alertId/toggle', (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  try {
+    // Check database connection
+    const dbCheck = db.prepare('SELECT 1').get();
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      database: 'connected',
+      port: PORT
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error', 
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
   }
 });
 

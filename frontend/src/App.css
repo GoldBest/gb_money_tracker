@@ -62,7 +62,7 @@ body {
 .app {
   width: 100%;
   max-width: 100%;
-  margin: 0 auto;
+  margin: 0;
   min-height: 100vh;
   background: var(--bg-primary);
   display: flex;
@@ -74,7 +74,8 @@ body {
 /* Mobile-first responsive design */
 @media (max-width: 768px) {
   .app {
-    padding-bottom: env(safe-area-inset-bottom);
+    padding: 0;
+    width: 100%;
   }
 }
 
@@ -86,6 +87,7 @@ body {
   box-shadow: var(--shadow);
   position: relative;
   z-index: 10;
+  width: 100%;
 }
 
 .theme-toggle {
@@ -116,7 +118,7 @@ body {
 
 .app-main {
   flex: 1;
-  padding: 1rem;
+  padding: 0;
   overflow-y: auto;
   width: 100%;
   -webkit-overflow-scrolling: touch;
@@ -126,13 +128,14 @@ body {
   display: flex;
   background: var(--bg-primary);
   border-top: 1px solid var(--border-color);
-  padding: 0.5rem;
+  padding: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   position: sticky;
   bottom: 0;
   z-index: 10;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 /* Enhanced mobile navigation */
@@ -155,6 +158,9 @@ body {
   /* Add bottom padding to main content to account for fixed nav */
   .app-main {
     padding-bottom: 5rem;
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
   }
 }
 
@@ -258,17 +264,19 @@ body {
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
+  padding: 0;
 }
 
 .balance-card {
   background: var(--accent-gradient);
   color: white;
   padding: 1.5rem;
-  border-radius: 1rem;
+  border-radius: 0;
   text-align: center;
   box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .balance-card::before {
@@ -315,6 +323,8 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
+  width: 100%;
+  padding: 0;
 }
 
 .stat-card {
@@ -423,9 +433,10 @@ body {
 .recent-categories {
   background: var(--bg-card);
   padding: 1.5rem;
-  border-radius: 0.75rem;
+  border-radius: 0;
   box-shadow: var(--shadow);
   border: 1px solid var(--border-color);
+  width: 100%;
 }
 
 .recent-categories h3 {
