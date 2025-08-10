@@ -39,7 +39,8 @@ import {
   Wallet, 
   Bell, 
   HardDrive, 
-  Download
+  Download,
+  Settings
 } from 'lucide-react'
 import './styles/apple-theme.css'
 import './mobile.css'
@@ -50,6 +51,7 @@ import './styles/apple-transitions.css'
 function AppContent() {
   const { isDark, toggleTheme } = useTheme()
   const [activeTab, setActiveTab] = useState('dashboard')
+  const [activeSubTab, setActiveSubTab] = useState(null)
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState(null)
   const [toasts, setToasts] = useState([])
@@ -58,6 +60,10 @@ function AppContent() {
     { id: 'dashboard', label: 'Главная', icon: <BarChart3 size={20} /> },
     { id: 'transactions', label: 'Транзакции', icon: <List size={20} /> },
     { id: 'statistics', label: 'Статистика', icon: <TrendingUp size={20} /> },
+    { id: 'settings', label: 'Настройки', icon: <Settings size={20} /> }
+  ]
+
+  const settingsSubTabs = [
     { id: 'goals', label: 'Цели', icon: <Target size={20} /> },
     { id: 'categories', label: 'Категории', icon: <Tag size={20} /> },
     { id: 'budgets', label: 'Бюджеты', icon: <Wallet size={20} /> },
@@ -75,12 +81,13 @@ function AppContent() {
         setShowTransactionForm(true)
       }
       
-      // Ctrl/Cmd + 1-9 - переключение табов
-      if ((event.ctrlKey || event.metaKey) && ['1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(event.key)) {
+      // Ctrl/Cmd + 1-4 - переключение основных табов
+      if ((event.ctrlKey || event.metaKey) && ['1', '2', '3', '4'].includes(event.key)) {
         event.preventDefault()
         const tabIndex = parseInt(event.key) - 1
         if (tabs[tabIndex]) {
           setActiveTab(tabs[tabIndex].id)
+          setActiveSubTab(null)
         }
       }
       
@@ -126,6 +133,15 @@ function AppContent() {
     setToasts(prev => prev.filter(toast => toast.id !== id))
   }
 
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId)
+    setActiveSubTab(null)
+  }
+
+  const handleSubTabChange = (subTabId) => {
+    setActiveSubTab(subTabId)
+  }
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -134,18 +150,26 @@ function AppContent() {
         return <TransactionList onEditTransaction={handleEditTransaction} />
       case 'statistics':
         return <Statistics />
-      case 'goals':
-        return <GoalManager />
-      case 'categories':
-        return <CategoryManager />
-      case 'budgets':
-        return <BudgetAlertManager />
-      case 'notifications':
-        return <NotificationManager />
-      case 'backup':
-        return <BackupManager />
-      case 'export':
-        return <ExportManager />
+      case 'settings':
+        if (activeSubTab) {
+          switch (activeSubTab) {
+            case 'goals':
+              return <GoalManager onBack={() => setActiveSubTab(null)} />
+            case 'categories':
+              return <CategoryManager onBack={() => setActiveSubTab(null)} />
+            case 'budgets':
+              return <BudgetAlertManager onBack={() => setActiveSubTab(null)} />
+            case 'notifications':
+              return <NotificationManager onBack={() => setActiveSubTab(null)} />
+            case 'backup':
+              return <BackupManager onBack={() => setActiveSubTab(null)} />
+            case 'export':
+              return <ExportManager onBack={() => setActiveSubTab(null)} />
+            default:
+              return <SettingsMenu subTabs={settingsSubTabs} onSubTabChange={handleSubTabChange} activeSubTab={activeSubTab} />
+          }
+        }
+        return <SettingsMenu subTabs={settingsSubTabs} onSubTabChange={handleSubTabChange} activeSubTab={activeSubTab} />
       default:
         return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
     }
@@ -170,7 +194,7 @@ function AppContent() {
             <button
               key={tab.id}
               className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
             >
               <span className="nav-icon">{tab.icon}</span>
               <span className="nav-label">{tab.label}</span>
@@ -181,7 +205,7 @@ function AppContent() {
 
       <main className="app-main">
         <AppleTabTransition 
-          key={activeTab}
+          key={activeTab + (activeSubTab || '')}
           activeTab={activeTab}
           tabId={activeTab}
           direction="right"
@@ -259,9 +283,9 @@ function AppContent() {
         </div>
       )}
 
-      {/* Toast notifications */}
-      <div style={{ position: 'fixed', top: '100px', right: '24px', zIndex: 1001 }}>
-        {toasts.map(toast => (
+      {/* Toasts */}
+      <div className="toast-container">
+        {toasts.map((toast) => (
           <AnimatedToast
             key={toast.id}
             message={toast.message}
@@ -274,14 +298,56 @@ function AppContent() {
   )
 }
 
+// Компонент меню настроек
+function SettingsMenu({ subTabs, onSubTabChange, activeSubTab }) {
+  return (
+    <div className="settings-menu">
+      <div className="settings-header">
+        <h2>Настройки</h2>
+        <p>Управление приложением и данными</p>
+      </div>
+      
+      <div className="settings-grid">
+        {subTabs.map((subTab) => (
+          <button
+            key={subTab.id}
+            className={`settings-item ${activeSubTab === subTab.id ? 'active' : ''}`}
+            onClick={() => onSubTabChange(subTab.id)}
+          >
+            <div className="settings-icon">{subTab.icon}</div>
+            <div className="settings-content">
+              <h3>{subTab.label}</h3>
+              <p>{getSettingsDescription(subTab.id)}</p>
+            </div>
+            <div className="settings-arrow">→</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Функция для получения описания настроек
+function getSettingsDescription(subTabId) {
+  const descriptions = {
+    goals: 'Управление финансовыми целями',
+    categories: 'Настройка категорий транзакций',
+    budgets: 'Управление бюджетами и уведомлениями',
+    notifications: 'Настройка уведомлений',
+    backup: 'Резервное копирование данных',
+    export: 'Экспорт данных в различные форматы'
+  }
+  return descriptions[subTabId] || ''
+}
+
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <TelegramProvider>
+      <TelegramProvider>
+        <ThemeProvider>
           <AppContent />
-        </TelegramProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </TelegramProvider>
     </ErrorBoundary>
   )
 }

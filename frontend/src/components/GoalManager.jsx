@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Target, Plus, Trash2, Edit, TrendingUp, Calendar, X } from 'lucide-react'
+import { Target, Plus, Trash2, Edit, TrendingUp, Calendar, X, ArrowLeft } from 'lucide-react'
 import { useTelegram } from '../contexts/TelegramContext'
 const GoalManager = () => {
   const { user } = useTelegram()
@@ -208,9 +208,24 @@ const GoalManager = () => {
 
   return (
     <div className="goal-manager">
-      <div className="section-header">
-        <h2>🎯 Финансовые цели</h2>
-        <p>Отслеживайте прогресс в достижении ваших финансовых целей</p>
+      <div className="goal-header">
+        <button 
+          className="back-button"
+          onClick={onBack}
+          aria-label="Вернуться к настройкам"
+        >
+          <ArrowLeft size={20} />
+          <span>Назад</span>
+        </button>
+        <h2>Управление целями</h2>
+        <button 
+          className="create-goal-button"
+          onClick={() => setShowCreateModal(true)}
+          disabled={loading}
+        >
+          <Plus size={20} />
+          <span>Новая цель</span>
+        </button>
       </div>
 
       {goals.length === 0 ? (

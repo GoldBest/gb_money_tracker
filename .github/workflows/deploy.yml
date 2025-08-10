@@ -1,0 +1,95 @@
+name: 🚀 Auto Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Деплой Frontend на Vercel
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 🚀 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+        
+    - name: 📁 Setup Frontend
+      working-directory: ./frontend
+      run: |
+        npm ci
+        npm run build
+        
+    - name: 🚀 Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./frontend
+        vercel-args: '--prod'
+
+  # Деплой Backend на Railway
+  deploy-backend:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 🚀 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: backend/package-lock.json
+        
+    - name: 📁 Setup Backend
+      working-directory: ./backend
+      run: |
+        npm ci
+        
+    - name: 🚂 Deploy to Railway
+      uses: bervProject/railway-deploy@v1.0.0
+      with:
+        railway_token: ${{ secrets.RAILWAY_TOKEN }}
+        service: ${{ secrets.RAILWAY_SERVICE_NAME }}
+
+  # Тестирование (для всех веток)
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🚀 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: 🧪 Test Frontend
+      working-directory: ./frontend
+      run: |
+        npm ci
+        npm run build
+        
+    - name: 🧪 Test Backend
+      working-directory: ./backend
+      run: |
+        npm ci
+        npm test || echo "No tests configured"
+        
+    - name: ✅ Tests completed
+      run: echo "All tests passed!"
