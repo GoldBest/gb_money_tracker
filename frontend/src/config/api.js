@@ -4,10 +4,10 @@
 
 export const API_CONFIG = {
   // URL для бэкенда (будет заменен при сборке)
-  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002',
+  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'https://gb-money-tracker-production.up.railway.app',
   
   // Локальный URL для разработки
-  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'http://localhost:3002',
+  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'https://gb-money-tracker-production.up.railway.app',
   
   // Заголовки для API запросов
   HEADERS: {
@@ -41,9 +41,9 @@ export const getBaseURL = () => {
     isLocalhost: hostname === 'localhost' || hostname === '127.0.0.1'
   })
   
-  // ВСЕГДА используем локальный бэкенд для разработки
-  console.log('🔍 Using LOCAL_BACKEND_URL:', API_CONFIG.LOCAL_BACKEND_URL)
-  return API_CONFIG.LOCAL_BACKEND_URL
+  // Используем production бэкенд для Railway
+  console.log('🔍 Using PRODUCTION_BACKEND_URL:', API_CONFIG.BACKEND_URL)
+  return API_CONFIG.BACKEND_URL
 }
 
 // Функция для получения конфигурации в зависимости от окружения

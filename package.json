@@ -25,7 +25,11 @@
     "docker:logs": "docker-compose logs -f",
     "docker:status": "docker-compose ps",
     "docker:restart": "docker-compose restart",
-    "docker:rebuild": "docker-compose down && docker-compose up -d --build"
+    "docker:rebuild": "docker-compose down && docker-compose up -d --build",
+    
+    "deploy": "./scripts/deploy-all.sh",
+    "deploy:vercel": "cd frontend && PATH=\"$PATH:$(npm config get prefix)/bin:$HOME/.npm-global/bin\" vercel --prod --yes",
+    "deploy:railway": "cd backend && PATH=\"$PATH:$(npm config get prefix)/bin:$HOME/.npm-global/bin\" railway up"
   },
   "keywords": [],
   "author": "",

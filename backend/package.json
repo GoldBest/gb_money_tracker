@@ -8,7 +8,8 @@
     "start": "node server.js",
     "bot": "node bot.js",
     "dev:bot": "nodemon bot.js",
-    "migrate": "node migrate-to-postgres.js"
+    "migrate": "node migrate-to-postgres.js",
+    "setup-db": "node setup-production-db.js"
   },
   "keywords": [],
   "author": "",

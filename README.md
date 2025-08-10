@@ -82,7 +82,12 @@ npm run dev:frontend
 
 ## 🚀 Развертывание
 
-### 🚀 Развертывание
+### 🚀 Облачные платформы
+- **Vercel (Frontend)**: `npm run deploy:vercel`
+- **Railway (Backend)**: `npm run deploy:railway`
+- **Полный деплой**: `npm run deploy`
+
+### 🐳 Docker развертывание
 - **Локальная разработка**: [QUICK_START_DOCKER.md](QUICK_START_DOCKER.md)
 - **Docker развертывание**: [docs/DOCKER_DEVELOPMENT.md](docs/DOCKER_DEVELOPMENT.md)
 
@@ -90,6 +95,17 @@ npm run dev:frontend
 Скрипты и конфигурация для развертывания в папке `deploy/`:
 - `setup-env.sh` - настройка окружения
 - `setup-bot.sh` - настройка Telegram бота
+
+### 🌍 Переменные окружения
+После деплоя настройте переменные окружения:
+
+**Vercel (Frontend):**
+- `REACT_APP_API_URL` - URL вашего backend API
+
+**Railway (Backend):**
+- `DATABASE_URL` - строка подключения к PostgreSQL
+- `BOT_TOKEN` - токен Telegram бота
+- `WEBHOOK_URL` - URL для webhook'ов бота
 
 ## 🐳 Docker
 
