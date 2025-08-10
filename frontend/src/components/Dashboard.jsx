@@ -22,6 +22,7 @@ import {
 import { 
   AppleSkeletonBalance,
   AppleSkeletonStats,
+  AppleSkeletonTransactions,
   useSkeleton 
 } from '../components/AppleSkeleton'
 
