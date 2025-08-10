@@ -4,10 +4,10 @@
 
 export const API_CONFIG = {
   // URL для бэкенда (будет заменен при сборке)
-  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'https://gbmt.gbdev.ru',
+  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:3002',
   
   // Локальный URL для разработки
-  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'https://gbmt.gbdev.ru',
+  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'http://localhost:3002',
   
   // Заголовки для API запросов
   HEADERS: {
@@ -15,7 +15,7 @@ export const API_CONFIG = {
   },
   
   // Таймаут для запросов
-  TIMEOUT: import.meta.env.VITE_API_TIMEOUT || 10000
+  TIMEOUT: import.meta.env.VITE_API_TIMEOUT || 30000
 }
 
 // Отладочная информация при загрузке модуля
