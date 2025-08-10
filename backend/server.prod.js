@@ -343,6 +343,113 @@ app.get('/api/notification-settings', async (req, res) => {
   }
 });
 
+// Export info endpoint
+app.get('/api/users/:userId/export-info', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { period } = req.query;
+    
+    // Get user's transactions for the specified period
+    let dateFilter = '';
+    let params = [userId];
+    
+    if (period === 'month') {
+      dateFilter = 'AND created_at >= NOW() - INTERVAL \'1 month\'';
+    } else if (period === 'week') {
+      dateFilter = 'AND created_at >= NOW() - INTERVAL \'1 week\'';
+    } else if (period === 'year') {
+      dateFilter = 'AND created_at >= NOW() - INTERVAL \'1 year\'';
+    }
+    
+    const result = await pool.query(`
+      SELECT 
+        t.id,
+        t.amount,
+        t.description,
+        t.type,
+        t.created_at,
+        c.name as category_name,
+        c.color as category_color
+      FROM transactions t
+      LEFT JOIN categories c ON t.category_id = c.id
+      WHERE t.user_id = $1 ${dateFilter}
+      ORDER BY t.created_at DESC
+    `, params);
+    
+    res.json({
+      success: true,
+      transactions: result.rows,
+      period: period || 'all',
+      total_transactions: result.rows.length
+    });
+  } catch (error) {
+    console.error('Ошибка при получении информации для экспорта:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Goals endpoints
+app.get('/api/users/:userId/goals', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const result = await pool.query(`
+      SELECT * FROM goals WHERE user_id = $1 ORDER BY created_at DESC
+    `, [userId]);
+    
+    res.json({
+      success: true,
+      goals: result.rows
+    });
+  } catch (error) {
+    console.error('Ошибка при получении целей:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/users/:userId/goals', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { name, target_amount, deadline } = req.body;
+    
+    const result = await pool.query(`
+      INSERT INTO goals (user_id, name, target_amount, deadline) 
+      VALUES ($1, $2, $3, $4) RETURNING *
+    `, [userId, name, target_amount, deadline]);
+    
+    res.json({
+      success: true,
+      goal: result.rows[0]
+    });
+  } catch (error) {
+    console.error('Ошибка при создании цели:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Budget alerts endpoints
+app.get('/api/users/:userId/budget-alerts', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const result = await pool.query(`
+      SELECT ba.*, c.name as category_name, c.color as category_color
+      FROM budget_alerts ba
+      LEFT JOIN categories c ON ba.category_id = c.id
+      WHERE ba.user_id = $1
+      ORDER BY ba.created_at DESC
+    `, [userId]);
+    
+    res.json({
+      success: true,
+      budget_alerts: result.rows
+    });
+  } catch (error) {
+    console.error('Ошибка при получении бюджетных уведомлений:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Ошибка сервера:', err);

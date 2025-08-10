@@ -258,7 +258,7 @@
   transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
-.hover-lift:hover {
+.hover-lift:active {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
 }
@@ -267,7 +267,7 @@
   transition: transform var(--transition-normal);
 }
 
-.hover-scale:hover {
+.hover-scale:active {
   transform: scale(1.05);
 }
 
@@ -275,7 +275,7 @@
   transition: box-shadow var(--transition-normal);
 }
 
-.hover-glow:hover {
+.hover-glow:active {
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
 }
 

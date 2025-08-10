@@ -74,7 +74,7 @@
   justify-content: center;
 }
 
-.close-notification:hover {
+.close-notification:active {
   background: var(--bg-hover);
   color: var(--text-primary);
   transform: scale(1.1);
@@ -164,9 +164,9 @@
   color: var(--text-primary);
 }
 
-.action-button.secondary:hover {
+.action-button.secondary:active {
   background: var(--border-color);
-  transform: translateY(-1px);
+  transform: scale(0.95);
 }
 
 .action-button.primary {
@@ -174,9 +174,9 @@
   color: white;
 }
 
-.action-button.primary:hover {
+.action-button.primary:active {
   background: var(--primary-color-dark);
-  transform: translateY(-1px);
+  transform: scale(0.95);
   box-shadow: 0 4px 12px var(--primary-color-alpha);
 }
 
@@ -234,8 +234,8 @@
   }
 }
 
-.goal-notification:hover {
-  transform: translateY(-2px);
+.goal-notification:active {
+  transform: scale(0.98);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
@@ -322,8 +322,9 @@
   background: var(--bg-hover-dark);
 }
 
-[data-theme="dark"] .action-button.secondary:hover {
+[data-theme="dark"] .action-button.secondary:active {
   background: var(--border-color-dark);
+  transform: scale(0.95);
 }
 
 /* Эффекты для достигнутых целей */

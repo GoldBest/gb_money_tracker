@@ -41,7 +41,7 @@
   transform: scale(0.95);
 }
 
-.button-animation:hover {
+.button-animation:active {
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -53,9 +53,9 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.stat-card:hover,
-.balance-card:hover,
-.category-item:hover {
+.stat-card:active,
+.balance-card:active,
+.category-item:active {
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
@@ -172,7 +172,7 @@
   transition: all 0.2s ease;
 }
 
-.action-button:hover {
+.action-button:active {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -186,7 +186,7 @@
   transition: transform 0.2s ease;
 }
 
-.icon:hover {
+.icon:active {
   transform: scale(1.1);
 }
 
@@ -195,7 +195,7 @@
   transition: transform 0.3s ease;
 }
 
-.theme-toggle:hover {
+.theme-toggle:active {
   transform: rotate(180deg);
 }
 

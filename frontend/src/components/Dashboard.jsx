@@ -4,7 +4,6 @@ import {
   Plus, 
   TrendingUp, 
   TrendingDown, 
-  DollarSign, 
   Wallet,
   ArrowUpRight,
   ArrowDownRight,

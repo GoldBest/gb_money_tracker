@@ -66,7 +66,7 @@
   font-weight: 500;
 }
 
-.format-option:hover {
+.format-option:active {
   border-color: var(--primary-color);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -142,8 +142,9 @@
   transition: all 0.2s ease;
 }
 
-.checkbox-option:hover {
+.checkbox-option:active {
   background: var(--bg-hover);
+  transform: scale(0.95);
 }
 
 .checkbox-option input[type="checkbox"] {
@@ -177,10 +178,10 @@
   font-weight: 500;
 }
 
-.period-button:hover {
+.period-button:active {
   border-color: var(--primary-color);
   background: var(--primary-color-alpha);
-  transform: translateY(-1px);
+  transform: scale(0.95);
 }
 
 /* Действия */
@@ -211,9 +212,9 @@
   color: var(--text-primary);
 }
 
-.action-button.secondary:hover {
+.action-button.secondary:active {
   background: var(--border-color);
-  transform: translateY(-2px);
+  transform: scale(0.95);
 }
 
 .action-button.primary {
@@ -221,9 +222,9 @@
   color: white;
 }
 
-.action-button.primary:hover:not(:disabled) {
+.action-button.primary:active:not(:disabled) {
   background: var(--primary-color-dark);
-  transform: translateY(-2px);
+  transform: scale(0.95);
   box-shadow: 0 8px 24px var(--primary-color-alpha);
 }
 
@@ -378,8 +379,9 @@
   border-color: var(--border-color-dark);
 }
 
-[data-theme="dark"] .checkbox-option:hover {
+[data-theme="dark"] .checkbox-option:active {
   background: var(--bg-hover-dark);
+  transform: scale(0.95);
 }
 
 [data-theme="dark"] .period-button {
@@ -418,10 +420,10 @@
   transform-origin: center;
 }
 
-.format-option:hover,
-.period-button:hover,
-.action-button:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.02);
+.format-option:active,
+.period-button:active,
+.action-button:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 /* Эффект пульсации для активных элементов */
@@ -456,8 +458,8 @@
 }
 
 /* Эффект наведения для чекбоксов */
-.checkbox-option:hover input[type="checkbox"] {
-  transform: scale(1.1);
+.checkbox-option:active input[type="checkbox"] {
+  transform: scale(1.05);
 }
 
 /* Эффект для отключенных кнопок */

@@ -150,8 +150,8 @@
   transform-origin: center;
 }
 
-.apple-card:hover {
-  transform: translateY(-4px) scale(1.02);
+.apple-card:active {
+  transform: translateY(-2px) scale(1.01);
   box-shadow: var(--apple-shadow-lg);
 }
 
@@ -183,7 +183,7 @@
               height var(--apple-duration-normal) var(--apple-ease-out);
 }
 
-.apple-button:hover::before {
+.apple-button:active::before {
   width: 300px;
   height: 300px;
 }
@@ -213,8 +213,8 @@
   transform-origin: left center;
 }
 
-.transaction-item:hover {
-  transform: translateX(8px) scale(1.02);
+.transaction-item:active {
+  transform: translateX(4px) scale(1.01);
   box-shadow: var(--apple-shadow-md);
 }
 
@@ -230,8 +230,8 @@
   transform-origin: center;
 }
 
-.transaction-category:hover {
-  transform: scale(1.1);
+.transaction-category:active {
+  transform: scale(1.05);
   filter: brightness(1.1);
 }
 
@@ -303,7 +303,7 @@
   transition: width var(--apple-duration-normal) var(--apple-ease-out);
 }
 
-.nav-tab:hover::after {
+.nav-tab:active::after {
   width: 60%;
 }
 
@@ -311,8 +311,8 @@
   width: 100%;
 }
 
-.nav-tab:hover {
-  transform: translateY(-2px);
+.nav-tab:active {
+  transform: translateY(-1px);
   color: var(--apple-accent-blue);
 }
 
@@ -328,8 +328,8 @@
   transform-origin: center;
 }
 
-.stat-card:hover {
-  transform: translateY(-6px) scale(1.03);
+.stat-card:active {
+  transform: translateY(-3px) scale(1.01);
   box-shadow: var(--apple-shadow-xl);
 }
 
@@ -345,8 +345,8 @@
   transform-origin: center;
 }
 
-.stat-card:hover .stat-icon {
-  transform: scale(1.2) rotate(5deg);
+.stat-card:active .stat-icon {
+  transform: scale(1.1) rotate(3deg);
   color: var(--apple-accent-blue);
 }
 
@@ -365,8 +365,8 @@
   color: var(--apple-accent-red);
 }
 
-.balance-card:hover .balance-amount {
-  transform: scale(1.05);
+.balance-card:active .balance-amount {
+  transform: scale(1.02);
   text-shadow: 0 0 10px currentColor;
 }
 
@@ -407,7 +407,7 @@
   transform-origin: center;
 }
 
-.filter-button:hover {
+.filter-button:active {
   transform: scale(1.1);
   background: var(--apple-accent-blue);
   color: white;
@@ -424,7 +424,7 @@
   transform-origin: center;
 }
 
-.export-button:hover {
+.export-button:active {
   transform: scale(1.05) rotate(5deg);
   background: var(--apple-accent-green);
   color: white;
@@ -442,7 +442,7 @@
   transform-origin: center;
 }
 
-.backup-button:hover {
+.backup-button:active {
   transform: scale(1.05) translateY(-2px);
   background: var(--apple-accent-purple);
   color: white;
@@ -455,7 +455,7 @@
   transform-origin: left center;
 }
 
-.notification-item:hover {
+.notification-item:active {
   transform: translateX(8px) scale(1.02);
   box-shadow: var(--apple-shadow-md);
 }
@@ -472,7 +472,7 @@
   transform-origin: center;
 }
 
-.goal-card:hover {
+.goal-card:active {
   transform: translateY(-4px) scale(1.02);
   box-shadow: var(--apple-shadow-lg);
 }
@@ -481,7 +481,7 @@
   transition: width var(--apple-duration-slow) var(--apple-ease-out);
 }
 
-.goal-card:hover .goal-progress {
+.goal-card:active .goal-progress {
   animation: applePulse 2s var(--apple-ease-in-out) infinite;
 }
 
@@ -492,7 +492,7 @@
   transform-origin: center;
 }
 
-.category-item:hover {
+.category-item:active {
   transform: scale(1.05) translateY(-2px);
   box-shadow: var(--apple-shadow-md);
 }
@@ -509,7 +509,7 @@
   transform-origin: center;
 }
 
-.budget-alert:hover {
+.budget-alert:active {
   transform: scale(1.02) translateY(-2px);
   box-shadow: var(--apple-shadow-md);
 }
@@ -579,15 +579,15 @@
 
 /* ===== DARK THEME ADJUSTMENTS ===== */
 
-.dark .apple-card:hover {
+.dark .apple-card:active {
   box-shadow: var(--apple-shadow-lg);
 }
 
-.dark .stat-card:hover {
+.dark .stat-card:active {
   box-shadow: var(--apple-shadow-xl);
 }
 
-.dark .transaction-item:hover {
+.dark .transaction-item:active {
   box-shadow: var(--apple-shadow-md);
 }
 

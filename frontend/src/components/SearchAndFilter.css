@@ -62,7 +62,7 @@
   justify-content: center;
 }
 
-.clear-search:hover {
+.clear-search:active {
   background: var(--bg-hover);
   color: var(--text-primary);
   transform: translateY(-50%) scale(1.1);
@@ -85,7 +85,7 @@
   height: 48px;
 }
 
-.filter-toggle:hover {
+.filter-toggle:active {
   border-color: var(--primary-color);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -159,7 +159,7 @@
   transition: all 0.2s ease;
 }
 
-.clear-filters:hover {
+.clear-filters:active {
   background: var(--accent-color-alpha);
   transform: translateY(-1px);
 }
@@ -270,8 +270,8 @@
   transform-origin: center;
 }
 
-.filter-group select:hover,
-.filter-group input:hover {
+.filter-group select:active,
+.filter-group input:active {
   transform: scale(1.02);
 }
 

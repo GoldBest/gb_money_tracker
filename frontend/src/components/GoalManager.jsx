@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Target, Plus, Trash2, Edit, TrendingUp, Calendar, DollarSign, X } from 'lucide-react'
+import { Target, Plus, Trash2, Edit, TrendingUp, Calendar, X } from 'lucide-react'
 import { useTelegram } from '../contexts/TelegramContext'
 const GoalManager = () => {
   const { user } = useTelegram()

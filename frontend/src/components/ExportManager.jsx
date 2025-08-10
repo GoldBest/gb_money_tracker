@@ -7,8 +7,7 @@ import {
   Calendar, 
   Filter,
   TrendingUp,
-  TrendingDown,
-  DollarSign
+  TrendingDown
 } from 'lucide-react'
 const ExportManager = () => {
   const { user, api } = useTelegram()
@@ -516,7 +515,7 @@ const ExportManager = () => {
 
             <div className="summary-card">
               <div className="summary-icon">
-                <DollarSign size={20} />
+                <span style={{ fontSize: '20px', fontWeight: 'bold' }}>₽</span>
               </div>
               <div className="summary-content">
                 <div className="summary-label">Баланс</div>

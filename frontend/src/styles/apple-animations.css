@@ -491,7 +491,7 @@
               box-shadow var(--apple-duration-normal) var(--apple-ease-out);
 }
 
-.apple-hover-lift:hover {
+.apple-hover-lift:active {
   animation: appleHoverLift var(--apple-duration-normal) var(--apple-ease-out) forwards;
 }
 
@@ -499,7 +499,7 @@
   transition: box-shadow var(--apple-duration-normal) var(--apple-ease-out);
 }
 
-.apple-hover-glow:hover {
+.apple-hover-glow:active {
   animation: appleHoverGlow var(--apple-duration-normal) var(--apple-ease-out) forwards;
 }
 
@@ -507,7 +507,7 @@
   transition: transform var(--apple-duration-normal) var(--apple-ease-out);
 }
 
-.apple-hover-scale:hover {
+.apple-hover-scale:active {
   animation: appleHoverScale var(--apple-duration-normal) var(--apple-ease-out) forwards;
 }
 

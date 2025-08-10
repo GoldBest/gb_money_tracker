@@ -1,0 +1,428 @@
+/* Mobile-optimized styles for Telegram Mini App */
+/* Убираем hover-эффекты, оставляем только touch-friendly анимации */
+
+:root {
+  /* Основные цвета */
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --accent-color: #f093fb;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  
+  /* Переходы */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Тени */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.2);
+  
+  /* Размеры для touch */
+  --touch-min-size: 44px;
+  --touch-spacing: 16px;
+}
+
+/* ===== TOUCH-FRIENDLY BUTTONS ===== */
+
+.button,
+.action-button,
+.nav-tab {
+  min-height: var(--touch-min-size);
+  min-width: var(--touch-min-size);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Active states вместо hover */
+.button:active,
+.action-button:active,
+.nav-tab:active {
+  transform: scale(0.95);
+  opacity: 0.8;
+}
+
+/* Primary button */
+.button.primary,
+.action-button.primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.button.primary:active,
+.action-button.primary:active {
+  box-shadow: var(--shadow-sm);
+  transform: scale(0.95) translateY(1px);
+}
+
+/* Secondary button */
+.button.secondary,
+.action-button.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--primary-color);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ===== TOUCH-FRIENDLY CARDS ===== */
+
+.card,
+.stat-card,
+.balance-card,
+.category-item,
+.transaction-item {
+  border-radius: 16px;
+  padding: var(--touch-spacing);
+  margin-bottom: 12px;
+  background: white;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Active states для карточек */
+.card:active,
+.stat-card:active,
+.balance-card:active,
+.category-item:active,
+.transaction-item:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===== TOUCH-FRIENDLY INPUTS ===== */
+
+input,
+textarea,
+select {
+  min-height: var(--touch-min-size);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  font-size: 16px;
+  transition: all var(--transition-fast);
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.1);
+  transform: scale(1.02);
+}
+
+/* ===== TOUCH-FRIENDLY NAVIGATION ===== */
+
+.nav-tab {
+  position: relative;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  margin: 0 4px;
+}
+
+.nav-tab.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--accent-color);
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width var(--transition-normal);
+}
+
+.nav-tab.active::after {
+  width: 60%;
+}
+
+/* ===== TOUCH-FRIENDLY MODALS ===== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn var(--transition-normal) ease-out;
+}
+
+.modal {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideIn var(--transition-normal) ease-out;
+}
+
+/* ===== TOUCH-FRIENDLY ANIMATIONS ===== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-normal) ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn var(--transition-normal) ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn var(--transition-normal) ease-out;
+}
+
+.animate-slide-in-up {
+  animation: slideInUp var(--transition-normal) ease-out;
+}
+
+/* ===== TOUCH-FRIENDLY TRANSITIONS ===== */
+
+.transaction-item,
+.category-item,
+.stat-card {
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+/* ===== LOADING STATES ===== */
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ===== REDUCED MOTION SUPPORT ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== DARK THEME ===== */
+
+.dark {
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
+
+.dark .card,
+.dark .stat-card,
+.dark .balance-card,
+.dark .category-item,
+.dark .transaction-item {
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .modal {
+  background: #1a1a1a;
+  color: white;
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+
+@media (max-width: 768px) {
+  .button,
+  .action-button,
+  .nav-tab {
+    min-height: 48px;
+    padding: 14px 18px;
+    font-size: 16px;
+  }
+  
+  .card,
+  .stat-card,
+  .balance-card,
+  .category-item,
+  .transaction-item {
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+  
+  .modal {
+    margin: 16px;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .button,
+  .action-button,
+  .nav-tab {
+    min-height: 52px;
+    padding: 16px 20px;
+  }
+  
+  .card,
+  .stat-card,
+  .balance-card,
+  .category-item,
+  .transaction-item {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+/* ===== TOUCH GESTURE SUPPORT ===== */
+
+.swipeable {
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.pull-to-refresh {
+  touch-action: pan-y;
+  overflow: hidden;
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+.button:focus,
+.action-button:focus,
+.nav-tab:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+.card,
+.stat-card,
+.balance-card,
+.category-item,
+.transaction-item,
+.button,
+.action-button,
+.nav-tab {
+  will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* ===== SMOOTH SCROLLING ===== */
+
+.app-main,
+.transaction-list,
+.statistics {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* ===== TOUCH FEEDBACK ===== */
+
+.touch-feedback {
+  position: relative;
+  overflow: hidden;
+}
+
+.touch-feedback::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width var(--transition-fast), height var(--transition-fast);
+}
+
+.touch-feedback:active::before {
+  width: 200px;
+  height: 200px;
+}

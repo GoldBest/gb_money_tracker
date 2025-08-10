@@ -106,7 +106,7 @@
     justify-content: center;
   }
   
-  .floating-action-button:hover {
+  .floating-action-button:active {
     transform: scale(1.1);
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
   }
@@ -302,7 +302,7 @@
     transition: all 0.2s ease;
   }
   
-  .close-button:hover {
+  .close-button:active {
     background: var(--border-color);
   }
   
@@ -519,8 +519,8 @@
     transition: none;
   }
   
-  .stat-card:hover,
-  .category-item:hover {
+  .stat-card:active,
+.category-item:active {
     transform: none;
   }
 }

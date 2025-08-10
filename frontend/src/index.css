@@ -212,7 +212,7 @@ a {
   transition: color var(--transition-fast);
 }
 
-a:hover {
+a:active {
   color: var(--color-primary-hover);
 }
 
@@ -251,7 +251,7 @@ button:disabled {
   color: var(--color-text-inverse);
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary:active:not(:disabled) {
   background-color: var(--color-primary-hover);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
@@ -263,7 +263,7 @@ button:disabled {
   border: 1px solid var(--color-border-primary);
 }
 
-.btn-secondary:hover:not(:disabled) {
+.btn-secondary:active:not(:disabled) {
   background-color: var(--color-bg-tertiary);
   border-color: var(--color-border-secondary);
 }
@@ -273,7 +273,7 @@ button:disabled {
   color: var(--color-text-inverse);
 }
 
-.btn-success:hover:not(:disabled) {
+.btn-success:active:not(:disabled) {
   background-color: var(--color-success-hover);
 }
 
@@ -282,7 +282,7 @@ button:disabled {
   color: var(--color-text-inverse);
 }
 
-.btn-danger:hover:not(:disabled) {
+.btn-danger:active:not(:disabled) {
   background-color: var(--color-danger-hover);
 }
 
@@ -320,9 +320,9 @@ input::placeholder, textarea::placeholder {
   transition: all var(--transition-normal);
 }
 
-.card:hover {
+.card:active {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: scale(0.98);
 }
 
 /* Utility Classes */
@@ -409,7 +409,7 @@ input::placeholder, textarea::placeholder {
     min-height: 48px;
   }
   
-  .card:hover {
-    transform: none;
+  .card:active {
+    transform: scale(0.98);
   }
 }

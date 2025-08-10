@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTelegram } from '../contexts/TelegramContext'
-import { X, Plus, DollarSign, Tag, FileText, Calendar, TrendingDown, TrendingUp } from 'lucide-react'
+import { X, Plus, Tag, FileText, Calendar, TrendingDown, TrendingUp } from 'lucide-react'
 
 const TransactionForm = ({ onSubmit, onCancel }) => {
   const { user, api } = useTelegram()
@@ -131,7 +131,7 @@ const TransactionForm = ({ onSubmit, onCancel }) => {
       {/* Amount Input */}
       <div className="apple-form-group">
         <label htmlFor="amount">
-          <DollarSign size={16} style={{ marginRight: 'var(--apple-spacing-xs)' }} />
+          <span style={{ marginRight: 'var(--apple-spacing-xs)', fontSize: '16px', fontWeight: 'bold' }}>₽</span>
           Сумма
         </label>
         <input
