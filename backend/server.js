@@ -15,7 +15,8 @@ app.use(cors({
     'http://localhost:5175',
     'http://localhost:5176',
     'https://*.ngrok-free.app',
-    'https://*.ngrok.io'
+    'https://*.ngrok.io',
+    'https://103ff5d4ede5.ngrok-free.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -1189,6 +1190,63 @@ app.post('/api/notifications/send', (req, res) => {
       success: true,
       message: 'Уведомление отправлено',
       notification: { chatId, warning }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get notifications for user
+app.get('/api/notifications', (req, res) => {
+  try {
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get user's notifications (budget alerts)
+    const notifications = db.prepare(`
+      SELECT ba.*, c.name as category_name 
+      FROM budget_alerts ba 
+      LEFT JOIN categories c ON ba.category_id = c.id 
+      WHERE ba.user_id = ? 
+      ORDER BY ba.created_at DESC
+    `).all(user_id);
+    
+    res.json({
+      success: true,
+      notifications: notifications
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get notification settings for user
+app.get('/api/notification-settings', (req, res) => {
+  try {
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get user's notification preferences
+    const settings = db.prepare(`
+      SELECT 
+        id,
+        user_id,
+        enabled,
+        created_at
+      FROM budget_alerts 
+      WHERE user_id = ? 
+      ORDER BY created_at DESC
+    `).all(user_id);
+    
+    res.json({
+      success: true,
+      settings: settings
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

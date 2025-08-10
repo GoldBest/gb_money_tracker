@@ -9,15 +9,15 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/icon-192.svg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/icon-512.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
@@ -30,31 +30,31 @@
   "edge_side_panel": {
     "preferred_width": 400
   },
-  "shortcuts": [
-    {
-      "name": "Добавить транзакцию",
-      "short_name": "Добавить",
-      "description": "Быстро добавить новую транзакцию",
-      "url": "/?action=add",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Статистика",
-      "short_name": "Статистика",
-      "description": "Просмотр финансовой статистики",
-      "url": "/?tab=statistics",
-      "icons": [
-        {
-          "src": "/icon-192.png",
-          "sizes": "192x192"
-        }
-      ]
-    }
+      "shortcuts": [
+      {
+        "name": "Добавить транзакцию",
+        "short_name": "Добавить",
+        "description": "Быстро добавить новую транзакцию",
+        "url": "/?action=add",
+        "icons": [
+          {
+            "src": "/icon-192.svg",
+            "sizes": "192x192"
+          }
+        ]
+      },
+          {
+        "name": "Статистика",
+        "short_name": "Статистика",
+        "description": "Просмотр финансовой статистики",
+        "url": "/?tab=statistics",
+        "icons": [
+          {
+            "src": "/icon-192.svg",
+            "sizes": "192x192"
+          }
+        ]
+      }
   ],
   "screenshots": [
     {

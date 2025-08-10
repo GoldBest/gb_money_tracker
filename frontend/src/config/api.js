@@ -12,7 +12,6 @@ export const API_CONFIG = {
   // Заголовки для обхода предупреждений ngrok
   HEADERS: {
     'ngrok-skip-browser-warning': 'true',
-    'User-Agent': 'TelegramWebApp/1.0',
     'Content-Type': 'application/json'
   },
   
