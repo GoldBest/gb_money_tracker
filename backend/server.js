@@ -44,6 +44,29 @@ db.exec(`
     FOREIGN KEY (category_id) REFERENCES categories (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
   );
+
+  CREATE TABLE IF NOT EXISTS backups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    data TEXT NOT NULL,
+    size INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+  );
+
+  CREATE TABLE IF NOT EXISTS budget_alerts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    limit_amount DECIMAL(10,2) NOT NULL,
+    period TEXT NOT NULL CHECK(period IN ('daily', 'weekly', 'monthly')),
+    enabled BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (category_id) REFERENCES categories (id)
+  );
 `);
 
 // Default categories
@@ -442,6 +465,522 @@ app.get('/api/users/:userId/export-info', (req, res) => {
       period: period,
       balance: (exportInfo.total_income || 0) - (exportInfo.total_expense || 0),
       export_date: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get all backups for a user
+app.get('/api/backups', (req, res) => {
+  try {
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get user data to verify user exists
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+    
+    // Get backups from database
+    const backups = db.prepare(`
+      SELECT id, name, description, size, created_at, 
+             (SELECT COUNT(*) FROM transactions WHERE user_id = ?) as transactions_count
+      FROM backups 
+      WHERE user_id = ? 
+      ORDER BY created_at DESC
+    `).all(user_id, user_id);
+    
+    res.json(backups);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create new backup
+app.post('/api/backups', (req, res) => {
+  try {
+    const { user_id, name = 'Автоматическая копия', description } = req.body;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get user data
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+    
+    // Get categories and transactions
+    const categories = db.prepare('SELECT * FROM categories WHERE user_id = ?').all(user_id);
+    const transactions = db.prepare('SELECT * FROM transactions WHERE user_id = ?').all(user_id);
+    
+    // Create backup data
+    const backupData = {
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
+      user: {
+        telegram_id: user.telegram_id,
+        username: user.username,
+        first_name: user.first_name,
+        created_at: user.created_at
+      },
+      categories: categories,
+      transactions: transactions,
+      metadata: {
+        total_categories: categories.length,
+        total_transactions: transactions.length,
+        export_date: new Date().toISOString()
+      }
+    };
+    
+    // Calculate size
+    const size = JSON.stringify(backupData).length;
+    
+    // Save backup to database
+    const stmt = db.prepare(`
+      INSERT INTO backups (user_id, name, description, data, size) 
+      VALUES (?, ?, ?, ?, ?)
+    `);
+    
+    const result = stmt.run(user_id, name, description, JSON.stringify(backupData), size);
+    
+    // Get created backup
+    const backup = db.prepare('SELECT * FROM backups WHERE id = ?').get(result.lastInsertRowid);
+    
+    res.json({
+      id: backup.id,
+      created_at: backup.created_at,
+      size: backup.size,
+      transactions_count: transactions.length,
+      user_id: backup.user_id
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Download backup
+app.get('/api/backups/:backupId/download', (req, res) => {
+  try {
+    const { backupId } = req.params;
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get backup from database
+    const backup = db.prepare('SELECT * FROM backups WHERE id = ? AND user_id = ?').get(backupId, user_id);
+    if (!backup) {
+      return res.status(404).json({ error: 'Резервная копия не найдена' });
+    }
+    
+    // Parse backup data
+    const backupData = JSON.parse(backup.data);
+    
+    // Set headers for file download
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Disposition', `attachment; filename="backup_${backup.name}_${new Date(backup.created_at).toISOString().split('T')[0]}.json"`);
+    
+    res.json(backupData);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Restore backup
+app.post('/api/backups/:backupId/restore', (req, res) => {
+  try {
+    const { backupId } = req.params;
+    const { user_id } = req.body;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get backup from database
+    const backup = db.prepare('SELECT * FROM backups WHERE id = ? AND user_id = ?').get(backupId, user_id);
+    if (!backup) {
+      return res.status(404).json({ error: 'Резервная копия не найдена' });
+    }
+    
+    // Parse backup data
+    const backupData = JSON.parse(backup.data);
+    
+    // Validate backup data
+    if (!backupData || !backupData.version || !backupData.categories || !backupData.transactions) {
+      return res.status(400).json({ error: 'Неверный формат резервной копии' });
+    }
+    
+    // Start transaction
+    const transaction = db.transaction(() => {
+      // Clear existing data
+      db.prepare('DELETE FROM transactions WHERE user_id = ?').run(user_id);
+      db.prepare('DELETE FROM categories WHERE user_id = ?').run(user_id);
+      
+      // Restore categories
+      const categoryStmt = db.prepare('INSERT INTO categories (name, type, color, user_id) VALUES (?, ?, ?, ?)');
+      const categoryMap = new Map(); // Map old category IDs to new ones
+      
+      backupData.categories.forEach(category => {
+        const result = categoryStmt.run(category.name, category.type, category.color, user_id);
+        categoryMap.set(category.id, result.lastInsertRowid);
+      });
+      
+      // Restore transactions
+      const transactionStmt = db.prepare('INSERT INTO transactions (amount, description, type, category_id, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?)');
+      backupData.transactions.forEach(transaction => {
+        const newCategoryId = categoryMap.get(transaction.category_id);
+        if (newCategoryId) {
+          transactionStmt.run(
+            transaction.amount,
+            transaction.description,
+            transaction.type,
+            newCategoryId,
+            user_id,
+            transaction.created_at
+          );
+        }
+      });
+    });
+    
+    // Execute transaction
+    transaction();
+    
+    res.json({ 
+      success: true, 
+      message: 'Данные восстановлены успешно',
+      backup_id: backupId,
+      restored: {
+        categories: backupData.categories.length,
+        transactions: backupData.transactions.length
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete backup
+app.delete('/api/backups/:backupId', (req, res) => {
+  try {
+    const { backupId } = req.params;
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Delete backup from database
+    const stmt = db.prepare('DELETE FROM backups WHERE id = ? AND user_id = ?');
+    const result = stmt.run(backupId, user_id);
+    
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Резервная копия не найдена' });
+    }
+    
+    res.json({ success: true, message: 'Резервная копия удалена' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Import backup
+app.post('/api/backups/import', (req, res) => {
+  try {
+    const { user_id, ...backupData } = req.body;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Validate backup data
+    if (!backupData || !backupData.version || !backupData.categories || !backupData.transactions) {
+      return res.status(400).json({ error: 'Неверный формат резервной копии' });
+    }
+    
+    // Get user data
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(user_id);
+    if (!user) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+    
+    // Start transaction
+    const transaction = db.transaction(() => {
+      // Clear existing data
+      db.prepare('DELETE FROM transactions WHERE user_id = ?').run(user_id);
+      db.prepare('DELETE FROM categories WHERE user_id = ?').run(user_id);
+      
+      // Restore categories
+      const categoryStmt = db.prepare('INSERT INTO categories (name, type, color, user_id) VALUES (?, ?, ?, ?)');
+      const categoryMap = new Map(); // Map old category IDs to new ones
+      
+      backupData.categories.forEach(category => {
+        const result = categoryStmt.run(category.name, category.type, category.color, user_id);
+        categoryMap.set(category.id, result.lastInsertRowid);
+      });
+      
+      // Restore transactions
+      const transactionStmt = db.prepare('INSERT INTO transactions (amount, description, type, category_id, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?)');
+      backupData.transactions.forEach(transaction => {
+        const newCategoryId = categoryMap.get(transaction.category_id);
+        newCategoryId,
+        user_id,
+        transaction.created_at
+      );
+    });
+    
+    // Execute transaction
+    transaction();
+    
+    res.json({ 
+      success: true, 
+      message: 'Резервная копия импортирована успешно',
+      imported: {
+        categories: backupData.categories.length,
+        transactions: backupData.transactions.length
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Budget Alerts API
+
+// Get all budget alerts for a user
+app.get('/api/budget-alerts', (req, res) => {
+  try {
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    const stmt = db.prepare(`
+      SELECT 
+        ba.*,
+        c.name as category_name,
+        c.color as category_color,
+        c.type as category_type
+      FROM budget_alerts ba
+      JOIN categories c ON ba.category_id = c.id
+      WHERE ba.user_id = ?
+      ORDER BY ba.created_at DESC
+    `);
+    
+    const alerts = stmt.all(user_id);
+    
+    // Calculate current spending for each alert
+    const alertsWithSpending = alerts.map(alert => {
+      let periodStart;
+      const now = new Date();
+      
+      switch (alert.period) {
+        case 'daily':
+          periodStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          break;
+        case 'weekly':
+          const dayOfWeek = now.getDay();
+          const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+          periodStart = new Date(now.getFullYear(), now.getMonth(), diff);
+          break;
+        case 'monthly':
+          periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
+          break;
+      }
+      
+      // Get spending for the period
+      const spendingStmt = db.prepare(`
+        SELECT COALESCE(SUM(amount), 0) as total
+        FROM transactions 
+        WHERE user_id = ? 
+          AND category_id = ? 
+          AND type = 'expense'
+          AND created_at >= ?
+      `);
+      
+      const spending = spendingStmt.get(user_id, alert.category_id, periodStart.toISOString());
+      const currentSpending = spending.total;
+      const remaining = alert.limit_amount - currentSpending;
+      const percentage = (currentSpending / alert.limit_amount) * 100;
+      
+      return {
+        ...alert,
+        current_spending: currentSpending,
+        remaining: remaining,
+        percentage: Math.round(percentage * 100) / 100,
+        is_over_limit: currentSpending > alert.limit_amount
+      };
+    });
+    
+    res.json(alertsWithSpending);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create new budget alert
+app.post('/api/budget-alerts', (req, res) => {
+  try {
+    const { user_id, category_id, limit_amount, period } = req.body;
+    
+    if (!user_id || !category_id || !limit_amount || !period) {
+      return res.status(400).json({ error: 'Все поля обязательны' });
+    }
+    
+    // Validate period
+    if (!['daily', 'weekly', 'monthly'].includes(period)) {
+      return res.status(400).json({ error: 'Неверный период' });
+    }
+    
+    // Check if category exists and belongs to user
+    const category = db.prepare('SELECT * FROM categories WHERE id = ? AND user_id = ?').get(category_id, user_id);
+    if (!category) {
+      return res.status(404).json({ error: 'Категория не найдена' });
+    }
+    
+    // Check if alert already exists for this category and period
+    const existingAlert = db.prepare('SELECT * FROM budget_alerts WHERE user_id = ? AND category_id = ? AND period = ?').get(user_id, category_id, period);
+    if (existingAlert) {
+      return res.status(400).json({ error: 'Уведомление для этой категории и периода уже существует' });
+    }
+    
+    const stmt = db.prepare('INSERT INTO budget_alerts (user_id, category_id, limit_amount, period) VALUES (?, ?, ?, ?)');
+    const result = stmt.run(user_id, category_id, limit_amount, period);
+    
+    const newAlert = db.prepare('SELECT * FROM budget_alerts WHERE id = ?').get(result.lastInsertRowid);
+    
+    res.status(201).json({
+      success: true,
+      message: 'Уведомление о бюджете создано',
+      alert: newAlert
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update budget alert
+app.put('/api/budget-alerts/:alertId', (req, res) => {
+  try {
+    const { alertId } = req.params;
+    const { user_id, limit_amount, period } = req.body;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Validate period if provided
+    if (period && !['daily', 'weekly', 'monthly'].includes(period)) {
+      return res.status(400).json({ error: 'Неверный период' });
+    }
+    
+    // Check if alert exists and belongs to user
+    const existingAlert = db.prepare('SELECT * FROM budget_alerts WHERE id = ? AND user_id = ?').get(alertId, user_id);
+    if (!existingAlert) {
+      return res.status(404).json({ error: 'Уведомление не найдено' });
+    }
+    
+    // Build update query
+    const updates = [];
+    const params = [];
+    
+    if (limit_amount !== undefined) {
+      updates.push('limit_amount = ?');
+      params.push(limit_amount);
+    }
+    
+    if (period !== undefined) {
+      updates.push('period = ?');
+      params.push(period);
+    }
+    
+    if (updates.length === 0) {
+      return res.status(400).json({ error: 'Нет данных для обновления' });
+    }
+    
+    params.push(alertId, user_id);
+    
+    const stmt = db.prepare(`UPDATE budget_alerts SET ${updates.join(', ')} WHERE id = ? AND user_id = ?`);
+    const result = stmt.run(...params);
+    
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Уведомление не найдено' });
+    }
+    
+    const updatedAlert = db.prepare('SELECT * FROM budget_alerts WHERE id = ?').get(alertId);
+    
+    res.json({
+      success: true,
+      message: 'Уведомление о бюджете обновлено',
+      alert: updatedAlert
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete budget alert
+app.delete('/api/budget-alerts/:alertId', (req, res) => {
+  try {
+    const { alertId } = req.params;
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    const stmt = db.prepare('DELETE FROM budget_alerts WHERE id = ? AND user_id = ?');
+    const result = stmt.run(alertId, user_id);
+    
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Уведомление не найдено' });
+    }
+    
+    res.json({ success: true, message: 'Уведомление о бюджете удалено' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Toggle budget alert
+app.patch('/api/budget-alerts/:alertId/toggle', (req, res) => {
+  try {
+    const { alertId } = req.params;
+    const { user_id } = req.body;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get current alert
+    const alert = db.prepare('SELECT * FROM budget_alerts WHERE id = ? AND user_id = ?').get(alertId, user_id);
+    if (!alert) {
+      return res.status(404).json({ error: 'Уведомление не найдено' });
+    }
+    
+    // Toggle enabled status
+    const newStatus = alert.enabled ? 0 : 1;
+    const stmt = db.prepare('UPDATE budget_alerts SET enabled = ? WHERE id = ? AND user_id = ?');
+    const result = stmt.run(newStatus, alertId, user_id);
+    
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Уведомление не найдено' });
+    }
+    
+    const updatedAlert = db.prepare('SELECT * FROM budget_alerts WHERE id = ?').get(alertId);
+    
+    res.json({
+      success: true,
+      message: `Уведомление ${newStatus ? 'включено' : 'отключено'}`,
+      alert: updatedAlert
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

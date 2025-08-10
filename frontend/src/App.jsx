@@ -13,6 +13,8 @@ import ExportManager from './components/ExportManager'
 import BackupManager from './components/BackupManager'
 import BudgetAlertManager from './components/BudgetAlertManager'
 import NotificationManager from './components/NotificationManager'
+import DataExporter from './components/DataExporter'
+import AnimatedTransition from './components/AnimatedTransition'
 import { Moon, Sun, Plus } from 'lucide-react'
 import './App.css'
 import './mobile.css'
@@ -100,41 +102,59 @@ function AppContent() {
           </header>
 
           <main className="app-main">
-            {activeTab === 'dashboard' && (
-              <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'dashboard'} direction="right">
+              {activeTab === 'dashboard' && (
+                <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+              )}
+            </AnimatedTransition>
             
-            {activeTab === 'transactions' && (
-              <TransactionList onEditTransaction={handleEditTransaction} />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'transactions'} direction="right">
+              {activeTab === 'transactions' && (
+                <TransactionList onEditTransaction={handleEditTransaction} />
+              )}
+            </AnimatedTransition>
             
-            {activeTab === 'statistics' && (
-              <Statistics />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'statistics'} direction="right">
+              {activeTab === 'statistics' && (
+                <Statistics />
+              )}
+            </AnimatedTransition>
 
-            {activeTab === 'goals' && (
-              <GoalManager />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'goals'} direction="right">
+              {activeTab === 'goals' && (
+                <GoalManager />
+              )}
+            </AnimatedTransition>
 
-            {activeTab === 'categories' && (
-              <CategoryManager />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'categories'} direction="right">
+              {activeTab === 'categories' && (
+                <CategoryManager />
+              )}
+            </AnimatedTransition>
 
-            {activeTab === 'budgets' && (
-              <BudgetAlertManager />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'budgets'} direction="right">
+              {activeTab === 'budgets' && (
+                <BudgetAlertManager />
+              )}
+            </AnimatedTransition>
 
-            {activeTab === 'notifications' && (
-              <NotificationManager />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'notifications'} direction="right">
+              {activeTab === 'notifications' && (
+                <NotificationManager />
+              )}
+            </AnimatedTransition>
 
-            {activeTab === 'backup' && (
-              <BackupManager />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'backup'} direction="right">
+              {activeTab === 'backup' && (
+                <BackupManager />
+              )}
+            </AnimatedTransition>
 
-            {activeTab === 'export' && (
-              <ExportManager />
-            )}
+            <AnimatedTransition isVisible={activeTab === 'export'} direction="right">
+              {activeTab === 'export' && (
+                <DataExporter />
+              )}
+            </AnimatedTransition>
           </main>
 
           <nav className="app-nav">

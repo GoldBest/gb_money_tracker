@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import { Download, Upload, Database, FileText, Calendar, Trash2, RefreshCw } from 'lucide-react'
 import { hapticFeedback } from '../utils/haptic'
+import { useTelegram } from '../contexts/TelegramContext'
 
 const BackupManager = () => {
+  const { user } = useTelegram()
   const [backups, setBackups] = useState([])
   const [loading, setLoading] = useState(false)
   const [showRestoreModal, setShowRestoreModal] = useState(false)
+  const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedBackup, setSelectedBackup] = useState(null)
   const [restoreProgress, setRestoreProgress] = useState(0)
+  const [backupName, setBackupName] = useState('')
+  const [backupDescription, setBackupDescription] = useState('')
 
   useEffect(() => {
-    loadBackups()
-  }, [])
+    if (user) {
+      loadBackups()
+    }
+  }, [user])
 
   const loadBackups = async () => {
+    if (!user) return
+    
     try {
       setLoading(true)
-      const response = await fetch('/api/backups')
+      const response = await fetch(`/api/backups?user_id=${user.id}`)
       if (response.ok) {
         const data = await response.json()
         setBackups(data)
@@ -29,15 +38,28 @@ const BackupManager = () => {
   }
 
   const createBackup = async () => {
+    if (!user) return
+    
     try {
       setLoading(true)
       const response = await fetch('/api/backups', {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          user_id: user.id,
+          name: backupName || 'Автоматическая копия',
+          description: backupDescription || ''
+        })
       })
 
       if (response.ok) {
         hapticFeedback.success()
         window.showTelegramAlert('Резервная копия создана успешно!')
+        setShowCreateModal(false)
+        setBackupName('')
+        setBackupDescription('')
         loadBackups()
       } else {
         throw new Error('Failed to create backup')
@@ -52,8 +74,10 @@ const BackupManager = () => {
   }
 
   const downloadBackup = async (backupId) => {
+    if (!user) return
+    
     try {
-      const response = await fetch(`/api/backups/${backupId}/download`)
+      const response = await fetch(`/api/backups/${backupId}/download?user_id=${user.id}`)
       
       if (response.ok) {
         const blob = await response.blob()
@@ -77,6 +101,8 @@ const BackupManager = () => {
   }
 
   const restoreBackup = async (backupId) => {
+    if (!user) return
+    
     if (!window.confirm('Внимание! Восстановление данных перезапишет все текущие данные. Продолжить?')) {
       return
     }
@@ -86,7 +112,11 @@ const BackupManager = () => {
       setRestoreProgress(0)
       
       const response = await fetch(`/api/backups/${backupId}/restore`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: user.id })
       })
 
       if (response.ok) {
@@ -116,12 +146,14 @@ const BackupManager = () => {
   }
 
   const deleteBackup = async (backupId) => {
+    if (!user) return
+    
     if (!window.confirm('Вы уверены, что хотите удалить эту резервную копию?')) {
       return
     }
 
     try {
-      const response = await fetch(`/api/backups/${backupId}`, {
+      const response = await fetch(`/api/backups/${backupId}?user_id=${user.id}`, {
         method: 'DELETE'
       })
 
@@ -138,6 +170,8 @@ const BackupManager = () => {
   }
 
   const importBackup = async (event) => {
+    if (!user) return
+    
     const file = event.target.files[0]
     if (!file) return
 
@@ -157,7 +191,10 @@ const BackupManager = () => {
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(backupData)
+            body: JSON.stringify({
+              user_id: user.id,
+              ...backupData
+            })
           })
 
           if (response.ok) {
@@ -201,119 +238,131 @@ const BackupManager = () => {
 
   return (
     <div className="backup-manager">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          <Database className="w-5 h-5" />
-          Резервные копии
-        </h2>
-        <div className="flex gap-3">
-          <label className="btn-secondary flex items-center gap-2 cursor-pointer">
-            <Upload className="w-4 h-4" />
-            Импорт
-            <input
-              type="file"
-              accept=".json"
-              onChange={importBackup}
-              className="hidden"
-            />
-          </label>
-          <button
-            onClick={createBackup}
-            disabled={loading}
-            className="btn-primary flex items-center gap-2"
-          >
-            {loading ? (
-              <RefreshCw className="w-4 h-4 animate-spin" />
-            ) : (
-              <Download className="w-4 h-4" />
-            )}
-            Создать копию
-          </button>
-        </div>
-      </div>
-
-      <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <div className="flex items-start gap-3">
-          <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
-          <div>
-            <h3 className="font-medium text-blue-900 mb-1">
-              Резервные копии данных
-            </h3>
-            <p className="text-sm text-blue-700">
-              Создавайте резервные копии всех ваших финансовых данных для безопасного хранения. 
-              Рекомендуется создавать копии регулярно, особенно перед важными изменениями.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {loading && backups.length === 0 ? (
+      {!user ? (
         <div className="text-center py-8">
           <RefreshCw className="w-8 h-8 mx-auto mb-4 animate-spin text-muted" />
-          <p className="text-muted">Загрузка резервных копий...</p>
-        </div>
-      ) : backups.length === 0 ? (
-        <div className="text-center py-8 text-muted">
-          <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>У вас пока нет резервных копий</p>
-          <p className="text-sm">Создайте первую копию для защиты ваших данных</p>
+          <p className="text-muted">Загрузка пользователя...</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {backups.map((backup) => (
-            <div
-              key={backup.id}
-              className="p-4 bg-card rounded-lg border hover:shadow-sm transition-shadow"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Database className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">
-                      Резервная копия от {formatDate(backup.created_at)}
-                    </h4>
-                    <div className="flex items-center gap-4 text-sm text-muted mt-1">
-                      <span className="flex items-center gap-1">
-                        <FileText className="w-4 h-4" />
-                        {formatFileSize(backup.size || 0)}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {backup.transactions_count || 0} транзакций
-                      </span>
+        <>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <Database className="w-5 h-5" />
+              Резервные копии
+            </h2>
+            <div className="flex gap-3">
+              <label className="btn-secondary flex items-center gap-2 cursor-pointer">
+                <Upload className="w-4 h-4" />
+                Импорт
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={importBackup}
+                  className="hidden"
+                />
+              </label>
+              <button
+                onClick={() => setShowCreateModal(true)}
+                disabled={loading}
+                className="btn-primary flex items-center gap-2"
+              >
+                {loading ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4" />
+                )}
+                Создать копию
+              </button>
+            </div>
+          </div>
+
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start gap-3">
+              <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
+              <div>
+                <h3 className="font-medium text-blue-900 mb-1">
+                  Резервные копии данных
+                </h3>
+                <p className="text-sm text-blue-700">
+                  Создавайте резервные копии всех ваших финансовых данных для безопасного хранения. 
+                  Рекомендуется создавать копии регулярно, особенно перед важными изменениями.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {loading && backups.length === 0 ? (
+            <div className="text-center py-8">
+              <RefreshCw className="w-8 h-8 mx-auto mb-4 animate-spin text-muted" />
+              <p className="text-muted">Загрузка резервных копий...</p>
+            </div>
+          ) : backups.length === 0 ? (
+            <div className="text-center py-8 text-muted">
+              <Database className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>У вас пока нет резервных копий</p>
+              <p className="text-sm">Создайте первую копию для защиты ваших данных</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {backups.map((backup) => (
+                <div
+                  key={backup.id}
+                  className="p-4 bg-card rounded-lg border hover:shadow-sm transition-shadow"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        <Database className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-medium">
+                          {backup.name || 'Резервная копия'} от {formatDate(backup.created_at)}
+                        </h4>
+                        {backup.description && (
+                          <p className="text-sm text-gray-600 mt-1">{backup.description}</p>
+                        )}
+                        <div className="flex items-center gap-4 text-sm text-muted mt-1">
+                          <span className="flex items-center gap-1">
+                            <FileText className="w-4 h-4" />
+                            {formatFileSize(backup.size || 0)}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            {backup.transactions_count || 0} транзакций
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => downloadBackup(backup.id)}
+                        className="btn-icon text-blue-600 hover:text-blue-700"
+                        title="Скачать"
+                      >
+                        <Download className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => restoreBackup(backup.id)}
+                        className="btn-icon text-green-600 hover:text-green-700"
+                        title="Восстановить"
+                      >
+                        <Upload className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => deleteBackup(backup.id)}
+                        className="btn-icon text-red-500 hover:text-red-600"
+                        title="Удалить"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 </div>
-                
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => downloadBackup(backup.id)}
-                    className="btn-icon text-blue-600 hover:text-blue-700"
-                    title="Скачать"
-                  >
-                    <Download className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => restoreBackup(backup.id)}
-                    className="btn-icon text-green-600 hover:text-green-700"
-                    title="Восстановить"
-                  >
-                    <Upload className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => deleteBackup(backup.id)}
-                    className="btn-icon text-red-500 hover:text-red-600"
-                    title="Удалить"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
 
       {/* Модальное окно восстановления */}
@@ -335,6 +384,65 @@ const BackupManager = () => {
             <p className="text-sm text-gray-600 mb-4">
               Пожалуйста, не закрывайте приложение во время восстановления данных.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно создания резервной копии */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-medium mb-4">Создать резервную копию</h3>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Название
+              </label>
+              <input
+                type="text"
+                value={backupName}
+                onChange={(e) => setBackupName(e.target.value)}
+                placeholder="Автоматическая копия"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Описание (необязательно)
+              </label>
+              <textarea
+                value={backupDescription}
+                onChange={(e) => setBackupDescription(e.target.value)}
+                placeholder="Описание резервной копии..."
+                rows="3"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => {
+                  setShowCreateModal(false)
+                  setBackupName('')
+                  setBackupDescription('')
+                }}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Отмена
+              </button>
+              <button
+                onClick={createBackup}
+                disabled={loading}
+                className="btn-primary px-4 py-2"
+              >
+                {loading ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  'Создать'
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

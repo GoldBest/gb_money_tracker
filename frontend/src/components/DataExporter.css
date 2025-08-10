@@ -1,0 +1,472 @@
+/* DataExporter.css */
+.data-exporter {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.exporter-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.exporter-header h3 {
+  margin: 0 0 12px 0;
+  color: var(--text-primary);
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.exporter-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Опции экспорта */
+.export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-group label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Селектор формата */
+.format-selector {
+  display: flex;
+  gap: 12px;
+}
+
+.format-option {
+  flex: 1;
+  padding: 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.format-option:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.format-option.active {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--primary-color-alpha);
+}
+
+/* Диапазон дат */
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.date-input {
+  position: relative;
+  flex: 1;
+}
+
+.date-input svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  z-index: 1;
+}
+
+.date-input input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.date-input input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px var(--primary-color-alpha);
+  transform: scale(1.02);
+}
+
+.date-separator {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 18px;
+}
+
+/* Чекбоксы */
+.include-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-option:hover {
+  background: var(--bg-hover);
+}
+
+.checkbox-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
+.checkbox-option span {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Быстрые периоды */
+.quick-periods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.period-button {
+  padding: 8px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.period-button:hover {
+  border-color: var(--primary-color);
+  background: var(--primary-color-alpha);
+  transform: translateY(-1px);
+}
+
+/* Действия */
+.exporter-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.action-button {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.action-button.secondary {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.action-button.secondary:hover {
+  background: var(--border-color);
+  transform: translateY(-2px);
+}
+
+.action-button.primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.action-button.primary:hover:not(:disabled) {
+  background: var(--primary-color-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--primary-color-alpha);
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Информация */
+.export-info {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.export-info h4 {
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.export-info ul {
+  margin: 0 0 20px 0;
+  padding-left: 20px;
+}
+
+.export-info li {
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.format-info {
+  padding: 16px;
+  background: var(--bg-hover);
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.format-info strong {
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.format-info span {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Спиннер загрузки */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .data-exporter {
+    padding: 16px;
+  }
+  
+  .exporter-header h3 {
+    font-size: 24px;
+  }
+  
+  .format-selector {
+    flex-direction: column;
+  }
+  
+  .date-range {
+    flex-direction: column;
+  }
+  
+  .date-separator {
+    display: none;
+  }
+  
+  .include-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .exporter-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .action-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .data-exporter {
+    padding: 12px;
+  }
+  
+  .exporter-header h3 {
+    font-size: 20px;
+  }
+  
+  .exporter-header p {
+    font-size: 14px;
+  }
+  
+  .option-group label {
+    font-size: 14px;
+  }
+  
+  .format-option {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .date-input input {
+    font-size: 16px; /* Предотвращает зум на iOS */
+  }
+  
+  .export-info {
+    padding: 16px;
+  }
+}
+
+/* Темная тема */
+[data-theme="dark"] .data-exporter {
+  background: var(--bg-primary-dark);
+}
+
+[data-theme="dark"] .format-option {
+  background: var(--bg-secondary-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .date-input input {
+  background: var(--bg-primary-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .checkbox-option:hover {
+  background: var(--bg-hover-dark);
+}
+
+[data-theme="dark"] .period-button {
+  background: var(--bg-secondary-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .export-info {
+  background: var(--bg-secondary-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .format-info {
+  background: var(--bg-hover-dark);
+}
+
+/* Анимации */
+.data-exporter {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.format-option,
+.period-button,
+.action-button {
+  transform-origin: center;
+}
+
+.format-option:hover,
+.period-button:hover,
+.action-button:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Эффект пульсации для активных элементов */
+.format-option.active {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 8px 24px var(--primary-color-alpha);
+  }
+  50% {
+    box-shadow: 0 8px 24px var(--primary-color-alpha), 0 0 0 0 var(--primary-color-alpha);
+  }
+  100% {
+    box-shadow: 0 8px 24px var(--primary-color-alpha);
+  }
+}
+
+/* Плавные переходы */
+.data-exporter * {
+  transition: all 0.2s ease;
+}
+
+/* Эффект фокуса для инпутов */
+.date-input input:focus,
+.format-option:focus,
+.period-button:focus,
+.action-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primary-color-alpha);
+}
+
+/* Эффект наведения для чекбоксов */
+.checkbox-option:hover input[type="checkbox"] {
+  transform: scale(1.1);
+}
+
+/* Эффект для отключенных кнопок */
+.action-button:disabled {
+  animation: none;
+  transform: none;
+}
+
+/* Эффект для успешного экспорта */
+.action-button.primary:not(:disabled):active {
+  transform: scale(0.98);
+}

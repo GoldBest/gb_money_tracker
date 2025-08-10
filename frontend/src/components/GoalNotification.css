@@ -1,0 +1,392 @@
+/* GoalNotification.css */
+.goal-notification {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.goal-notification::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
+/* Заголовок уведомления */
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.goal-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.goal-icon {
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: var(--primary-color-alpha);
+  border-radius: 12px;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.goal-title h4 {
+  margin: 0 0 4px 0;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.goal-type {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+  padding: 4px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.close-notification {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-notification:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+/* Содержимое уведомления */
+.notification-content {
+  margin-bottom: 20px;
+}
+
+.goal-message {
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Секция прогресса */
+.progress-section {
+  margin-bottom: 16px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-hover);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1s ease-out;
+}
+
+/* Информация о дедлайне */
+.deadline-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 12px;
+  background: var(--bg-hover);
+  border-radius: 8px;
+}
+
+.days-left {
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+/* Действия */
+.notification-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.action-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-button.secondary {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.action-button.secondary:hover {
+  background: var(--border-color);
+  transform: translateY(-1px);
+}
+
+.action-button.primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.action-button.primary:hover {
+  background: var(--primary-color-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--primary-color-alpha);
+}
+
+/* Детали цели */
+.goal-details {
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.detail-item strong {
+  color: var(--text-primary);
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status.completed {
+  background: var(--success-color-alpha);
+  color: var(--success-color);
+}
+
+.status.in-progress {
+  background: var(--warning-color-alpha);
+  color: var(--warning-color);
+}
+
+/* Анимации */
+.goal-notification {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.goal-notification:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .goal-notification {
+    padding: 16px;
+  }
+  
+  .notification-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .goal-info {
+    justify-content: center;
+  }
+  
+  .close-notification {
+    align-self: flex-end;
+  }
+  
+  .notification-actions {
+    flex-direction: column;
+  }
+  
+  .action-button {
+    justify-content: center;
+  }
+  
+  .deadline-info {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .goal-notification {
+    padding: 12px;
+  }
+  
+  .goal-icon {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+  }
+  
+  .goal-title h4 {
+    font-size: 16px;
+  }
+  
+  .goal-message {
+    font-size: 14px;
+  }
+  
+  .progress-info {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+}
+
+/* Темная тема */
+[data-theme="dark"] .goal-notification {
+  background: var(--bg-secondary-dark);
+  border-color: var(--border-color-dark);
+}
+
+[data-theme="dark"] .goal-notification::before {
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
+[data-theme="dark"] .goal-type {
+  background: var(--bg-hover-dark);
+}
+
+[data-theme="dark"] .deadline-info {
+  background: var(--bg-hover-dark);
+}
+
+[data-theme="dark"] .action-button.secondary {
+  background: var(--bg-hover-dark);
+}
+
+[data-theme="dark"] .action-button.secondary:hover {
+  background: var(--border-color-dark);
+}
+
+/* Эффекты для достигнутых целей */
+.goal-notification.achieved {
+  border-color: var(--success-color);
+  background: linear-gradient(135deg, var(--bg-secondary), var(--success-color-alpha));
+}
+
+.goal-notification.achieved::before {
+  background: var(--success-color);
+}
+
+.goal-notification.achieved .goal-icon {
+  background: var(--success-color-alpha);
+  color: var(--success-color);
+  animation: celebrate 2s infinite;
+}
+
+@keyframes celebrate {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+/* Эффекты для целей с высоким прогрессом */
+.goal-notification.high-progress {
+  border-color: var(--warning-color);
+}
+
+.goal-notification.high-progress::before {
+  background: var(--warning-color);
+}
+
+/* Эффекты для целей с низким прогрессом */
+.goal-notification.low-progress {
+  border-color: var(--error-color);
+}
+
+.goal-notification.low-progress::before {
+  background: var(--error-color);
+}
+
+/* Плавные переходы */
+.goal-notification * {
+  transition: all 0.2s ease;
+}
+
+/* Эффект пульсации для активных уведомлений */
+.goal-notification:not(.achieved) {
+  animation: slideInRight 0.3s ease-out, pulse 3s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+}
