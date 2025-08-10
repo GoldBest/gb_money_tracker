@@ -16,8 +16,8 @@ if grep -q "YOUR_NGROK_AUTHTOKEN_HERE" ngrok.yml; then
 fi
 
 # Проверяем, запущены ли сервисы
-if ! curl -s http://localhost:5173 > /dev/null; then
-    echo "⚠️  Frontend сервер не запущен на порту 5173"
+if ! curl -s http://localhost:5176 > /dev/null; then
+    echo "⚠️  Frontend сервер не запущен на порту 5176"
     echo "Запустите сначала: cd frontend && npm run dev"
     exit 1
 fi
