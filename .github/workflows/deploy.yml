@@ -2,15 +2,15 @@ name: 🚀 Auto Deploy
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ master ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ master ]
 
 jobs:
   # Деплой Frontend на Vercel
   deploy-frontend:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     
     steps:
     - name: 🚀 Checkout code
@@ -41,7 +41,7 @@ jobs:
   # Деплой Backend на Railway
   deploy-backend:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     
     steps:
     - name: 🚀 Checkout code
