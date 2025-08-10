@@ -1,0 +1,36 @@
+services:
+  # Backend API Service
+  - type: web
+    name: gb-money-tracker-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm install pg && node server.prod.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gb-money-tracker-db
+          property: connectionString
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+  # Frontend Web Service
+  - type: web
+    name: gb-money-tracker-frontend
+    env: static
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_BACKEND_API_URL
+        value: https://gb-money-tracker-backend.onrender.com
+    autoDeploy: true
+
+databases:
+  - name: gb-money-tracker-db
+    databaseName: gbmoneytracker
+    plan: free

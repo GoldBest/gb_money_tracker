@@ -81,12 +81,7 @@ export const TelegramProvider = ({ children }) => {
         alert(message)
       }
       
-      // Mock haptic feedback для разработки
-      window.Telegram.WebApp.HapticFeedback = {
-        impactOccurred: (style) => console.log('Mock haptic feedback:', style),
-        notificationOccurred: (type) => console.log('Mock haptic notification:', type),
-        selectionChanged: () => console.log('Mock haptic selection')
-      }
+
       
       // Логируем версию для отладки
       console.log('🔧 Using mock Telegram WebApp (development mode)')
@@ -99,8 +94,7 @@ export const TelegramProvider = ({ children }) => {
       // Логируем информацию о версии
       const versionInfo = {
         version: window.Telegram.WebApp.version,
-        platform: window.Telegram.WebApp.platform,
-        hapticSupported: !!window.Telegram.WebApp.HapticFeedback
+        platform: window.Telegram.WebApp.platform
       };
       console.log('📱 Telegram WebApp Info:', versionInfo);
       

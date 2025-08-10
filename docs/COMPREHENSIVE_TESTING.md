@@ -70,7 +70,7 @@
 - [ ] Адаптивный дизайн
 - [ ] Темная/светлая тема
 - [ ] Анимации переходов
-- [ ] Haptic feedback
+
 - [ ] Pull-to-refresh
 - [ ] Loading states
 - [ ] Error handling

@@ -25,7 +25,8 @@ export default defineConfig(({ command, mode }) => {
         'localhost',
         '127.0.0.1',
         '*.ngrok-free.app',
-        '76497dd1bbc9.ngrok-free.app'
+        '76497dd1bbc9.ngrok-free.app',
+        '7747cf0ecbb1.ngrok-free.app'
       ],
       proxy: {
         '/api': {
@@ -41,8 +42,7 @@ export default defineConfig(({ command, mode }) => {
       rollupOptions: {
         output: {
           manualChunks: {
-            vendor: ['react', 'react-dom'],
-            telegram: ['telegram-web-app']
+            vendor: ['react', 'react-dom']
           }
         }
       }

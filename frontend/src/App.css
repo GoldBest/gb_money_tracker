@@ -1850,14 +1850,7 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Haptic feedback visual indicators */
-.haptic-trigger {
-  transition: transform 0.1s ease;
-}
 
-.haptic-trigger:active {
-  transform: scale(0.95);
-}
 
 /* Enhanced touch feedback for mobile */
 @media (hover: none) and (pointer: coarse) {
