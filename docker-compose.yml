@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: gb-money-tracker-db
+    environment:
+      POSTGRES_DB: gbmoneytracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gb-money-tracker-backend
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/gbmoneytracker
+      BOT_TOKEN: ${BOT_TOKEN}
+    ports:
+      - "3002:3001"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  # Frontend (Nginx)
+  frontend:
+    image: nginx:alpine
+    container_name: gb-money-tracker-frontend
+    ports:
+      - "8081:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
