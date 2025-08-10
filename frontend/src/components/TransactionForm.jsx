@@ -42,6 +42,8 @@ const TransactionForm = ({ onClose, onSuccess }) => {
     }
   }
 
+  const [budgetWarnings, setBudgetWarnings] = useState([])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     
@@ -53,13 +55,31 @@ const TransactionForm = ({ onClose, onSuccess }) => {
 
     try {
       setLoading(true)
-      await api.post('/api/transactions', {
+      const response = await api.post('/api/transactions', {
         ...formData,
         user_id: user.id,
         amount: parseFloat(formData.amount)
       })
       
-      hapticFeedback.success()
+      // Проверяем бюджетные предупреждения
+      if (response.data.budgetWarnings && response.data.budgetWarnings.length > 0) {
+        setBudgetWarnings(response.data.budgetWarnings)
+        
+        // Показываем предупреждения пользователю
+        const warningMessages = response.data.budgetWarnings.map(w => w.message).join('\n\n')
+        window.showTelegramAlert(`Транзакция создана, но есть предупреждения:\n\n${warningMessages}`)
+        
+        // Вибрация для предупреждений
+        if (response.data.budgetWarnings.some(w => w.type === 'budget_exceeded')) {
+          hapticFeedback.error() // Сильная вибрация для превышения
+        } else {
+          hapticFeedback.medium() // Средняя вибрация для предупреждений
+        }
+      } else {
+        hapticFeedback.success()
+        window.showTelegramAlert('Транзакция успешно создана!')
+      }
+      
       onSuccess()
     } catch (error) {
       console.error('Error creating transaction:', error)
@@ -166,6 +186,31 @@ const TransactionForm = ({ onClose, onSuccess }) => {
               placeholder="Краткое описание"
             />
           </div>
+
+          {/* Бюджетные предупреждения */}
+          {budgetWarnings.length > 0 && (
+            <div className="budget-warnings">
+              <h4>⚠️ Бюджетные предупреждения</h4>
+              {budgetWarnings.map((warning, index) => (
+                <div 
+                  key={index} 
+                  className={`warning-item ${warning.type === 'budget_exceeded' ? 'exceeded' : 'warning'}`}
+                >
+                  <div className="warning-icon">
+                    {warning.type === 'budget_exceeded' ? '🚨' : '⚠️'}
+                  </div>
+                  <div className="warning-content">
+                    <p className="warning-message">{warning.message}</p>
+                    <div className="warning-details">
+                      <span>Текущие траты: {warning.current.toLocaleString()} ₽</span>
+                      <span>Лимит: {warning.limit.toLocaleString()} ₽</span>
+                      <span>Новый итог: {warning.newTotal.toLocaleString()} ₽</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="form-actions">
             <button type="button" className="button secondary haptic-trigger" onClick={handleClose}>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug CORS - GB Money Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🐛 Debug CORS - GB Money Tracker</h1>
+    
+    <div>
+        <h3>Текущие URL:</h3>
+        <p><strong>Backend:</strong> https://669e2796539e.ngrok-free.app</p>
+        <p><strong>Frontend:</strong> https://144343b69edd.ngrok-free.app</p>
+        <p><strong>Текущая страница:</strong> <span id="current-url"></span></p>
+    </div>
+
+    <div>
+        <h3>Тесты:</h3>
+        <button onclick="testSimple()">1. Простой GET запрос</button>
+        <button onclick="testWithHeaders()">2. С заголовками ngrok</button>
+        <button onclick="testOptions()">3. OPTIONS запрос</button>
+        <button onclick="testPost()">4. POST запрос</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('current-url').textContent = window.location.href;
+        
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            results.appendChild(div);
+            console.log(message);
+        }
+
+        async function testSimple() {
+            log('🔄 Тест 1: Простой GET запрос...', 'info');
+            
+            try {
+                const response = await fetch('https://669e2796539e.ngrok-free.app/api/health');
+                log(`✅ Успех! Статус: ${response.status}`, 'success');
+                
+                const data = await response.json();
+                log(`📊 Данные: ${JSON.stringify(data)}`, 'success');
+            } catch (error) {
+                log(`❌ Ошибка: ${error.message}`, 'error');
+                log(`🔍 Тип ошибки: ${error.name}`, 'error');
+                log(`🔍 Код ошибки: ${error.code}`, 'error');
+            }
+        }
+
+        async function testWithHeaders() {
+            log('🔄 Тест 2: С заголовками ngrok...', 'info');
+            
+            try {
+                const response = await fetch('https://669e2796539e.ngrok-free.app/api/health', {
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                log(`✅ Успех! Статус: ${response.status}`, 'success');
+                
+                const data = await response.json();
+                log(`📊 Данные: ${JSON.stringify(data)}`, 'success');
+            } catch (error) {
+                log(`❌ Ошибка: ${error.message}`, 'error');
+                log(`🔍 Тип ошибки: ${error.name}`, 'error');
+                log(`🔍 Код ошибки: ${error.code}`, 'error');
+            }
+        }
+
+        async function testOptions() {
+            log('🔄 Тест 3: OPTIONS запрос...', 'info');
+            
+            try {
+                const response = await fetch('https://669e2796539e.ngrok-free.app/api/health', {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': window.location.origin,
+                        'ngrok-skip-browser-warning': 'true'
+                    }
+                });
+                log(`✅ OPTIONS успешен! Статус: ${response.status}`, 'success');
+                
+                // Показываем заголовки CORS
+                const corsHeaders = {
+                    'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),
+                    'Access-Control-Allow-Methods': response.headers.get('Access-Control-Allow-Methods'),
+                    'Access-Control-Allow-Headers': response.headers.get('Access-Control-Allow-Headers')
+                };
+                log(`📋 CORS заголовки: ${JSON.stringify(corsHeaders)}`, 'success');
+            } catch (error) {
+                log(`❌ OPTIONS ошибка: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPost() {
+            log('🔄 Тест 4: POST запрос...', 'info');
+            
+            try {
+                const userData = {
+                    telegram_id: `debug_test_${Date.now()}`,
+                    username: 'debug_user',
+                    first_name: 'Debug User'
+                };
+                
+                const response = await fetch('https://669e2796539e.ngrok-free.app/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ POST успешен! Создан пользователь: ${data.telegram_id}`, 'success');
+                } else {
+                    const errorData = await response.text();
+                    log(`❌ POST ошибка HTTP: ${response.status} - ${errorData}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ POST ошибка: ${error.message}`, 'error');
+                log(`🔍 Тип ошибки: ${error.name}`, 'error');
+                log(`🔍 Код ошибки: ${error.code}`, 'error');
+            }
+        }
+
+        // Автоматический тест при загрузке
+        window.addEventListener('load', () => {
+            log('🚀 Страница загружена, начинаю автоматические тесты...', 'info');
+            setTimeout(() => testSimple(), 1000);
+            setTimeout(() => testWithHeaders(), 2000);
+            setTimeout(() => testOptions(), 3000);
+        });
+    </script>
+</body>
+</html>

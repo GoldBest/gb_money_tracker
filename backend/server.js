@@ -8,7 +8,19 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174', 
+    'http://localhost:5175',
+    'http://localhost:5176',
+    'https://*.ngrok-free.app',
+    'https://*.ngrok.io'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning']
+}));
 app.use(express.json());
 
 // Database setup
@@ -263,10 +275,84 @@ app.get('/api/users/:userId/transactions', (req, res) => {
   }
 });
 
+// Function to check budget limits
+function checkBudgetLimits(userId, categoryId, amount, type) {
+  if (type === 'expense') {
+    // Get budget alerts for this category
+    const budgetAlerts = db.prepare(`
+      SELECT * FROM budget_alerts 
+      WHERE user_id = ? AND category_id = ? AND enabled = 1
+    `).all(userId, categoryId);
+    
+    const warnings = [];
+    
+    for (const alert of budgetAlerts) {
+      let currentSpending = 0;
+      
+      if (alert.period === 'daily') {
+        currentSpending = db.prepare(`
+          SELECT COALESCE(SUM(amount), 0) as total 
+          FROM transactions 
+          WHERE user_id = ? AND category_id = ? AND type = 'expense' 
+          AND DATE(created_at) = DATE('now')
+        `).get(userId, categoryId).total;
+      } else if (alert.period === 'weekly') {
+        currentSpending = db.prepare(`
+          SELECT COALESCE(SUM(amount), 0) as total 
+          FROM transactions 
+          WHERE user_id = ? AND category_id = ? AND type = 'expense' 
+          AND created_at >= datetime('now', '-7 days')
+        `).get(userId, categoryId).total;
+      } else if (alert.period === 'monthly') {
+        currentSpending = db.prepare(`
+          SELECT COALESCE(SUM(amount), 0) as total 
+          FROM transactions 
+          WHERE user_id = ? AND category_id = ? AND type = 'expense' 
+          AND created_at >= datetime('now', '-30 days')
+        `).get(userId, categoryId).total;
+      }
+      
+      const newTotal = currentSpending + amount;
+      
+      // Get category name for the message
+      const category = db.prepare('SELECT name FROM categories WHERE id = ?').get(alert.category_id);
+      const categoryName = category ? category.name : 'Неизвестная категория';
+      
+      if (newTotal > alert.limit_amount) {
+        warnings.push({
+          type: 'budget_exceeded',
+          message: `Превышен лимит бюджета для категории "${categoryName}" (${alert.period})`,
+          current: currentSpending,
+          limit: alert.limit_amount,
+          newTotal: newTotal,
+          period: alert.period
+        });
+      } else if (newTotal > alert.limit_amount * 0.8) {
+        warnings.push({
+          type: 'budget_warning',
+          message: `Приближение к лимиту бюджета для категории "${categoryName}" (${alert.period})`,
+          current: currentSpending,
+          limit: alert.limit_amount,
+          newTotal: newTotal,
+          period: alert.period
+        });
+      }
+    }
+    
+    return warnings;
+  }
+  
+  return [];
+}
+
 // Create transaction
 app.post('/api/transactions', (req, res) => {
   try {
     const { amount, description, type, category_id, user_id } = req.body;
+    
+    // Check budget limits before creating transaction
+    const budgetWarnings = checkBudgetLimits(user_id, category_id, amount, type);
+    
     const stmt = db.prepare('INSERT INTO transactions (amount, description, type, category_id, user_id) VALUES (?, ?, ?, ?, ?)');
     const result = stmt.run(amount, description, type, category_id, user_id);
     const transaction = db.prepare(`
@@ -275,7 +361,11 @@ app.post('/api/transactions', (req, res) => {
       LEFT JOIN categories c ON t.category_id = c.id 
       WHERE t.id = ?
     `).get(result.lastInsertRowid);
-    res.json(transaction);
+    
+    res.json({
+      ...transaction,
+      budgetWarnings
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -1076,6 +1166,29 @@ app.patch('/api/budget-alerts/:alertId/toggle', (req, res) => {
       success: true,
       message: `Уведомление ${newStatus ? 'включено' : 'отключено'}`,
       alert: updatedAlert
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Send budget notification via Telegram
+app.post('/api/notifications/send', (req, res) => {
+  try {
+    const { chatId, warning } = req.body;
+    
+    if (!chatId || !warning) {
+      return res.status(400).json({ error: 'chatId и warning обязательны' });
+    }
+    
+    // Здесь будет логика отправки уведомления через Telegram
+    // Пока просто возвращаем успех
+    console.log(`📢 Уведомление для ${chatId}:`, warning);
+    
+    res.json({
+      success: true,
+      message: 'Уведомление отправлено',
+      notification: { chatId, warning }
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

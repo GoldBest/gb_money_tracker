@@ -8,22 +8,36 @@
   if (window.Telegram && window.Telegram.WebApp) {
     const tg = window.Telegram.WebApp;
     
+    // Проверяем версию Telegram WebApp
+    const version = tg.version || '6.0';
+    const isVersion6 = version.startsWith('6.');
+    
+    console.log('Telegram WebApp version:', version);
+    
     // Готовим приложение
     tg.ready();
     
-    // Раскрываем на полный экран
-    tg.expand();
+    // Раскрываем на полный экран (если поддерживается)
+    if (tg.expand) {
+      tg.expand();
+    }
     
-    // Устанавливаем основной цвет
-    tg.setHeaderColor('#667eea');
+    // Устанавливаем основной цвет (если поддерживается)
+    if (tg.setHeaderColor) {
+      tg.setHeaderColor('#667eea');
+    }
     
-    // Устанавливаем цвет фона
-    tg.setBackgroundColor('#f8fafc');
+    // Устанавливаем цвет фона (если поддерживается)
+    if (tg.setBackgroundColor) {
+      tg.setBackgroundColor('#f8fafc');
+    }
     
-    // Обработка событий
-    tg.onEvent('viewportChanged', function() {
-      console.log('Viewport changed');
-    });
+    // Обработка событий (если поддерживается)
+    if (tg.onEvent) {
+      tg.onEvent('viewportChanged', function() {
+        console.log('Viewport changed');
+      });
+    }
     
     // Функция для отправки данных в Telegram
     window.sendToTelegram = function(data) {
@@ -41,18 +55,41 @@
     
     // Функция для показа алерта в Telegram
     window.showTelegramAlert = function(message) {
-      if (tg.showAlert) {
+      // В версии 6.0 showAlert может не поддерживаться
+      if (tg.showAlert && !isVersion6) {
         tg.showAlert(message);
+      } else if (tg.showPopup && !isVersion6) {
+        // Попробуем showPopup как альтернативу
+        tg.showPopup({
+          title: 'Уведомление',
+          message: message,
+          buttons: [{ type: 'ok' }]
+        });
       } else {
+        // Fallback на обычный alert
+        console.log('Telegram Alert (fallback):', message);
         alert(message);
       }
     };
     
     // Функция для показа подтверждения в Telegram
     window.showTelegramConfirm = function(message, callback) {
-      if (tg.showConfirm) {
+      if (tg.showConfirm && !isVersion6) {
         tg.showConfirm(message, callback);
+      } else if (tg.showPopup && !isVersion6) {
+        // Попробуем showPopup как альтернативу
+        tg.showPopup({
+          title: 'Подтверждение',
+          message: message,
+          buttons: [
+            { type: 'cancel', text: 'Отмена' },
+            { type: 'ok', text: 'OK' }
+          ]
+        }, function(buttonId) {
+          if (callback) callback(buttonId === 'ok');
+        });
       } else {
+        // Fallback на обычный confirm
         const result = confirm(message);
         if (callback) callback(result);
       }

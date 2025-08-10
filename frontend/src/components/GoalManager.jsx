@@ -1,120 +1,205 @@
 import React, { useState, useEffect } from 'react'
-import { Target, Plus, Edit3, Trash2, TrendingUp, Calendar } from 'lucide-react'
+import { Target, Plus, Trash2, Edit, TrendingUp, Calendar, DollarSign, X } from 'lucide-react'
+import { useTelegram } from '../contexts/TelegramContext'
 import { hapticFeedback } from '../utils/haptic'
 
 const GoalManager = () => {
+  const { user } = useTelegram()
   const [goals, setGoals] = useState([])
-  const [showForm, setShowForm] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [showCreateModal, setShowCreateModal] = useState(false)
   const [editingGoal, setEditingGoal] = useState(null)
   const [formData, setFormData] = useState({
     title: '',
-    targetAmount: '',
-    currentAmount: '',
+    target_amount: '',
+    current_amount: '',
     deadline: '',
     description: ''
   })
 
   useEffect(() => {
-    loadGoals()
-  }, [])
+    if (user) {
+      loadGoals()
+    }
+  }, [user])
 
   const loadGoals = async () => {
+    if (!user) return
+    
     try {
-      const response = await fetch('/api/goals')
+      setLoading(true)
+      const response = await fetch(`/api/users/${user.id}/goals`)
       if (response.ok) {
         const data = await response.json()
         setGoals(data)
       }
     } catch (error) {
       console.error('Error loading goals:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const createGoal = async () => {
+    if (!user) return
     
+    if (!formData.title || !formData.target_amount) {
+      hapticFeedback.error()
+      window.showTelegramAlert('Пожалуйста, заполните все обязательные поля')
+      return
+    }
+
     try {
-      const goalData = {
-        ...formData,
-        targetAmount: parseFloat(formData.targetAmount),
-        currentAmount: parseFloat(formData.currentAmount) || 0
-      }
-
-      const url = editingGoal ? `/api/goals/${editingGoal.id}` : '/api/goals'
-      const method = editingGoal ? 'PUT' : 'POST'
-
-      const response = await fetch(url, {
-        method,
+      setLoading(true)
+      const response = await fetch('/api/goals', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(goalData)
+        body: JSON.stringify({
+          user_id: user.id,
+          ...formData,
+          target_amount: parseFloat(formData.target_amount),
+          current_amount: parseFloat(formData.current_amount) || 0
+        })
       })
 
       if (response.ok) {
         hapticFeedback.success()
-        window.showTelegramAlert(
-          editingGoal ? 'Цель обновлена!' : 'Цель создана!'
-        )
-        setShowForm(false)
-        setEditingGoal(null)
-        resetForm()
+        window.showTelegramAlert('Цель успешно создана!')
+        setShowCreateModal(false)
+        setFormData({
+          title: '',
+          target_amount: '',
+          current_amount: '',
+          deadline: '',
+          description: ''
+        })
         loadGoals()
+      } else {
+        throw new Error('Failed to create goal')
       }
     } catch (error) {
-      console.error('Error saving goal:', error)
+      console.error('Error creating goal:', error)
       hapticFeedback.error()
-      window.showTelegramAlert('Ошибка при сохранении цели')
+      window.showTelegramAlert('Ошибка при создании цели')
+    } finally {
+      setLoading(false)
     }
+  }
+
+  const updateGoal = async () => {
+    if (!editingGoal) return
+    
+    try {
+      setLoading(true)
+      const response = await fetch(`/api/goals/${editingGoal.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          target_amount: parseFloat(formData.target_amount),
+          current_amount: parseFloat(formData.current_amount) || 0
+        })
+      })
+
+      if (response.ok) {
+        hapticFeedback.success()
+        window.showTelegramAlert('Цель успешно обновлена!')
+        setShowCreateModal(false)
+        setEditingGoal(null)
+        setFormData({
+          title: '',
+          target_amount: '',
+          current_amount: '',
+          deadline: '',
+          description: ''
+        })
+        loadGoals()
+      } else {
+        throw new Error('Failed to update goal')
+      }
+    } catch (error) {
+      console.error('Error updating goal:', error)
+      hapticFeedback.error()
+      window.showTelegramAlert('Ошибка при обновлении цели')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const deleteGoal = async (goalId) => {
+    hapticFeedback.medium()
+    window.showTelegramConfirm(
+      'Вы уверены, что хотите удалить эту цель?',
+      async (confirmed) => {
+        if (confirmed) {
+          try {
+            const response = await fetch(`/api/goals/${goalId}`, {
+              method: 'DELETE'
+            })
+
+            if (response.ok) {
+              hapticFeedback.success()
+              window.showTelegramAlert('Цель удалена!')
+              loadGoals()
+            } else {
+              throw new Error('Failed to delete goal')
+            }
+          } catch (error) {
+            console.error('Error deleting goal:', error)
+            hapticFeedback.error()
+            window.showTelegramAlert('Ошибка при удалении цели')
+          }
+        }
+      }
+    )
   }
 
   const handleEdit = (goal) => {
     setEditingGoal(goal)
     setFormData({
       title: goal.title,
-      targetAmount: goal.targetAmount.toString(),
-      currentAmount: goal.currentAmount.toString(),
-      deadline: goal.deadline,
+      target_amount: goal.target_amount.toString(),
+      current_amount: goal.current_amount.toString(),
+      deadline: goal.deadline || '',
       description: goal.description || ''
     })
-    setShowForm(true)
+    setShowCreateModal(true)
   }
 
-  const handleDelete = async (goalId) => {
-    if (!window.confirm('Вы уверены, что хотите удалить эту цель?')) return
-
-    try {
-      const response = await fetch(`/api/goals/${goalId}`, {
-        method: 'DELETE'
-      })
-
-      if (response.ok) {
-        hapticFeedback.success()
-        window.showTelegramAlert('Цель удалена!')
-        loadGoals()
-      }
-    } catch (error) {
-      console.error('Error deleting goal:', error)
-      hapticFeedback.error()
-      window.showTelegramAlert('Ошибка при удалении цели')
-    }
-  }
-
-  const resetForm = () => {
+  const handleCloseModal = () => {
+    setShowCreateModal(false)
+    setEditingGoal(null)
     setFormData({
       title: '',
-      targetAmount: '',
-      currentAmount: '',
+      target_amount: '',
+      current_amount: '',
       deadline: '',
       description: ''
     })
   }
 
-  const getProgressPercentage = (current, target) => {
+  const calculateProgress = (current, target) => {
     return Math.min((current / target) * 100, 100)
   }
 
-  const getDaysUntilDeadline = (deadline) => {
+  const getProgressColor = (progress) => {
+    if (progress >= 100) return '#10b981' // Зеленый
+    if (progress >= 75) return '#3b82f6' // Синий
+    if (progress >= 50) return '#f59e0b' // Желтый
+    return '#ef4444' // Красный
+  }
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Без срока'
+    return new Date(dateString).toLocaleDateString('ru-RU')
+  }
+
+  const daysUntilDeadline = (deadline) => {
+    if (!deadline) return null
     const today = new Date()
     const deadlineDate = new Date(deadline)
     const diffTime = deadlineDate - today
@@ -122,229 +207,201 @@ const GoalManager = () => {
     return diffDays
   }
 
-  const getProgressColor = (percentage) => {
-    if (percentage >= 100) return 'bg-green-500'
-    if (percentage >= 75) return 'bg-blue-500'
-    if (percentage >= 50) return 'bg-yellow-500'
-    return 'bg-red-500'
+  if (loading && goals.length === 0) {
+    return (
+      <div className="loading">
+        <div className="loading-spinner"></div>
+        <p>Загрузка целей...</p>
+      </div>
+    )
   }
 
   return (
     <div className="goal-manager">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          <Target className="w-5 h-5" />
-          Финансовые цели
-        </h2>
-        <button
-          onClick={() => setShowForm(true)}
-          className="btn-primary flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Новая цель
-        </button>
+      <div className="section-header">
+        <h2>🎯 Финансовые цели</h2>
+        <p>Отслеживайте прогресс в достижении ваших финансовых целей</p>
       </div>
 
-      {showForm && (
-        <div className="mb-6 p-4 bg-card rounded-lg border">
-          <h3 className="text-lg font-medium mb-4">
-            {editingGoal ? 'Редактировать цель' : 'Создать новую цель'}
-          </h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Название цели
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => setFormData({...formData, title: e.target.value})}
-                className="input-field"
-                placeholder="Например: Покупка ноутбука"
-                required
-              />
+      {goals.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon">
+            <Target size={48} />
+          </div>
+          <h3>У вас пока нет целей</h3>
+          <p>Создайте свою первую финансовую цель и начните копить!</p>
+          <button 
+            className="action-button primary haptic-trigger"
+            onClick={() => setShowCreateModal(true)}
+          >
+            <Plus size={20} />
+            Создать цель
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="goals-header">
+            <button 
+              className="action-button primary haptic-trigger"
+              onClick={() => setShowCreateModal(true)}
+            >
+              <Plus size={20} />
+              Новая цель
+            </button>
+          </div>
+
+          <div className="goals-grid">
+            {goals.map(goal => {
+              const progress = calculateProgress(goal.current_amount, goal.target_amount)
+              const progressColor = getProgressColor(progress)
+              const daysLeft = daysUntilDeadline(goal.deadline)
+              
+              return (
+                <div key={goal.id} className="goal-card">
+                  <div className="goal-header">
+                    <h3>{goal.title}</h3>
+                    <div className="goal-actions">
+                      <button 
+                        className="edit-button haptic-trigger"
+                        onClick={() => handleEdit(goal)}
+                      >
+                        <Edit size={16} />
+                      </button>
+                      <button 
+                        className="delete-button haptic-trigger"
+                        onClick={() => deleteGoal(goal.id)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  {goal.description && (
+                    <p className="goal-description">{goal.description}</p>
+                  )}
+
+                  <div className="goal-progress">
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill"
+                        style={{ 
+                          width: `${progress}%`,
+                          backgroundColor: progressColor
+                        }}
+                      ></div>
+                    </div>
+                    <div className="progress-text">
+                      <span>{progress.toFixed(1)}%</span>
+                      <span>{goal.current_amount.toLocaleString()} / {goal.target_amount.toLocaleString()} ₽</span>
+                    </div>
+                  </div>
+
+                  <div className="goal-details">
+                    <div className="detail-item">
+                      <Calendar size={16} />
+                      <span>{formatDate(goal.deadline)}</span>
+                    </div>
+                    {daysLeft !== null && (
+                      <div className="detail-item">
+                        <TrendingUp size={16} />
+                        <span className={daysLeft < 0 ? 'overdue' : daysLeft < 7 ? 'urgent' : ''}>
+                          {daysLeft < 0 ? `Просрочено на ${Math.abs(daysLeft)} дн.` : 
+                           daysLeft === 0 ? 'Срок сегодня' : 
+                           `${daysLeft} дн. осталось`}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {progress >= 100 && (
+                    <div className="goal-completed">
+                      🎉 Цель достигнута!
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )}
+
+      {/* Модальное окно создания/редактирования цели */}
+      {showCreateModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2>{editingGoal ? 'Редактировать цель' : 'Новая цель'}</h2>
+              <button className="close-button haptic-trigger" onClick={handleCloseModal}>
+                <X size={20} />
+              </button>
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Целевая сумма (₽)
-                </label>
+
+            <form onSubmit={(e) => { e.preventDefault(); editingGoal ? updateGoal() : createGoal() }} className="goal-form">
+              <div className="form-group">
+                <label>Название цели *</label>
                 <input
-                  type="number"
-                  value={formData.targetAmount}
-                  onChange={(e) => setFormData({...formData, targetAmount: e.target.value})}
-                  className="input-field"
-                  placeholder="50000"
-                  min="0"
-                  step="0.01"
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                  placeholder="Например: Новый телефон"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Текущая сумма (₽)
-                </label>
+
+              <div className="form-group">
+                <label>Целевая сумма *</label>
                 <input
                   type="number"
-                  value={formData.currentAmount}
-                  onChange={(e) => setFormData({...formData, currentAmount: e.target.value})}
-                  className="input-field"
-                  placeholder="0"
-                  min="0"
                   step="0.01"
+                  value={formData.target_amount}
+                  onChange={(e) => setFormData(prev => ({ ...prev, target_amount: e.target.value }))}
+                  placeholder="0.00"
+                  required
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Срок достижения
-              </label>
-              <input
-                type="date"
-                value={formData.deadline}
-                onChange={(e) => setFormData({...formData, deadline: e.target.value})}
-                className="input-field"
-                required
-              />
-            </div>
+              <div className="form-group">
+                <label>Текущая сумма</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={formData.current_amount}
+                  onChange={(e) => setFormData(prev => ({ ...prev, current_amount: e.target.value }))}
+                  placeholder="0.00"
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">
-                Описание (необязательно)
-              </label>
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
-                className="input-field"
-                rows="3"
-                placeholder="Дополнительная информация о цели..."
-              />
-            </div>
+              <div className="form-group">
+                <label>Срок достижения</label>
+                <input
+                  type="date"
+                  value={formData.deadline}
+                  onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
+                />
+              </div>
 
-            <div className="flex gap-3">
-              <button type="submit" className="btn-primary flex-1">
-                {editingGoal ? 'Обновить' : 'Создать'}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowForm(false)
-                  setEditingGoal(null)
-                  resetForm()
-                }}
-                className="btn-secondary"
-              >
-                Отмена
-              </button>
-            </div>
-          </form>
+              <div className="form-group">
+                <label>Описание</label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder="Дополнительная информация о цели"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div className="form-actions">
+                <button type="button" className="button secondary haptic-trigger" onClick={handleCloseModal}>
+                  Отмена
+                </button>
+                <button type="submit" className="button primary haptic-trigger" disabled={loading}>
+                  {loading ? 'Сохранение...' : (editingGoal ? 'Обновить' : 'Создать')}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
-
-      <div className="space-y-4">
-        {goals.length === 0 ? (
-          <div className="text-center py-8 text-muted">
-            <Target className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>У вас пока нет финансовых целей</p>
-            <p className="text-sm">Создайте первую цель для отслеживания прогресса</p>
-          </div>
-        ) : (
-          goals.map((goal) => {
-            const progress = getProgressPercentage(goal.currentAmount, goal.targetAmount)
-            const daysLeft = getDaysUntilDeadline(goal.deadline)
-            const isCompleted = progress >= 100
-            const isOverdue = daysLeft < 0
-
-            return (
-              <div
-                key={goal.id}
-                className={`p-4 bg-card rounded-lg border ${
-                  isCompleted ? 'border-green-200 bg-green-50' : ''
-                }`}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h4 className="font-medium text-lg">{goal.title}</h4>
-                    {goal.description && (
-                      <p className="text-sm text-muted mt-1">{goal.description}</p>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleEdit(goal)}
-                      className="btn-icon"
-                      title="Редактировать"
-                    >
-                      <Edit3 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(goal.id)}
-                      className="btn-icon text-red-500 hover:text-red-600"
-                      title="Удалить"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
-                      {goal.currentAmount.toLocaleString('ru-RU')} ₽
-                    </div>
-                    <div className="text-sm text-muted">Накоплено</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">
-                      {goal.targetAmount.toLocaleString('ru-RU')} ₽
-                    </div>
-                    <div className="text-sm text-muted">Цель</div>
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Прогресс</span>
-                    <span className="font-medium">{progress.toFixed(1)}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className={`h-2 rounded-full transition-all duration-300 ${getProgressColor(progress)}`}
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span className={isOverdue ? 'text-red-600 font-medium' : ''}>
-                      {isOverdue 
-                        ? `Просрочено на ${Math.abs(daysLeft)} дн.`
-                        : `Осталось ${daysLeft} дн.`
-                      }
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4" />
-                    <span className="text-muted">
-                      Осталось: {(goal.targetAmount - goal.currentAmount).toLocaleString('ru-RU')} ₽
-                    </span>
-                  </div>
-                </div>
-
-                {isCompleted && (
-                  <div className="mt-3 p-2 bg-green-100 text-green-800 rounded text-center text-sm font-medium">
-                    🎉 Цель достигнута!
-                  </div>
-                )}
-              </div>
-            )
-          })
-        )}
-      </div>
     </div>
   )
 }

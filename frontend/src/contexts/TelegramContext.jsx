@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
+import { getBaseURL, API_CONFIG } from '../config/api'
 
 const TelegramContext = createContext()
 
@@ -11,32 +12,18 @@ export const useTelegram = () => {
   return context
 }
 
-// Функция для определения baseURL
-const getBaseURL = () => {
-  // Если мы в Telegram Web App, используем ngrok URL для бэкенда
-  if (window.Telegram?.WebApp) {
-    return 'https://46d4bfbcf6f5.ngrok-free.app'
-  }
-  
-  // Если локальная разработка
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return 'http://localhost:3001'
-  }
-  
-  // По умолчанию используем ngrok URL для бэкенда
-  return 'https://46d4bfbcf6f5.ngrok-free.app'
-}
-
 // Создаем axios instance с настройками
 const apiClient = axios.create({
   baseURL: getBaseURL(),
-  timeout: 10000,
+  timeout: API_CONFIG.TIMEOUT,
+  headers: API_CONFIG.HEADERS
 })
 
 // Логируем используемый baseURL
 console.log('🔗 API Base URL:', getBaseURL())
 console.log('🌐 Current hostname:', window.location.hostname)
 console.log('📱 Telegram WebApp available:', !!window.Telegram?.WebApp)
+console.log('⚙️ API Config:', API_CONFIG)
 
 // Interceptor для обработки ошибок
 apiClient.interceptors.response.use(
