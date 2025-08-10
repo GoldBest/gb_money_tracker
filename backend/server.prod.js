@@ -285,6 +285,65 @@ app.post('/api/users/:userId/budget-alerts', async (req, res) => {
   }
 });
 
+// Get notifications for user
+app.get('/api/notifications', async (req, res) => {
+  try {
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get user's notifications (budget alerts)
+    const result = await pool.query(`
+      SELECT ba.*, c.name as category_name 
+      FROM budget_alerts ba 
+      LEFT JOIN categories c ON ba.category_id = c.id 
+      WHERE ba.user_id = $1 
+      ORDER BY ba.created_at DESC
+    `, [user_id]);
+    
+    res.json({
+      success: true,
+      notifications: result.rows
+    });
+  } catch (error) {
+    console.error('Ошибка при получении уведомлений:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get notification settings for user
+app.get('/api/notification-settings', async (req, res) => {
+  try {
+    const { user_id } = req.query;
+    
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id required' });
+    }
+    
+    // Get user's notification preferences
+    const result = await pool.query(`
+      SELECT 
+        id,
+        user_id,
+        enabled,
+        created_at
+      FROM budget_alerts 
+      WHERE user_id = $1 
+      ORDER BY created_at DESC
+    `, [user_id]);
+    
+    res.json({
+      success: true,
+      settings: result.rows
+    });
+  } catch (error) {
+    console.error('Ошибка при получении настроек уведомлений:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Ошибка сервера:', err);
