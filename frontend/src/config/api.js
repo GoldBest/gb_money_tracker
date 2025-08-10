@@ -4,7 +4,7 @@
 
 export const API_CONFIG = {
   // Ngrok URL для бэкенда (будет заменен при сборке)
-  NGROK_BACKEND_URL: import.meta.env.VITE_NGROK_BACKEND_URL || 'https://1b0966126d83.ngrok-free.app',
+  NGROK_BACKEND_URL: import.meta.env.VITE_NGROK_BACKEND_URL || 'https://c93fb5a36884.ngrok-free.app',
   
   // Локальный URL для разработки
   LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'http://localhost:3001',

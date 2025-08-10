@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест переменных окружения</title>
+</head>
+<body>
+    <h1>Тест переменных окружения</h1>
+    <div id="env-info"></div>
+    <div id="api-config"></div>
+    
+    <script type="module">
+        import { API_CONFIG, getBaseURL, getApiConfig } from './src/config/api.js';
+        
+        document.getElementById('env-info').innerHTML = `
+            <h2>Переменные окружения:</h2>
+            <p>VITE_NGROK_BACKEND_URL: ${import.meta.env.VITE_NGROK_BACKEND_URL || 'не установлена'}</p>
+            <p>VITE_LOCAL_BACKEND_URL: ${import.meta.env.VITE_LOCAL_BACKEND_URL || 'не установлена'}</p>
+            <p>DEV: ${import.meta.env.DEV}</p>
+            <p>PROD: ${import.meta.env.PROD}</p>
+        `;
+        
+        document.getElementById('api-config').innerHTML = `
+            <h2>Конфигурация API:</h2>
+            <p>NGROK_BACKEND_URL: ${API_CONFIG.NGROK_BACKEND_URL}</p>
+            <p>LOCAL_BACKEND_URL: ${API_CONFIG.LOCAL_BACKEND_URL}</p>
+            <p>getBaseURL(): ${getBaseURL()}</p>
+            <p>getApiConfig(): ${JSON.stringify(getApiConfig(), null, 2)}</p>
+        `;
+    </script>
+</body>
+</html>

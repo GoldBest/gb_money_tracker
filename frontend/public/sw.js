@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gb-money-tracker-v1.0.0'
+const CACHE_NAME = 'gb-money-tracker-v1.0.1'
 const urlsToCache = [
   '/',
   '/index.html',
@@ -35,6 +35,11 @@ self.addEventListener('activate', (event) => {
 
 // Перехват запросов
 self.addEventListener('fetch', (event) => {
+  // Пропускаем chrome-extension схему
+  if (event.request.url.startsWith('chrome-extension://')) {
+    return
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
