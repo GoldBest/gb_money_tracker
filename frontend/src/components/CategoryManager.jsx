@@ -18,7 +18,7 @@ import {
   Gift,
   Coffee
 } from 'lucide-react'
-import { hapticFeedback } from '../utils/haptic'
+
 
 const CategoryManager = () => {
   const { user, api } = useTelegram()
@@ -72,11 +72,9 @@ const CategoryManager = () => {
       const response = await api.post(`/api/users/${user.id}/categories`, categoryData)
       setCategories([...categories, response.data])
       setShowForm(false)
-      hapticFeedback.success()
       window.showTelegramAlert('Категория успешно создана!')
     } catch (error) {
       console.error('Error creating category:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при создании категории')
     }
   }
@@ -86,11 +84,9 @@ const CategoryManager = () => {
       const response = await api.put(`/api/users/${user.id}/categories/${categoryId}`, categoryData)
       setCategories(categories.map(c => c.id === categoryId ? response.data : c))
       setEditingCategory(null)
-      hapticFeedback.success()
       window.showTelegramAlert('Категория успешно обновлена!')
     } catch (error) {
       console.error('Error updating category:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при обновлении категории')
     }
   }
@@ -99,11 +95,9 @@ const CategoryManager = () => {
     try {
       await api.delete(`/api/users/${user.id}/categories/${categoryId}`)
       setCategories(categories.filter(c => c.id !== categoryId))
-      hapticFeedback.success()
       window.showTelegramAlert('Категория удалена!')
     } catch (error) {
       console.error('Error deleting category:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при удалении категории')
     }
   }
@@ -124,9 +118,8 @@ const CategoryManager = () => {
       <div className="section-header">
         <h2>🏷️ Управление категориями</h2>
         <button 
-          className="action-button primary haptic-trigger"
+          className="action-button primary button-animation"
           onClick={() => {
-            hapticFeedback.light();
             setShowForm(true);
           }}
         >
@@ -142,9 +135,8 @@ const CategoryManager = () => {
           <p>Создайте категории для лучшей организации транзакций</p>
           <div className="empty-state-actions">
             <button 
-              className="action-button primary haptic-trigger"
+              className="action-button primary button-animation"
               onClick={() => {
-                hapticFeedback.light();
                 setShowForm(true);
               }}
             >
@@ -152,19 +144,16 @@ const CategoryManager = () => {
               Создать первую категорию
             </button>
             <button 
-              className="action-button secondary haptic-trigger"
+              className="action-button secondary button-animation"
               onClick={async () => {
                 try {
-                  hapticFeedback.light();
                   const response = await api.post(`/api/users/${user.id}/categories/default`);
                   if (response.data.success) {
-                    hapticFeedback.success();
                     window.showTelegramAlert(response.data.message);
                     loadCategories(); // Перезагружаем категории
                   }
                 } catch (error) {
                   console.error('Error creating default categories:', error);
-                  hapticFeedback.error();
                   if (error.response?.data?.message) {
                     window.showTelegramAlert(error.response.data.message);
                   } else {
@@ -194,18 +183,16 @@ const CategoryManager = () => {
                 </div>
                 <div className="category-actions">
                   <button 
-                    className="icon-button haptic-trigger"
+                    className="icon-button button-animation"
                     onClick={() => {
-                      hapticFeedback.light();
                       setEditingCategory(category);
                     }}
                   >
                     <Edit3 size={16} />
                   </button>
                   <button 
-                    className="icon-button danger haptic-trigger"
+                    className="icon-button danger button-animation"
                     onClick={() => {
-                      hapticFeedback.light();
                       deleteCategory(category.id);
                     }}
                   >

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { RefreshCw } from 'lucide-react';
-import { hapticFeedback } from '../utils/haptic';
+
 
 const PullToRefresh = ({ onRefresh, children, threshold = 80 }) => {
   const [isPulling, setIsPulling] = useState(false);
@@ -32,10 +32,7 @@ const PullToRefresh = ({ onRefresh, children, threshold = 80 }) => {
           setPullDistance(distance);
           setIsPulling(distance > 10);
           
-          // Haptic feedback при достижении порога
-          if (distance > threshold && !isRefreshing) {
-            hapticFeedback.medium();
-          }
+          // Достижение порога для обновления
         }
       }
     };
@@ -43,12 +40,10 @@ const PullToRefresh = ({ onRefresh, children, threshold = 80 }) => {
     const handleTouchEnd = async () => {
       if (isPulling && pullDistance > threshold && !isRefreshing) {
         setIsRefreshing(true);
-        hapticFeedback.success();
         
         try {
           await onRefresh();
         } catch (error) {
-          hapticFeedback.error();
           console.error('Refresh error:', error);
         } finally {
           setIsRefreshing(false);

@@ -10,7 +10,7 @@
 - Адаптивный дизайн
 - Темная/светлая тема
 - Базовые анимации
-- Haptic feedback
+
 - Pull-to-refresh
 
 ### 🚀 Что добавим
@@ -188,7 +188,7 @@ const AnimatedPage = ({ children, direction = 'right' }) => {
 - [ ] Swipe gestures
 - [ ] Pinch to zoom
 - [ ] Long press actions
-- [ ] Haptic feedback
+
 
 ### Performance
 - [ ] 60fps анимации

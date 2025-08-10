@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTelegram } from '../contexts/TelegramContext'
 import { X, Plus } from 'lucide-react'
-import { hapticFeedback } from '../utils/haptic'
+
 
 const TransactionForm = ({ onClose, onSuccess }) => {
   const { user, api } = useTelegram()
@@ -48,7 +48,6 @@ const TransactionForm = ({ onClose, onSuccess }) => {
     e.preventDefault()
     
     if (!formData.amount || !formData.category_id) {
-      hapticFeedback.error()
       window.showTelegramAlert('Пожалуйста, заполните все обязательные поля')
       return
     }
@@ -69,21 +68,14 @@ const TransactionForm = ({ onClose, onSuccess }) => {
         const warningMessages = response.data.budgetWarnings.map(w => w.message).join('\n\n')
         window.showTelegramAlert(`Транзакция создана, но есть предупреждения:\n\n${warningMessages}`)
         
-        // Вибрация для предупреждений
-        if (response.data.budgetWarnings.some(w => w.type === 'budget_exceeded')) {
-          hapticFeedback.error() // Сильная вибрация для превышения
-        } else {
-          hapticFeedback.medium() // Средняя вибрация для предупреждений
-        }
+        // Показываем предупреждения пользователю
       } else {
-        hapticFeedback.success()
         window.showTelegramAlert('Транзакция успешно создана!')
       }
       
       onSuccess()
     } catch (error) {
       console.error('Error creating transaction:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при создании транзакции')
     } finally {
       setLoading(false)
@@ -96,18 +88,15 @@ const TransactionForm = ({ onClose, onSuccess }) => {
 
   const handleClose = () => {
     if (hasChanges) {
-      hapticFeedback.medium()
       window.showTelegramConfirm(
         'У вас есть несохраненные изменения. Закрыть форму?',
         (confirmed) => {
           if (confirmed) {
-            hapticFeedback.light()
             onClose()
           }
         }
       )
     } else {
-      hapticFeedback.light()
       onClose()
     }
   }
@@ -117,7 +106,7 @@ const TransactionForm = ({ onClose, onSuccess }) => {
       <div className="modal">
         <div className="modal-header">
           <h2>Новая транзакция</h2>
-          <button className="close-button haptic-trigger" onClick={handleClose}>
+          <button className="close-button button-animation" onClick={handleClose}>
             <X size={20} />
           </button>
         </div>
@@ -128,9 +117,8 @@ const TransactionForm = ({ onClose, onSuccess }) => {
             <div className="type-selector">
               <button
                 type="button"
-                className={`type-button haptic-trigger ${formData.type === 'expense' ? 'active' : ''}`}
+                className={`type-button button-animation ${formData.type === 'expense' ? 'active' : ''}`}
                 onClick={() => {
-                  hapticFeedback.light();
                   handleInputChange('type', 'expense');
                 }}
               >
@@ -138,9 +126,8 @@ const TransactionForm = ({ onClose, onSuccess }) => {
               </button>
               <button
                 type="button"
-                className={`type-button haptic-trigger ${formData.type === 'income' ? 'active' : ''}`}
+                className={`type-button button-animation ${formData.type === 'income' ? 'active' : ''}`}
                 onClick={() => {
-                  hapticFeedback.light();
                   handleInputChange('type', 'income');
                 }}
               >
@@ -213,10 +200,10 @@ const TransactionForm = ({ onClose, onSuccess }) => {
           )}
 
           <div className="form-actions">
-            <button type="button" className="button secondary haptic-trigger" onClick={handleClose}>
+            <button type="button" className="button secondary button-animation" onClick={handleClose}>
               Отмена
             </button>
-            <button type="submit" className="button primary haptic-trigger" disabled={loading}>
+            <button type="submit" className="button primary button-animation" disabled={loading}>
               {loading ? 'Сохранение...' : 'Сохранить'}
             </button>
           </div>

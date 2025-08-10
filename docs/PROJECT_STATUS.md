@@ -12,7 +12,7 @@
 - **Health check**: `/api/health` работает
 
 ### ✅ Frontend (React + Vite)
-- **Порт**: 5173
+- **Порт**: 5176
 - **Статус**: Работает
 - **Функции**: Полный функционал
 - **PWA**: Настроено
@@ -66,7 +66,7 @@ curl "http://localhost:3001/api/users/1/categories"
 ```
 
 ### 2. Frontend
-http://localhost:5173
+http://localhost:5176
 
 ### 3. Telegram Bot
 Найдите `@gb_money_tracker_bot` и отправьте `/start`
@@ -100,7 +100,7 @@ tg-money-miniapp/
 
 ## 🔗 Полезные ссылки
 
-- **Frontend**: http://localhost:5173
+- **Frontend**: http://localhost:5176
 - **Backend API**: http://localhost:3001
 - **Ngrok**: https://f55e154b6f3a.ngrok-free.app
 - **Telegram Bot**: @gb_money_tracker_bot

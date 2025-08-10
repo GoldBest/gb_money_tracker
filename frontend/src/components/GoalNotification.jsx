@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Trophy, X, TrendingUp, Target, Star } from 'lucide-react'
-import { hapticFeedback } from '../utils/haptic'
+
 
 const GoalNotification = ({ goal, onClose, onDismiss }) => {
   const [isVisible, setIsVisible] = useState(true)
@@ -19,7 +19,6 @@ const GoalNotification = ({ goal, onClose, onDismiss }) => {
 
   const handleClose = () => {
     setIsVisible(false)
-    hapticFeedback.light()
     setTimeout(() => onDismiss(goal.id), 500)
   }
 
@@ -88,7 +87,7 @@ const GoalNotification = ({ goal, onClose, onDismiss }) => {
               </div>
             </div>
             <button
-              className="close-notification haptic-trigger"
+              className="close-notification button-animation"
               onClick={handleClose}
             >
               <X size={18} />
@@ -130,13 +129,13 @@ const GoalNotification = ({ goal, onClose, onDismiss }) => {
 
           <div className="notification-actions">
             <button
-              className="action-button secondary haptic-trigger"
+              className="action-button secondary button-animation"
               onClick={() => setShowDetails(!showDetails)}
             >
               {showDetails ? 'Скрыть детали' : 'Показать детали'}
             </button>
             {goal.progress >= 100 && (
-              <button className="action-button primary haptic-trigger">
+              <button className="action-button primary button-animation">
                 🎉 Отпраздновать!
               </button>
             )}

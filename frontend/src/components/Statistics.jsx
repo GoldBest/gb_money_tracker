@@ -3,8 +3,6 @@ import { useTelegram } from '../contexts/TelegramContext'
 import { TrendingUp, TrendingDown, Calendar, Download } from 'lucide-react'
 import { CategoryPieChart, TrendLineChart, ComparisonBarChart } from './Charts'
 import PullToRefresh from './PullToRefresh'
-import { hapticFeedback } from '../utils/haptic'
-
 const Statistics = () => {
   const { user, api } = useTelegram()
   const [stats, setStats] = useState(null)
@@ -32,11 +30,9 @@ const Statistics = () => {
       setLoading(true)
       const response = await api.get(`/api/users/${user.id}/stats?period=${period}`)
       setStats(response.data)
-      hapticFeedback.success()
-    } catch (error) {
+      } catch (error) {
       console.error('Error loading stats:', error)
-      hapticFeedback.error()
-    } finally {
+      } finally {
       setLoading(false)
     }
   }
@@ -78,11 +74,9 @@ const Statistics = () => {
       link.click()
       document.body.removeChild(link)
 
-      hapticFeedback.success()
       window.showTelegramAlert('Данные успешно экспортированы!')
     } catch (error) {
       console.error('Error exporting data:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при экспорте данных')
     } finally {
       setExporting(false)
@@ -168,9 +162,8 @@ const Statistics = () => {
               {periods.map(p => (
                 <button
                   key={p.value}
-                  className={`period-button haptic-trigger ${period === p.value ? 'active' : ''}`}
+                  className={`period-button button-animation ${period === p.value ? 'active' : ''}`}
                   onClick={() => {
-                    hapticFeedback.light();
                     setPeriod(p.value);
                   }}
                 >
@@ -179,7 +172,7 @@ const Statistics = () => {
               ))}
             </div>
             <button 
-              className="export-button haptic-trigger"
+              className="export-button button-animation"
               onClick={exportToCSV}
               disabled={exporting || totalTransactions === 0}
             >
@@ -236,27 +229,24 @@ const Statistics = () => {
       {/* Переключатель видов графиков */}
       <div className="chart-controls">
         <button 
-          className={`chart-button haptic-trigger ${chartView === 'pie' ? 'active' : ''}`}
+          className={`chart-button button-animation ${chartView === 'pie' ? 'active' : ''}`}
           onClick={() => {
-            hapticFeedback.light();
             setChartView('pie');
           }}
         >
           Круговая диаграмма
         </button>
         <button 
-          className={`chart-button haptic-trigger ${chartView === 'line' ? 'active' : ''}`}
+          className={`chart-button button-animation ${chartView === 'line' ? 'active' : ''}`}
           onClick={() => {
-            hapticFeedback.light();
             setChartView('line');
           }}
         >
           Тренды
         </button>
         <button 
-          className={`chart-button haptic-trigger ${chartView === 'bar' ? 'active' : ''}`}
+          className={`chart-button button-animation ${chartView === 'bar' ? 'active' : ''}`}
           onClick={() => {
-            hapticFeedback.light();
             setChartView('bar');
           }}
         >

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Target, Plus, Trash2, Edit, TrendingUp, Calendar, DollarSign, X } from 'lucide-react'
 import { useTelegram } from '../contexts/TelegramContext'
-import { hapticFeedback } from '../utils/haptic'
-
 const GoalManager = () => {
   const { user } = useTelegram()
   const [goals, setGoals] = useState([])
@@ -44,7 +42,6 @@ const GoalManager = () => {
     if (!user) return
     
     if (!formData.title || !formData.target_amount) {
-      hapticFeedback.error()
       window.showTelegramAlert('Пожалуйста, заполните все обязательные поля')
       return
     }
@@ -65,7 +62,6 @@ const GoalManager = () => {
       })
 
       if (response.ok) {
-        hapticFeedback.success()
         window.showTelegramAlert('Цель успешно создана!')
         setShowCreateModal(false)
         setFormData({
@@ -81,7 +77,6 @@ const GoalManager = () => {
       }
     } catch (error) {
       console.error('Error creating goal:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при создании цели')
     } finally {
       setLoading(false)
@@ -106,7 +101,6 @@ const GoalManager = () => {
       })
 
       if (response.ok) {
-        hapticFeedback.success()
         window.showTelegramAlert('Цель успешно обновлена!')
         setShowCreateModal(false)
         setEditingGoal(null)
@@ -123,7 +117,6 @@ const GoalManager = () => {
       }
     } catch (error) {
       console.error('Error updating goal:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при обновлении цели')
     } finally {
       setLoading(false)
@@ -131,7 +124,6 @@ const GoalManager = () => {
   }
 
   const deleteGoal = async (goalId) => {
-    hapticFeedback.medium()
     window.showTelegramConfirm(
       'Вы уверены, что хотите удалить эту цель?',
       async (confirmed) => {
@@ -142,7 +134,6 @@ const GoalManager = () => {
             })
 
             if (response.ok) {
-              hapticFeedback.success()
               window.showTelegramAlert('Цель удалена!')
               loadGoals()
             } else {
@@ -150,7 +141,6 @@ const GoalManager = () => {
             }
           } catch (error) {
             console.error('Error deleting goal:', error)
-            hapticFeedback.error()
             window.showTelegramAlert('Ошибка при удалении цели')
           }
         }
@@ -231,7 +221,7 @@ const GoalManager = () => {
           <h3>У вас пока нет целей</h3>
           <p>Создайте свою первую финансовую цель и начните копить!</p>
           <button 
-            className="action-button primary haptic-trigger"
+            className="action-button primary button-animation"
             onClick={() => setShowCreateModal(true)}
           >
             <Plus size={20} />
@@ -242,7 +232,7 @@ const GoalManager = () => {
         <>
           <div className="goals-header">
             <button 
-              className="action-button primary haptic-trigger"
+              className="action-button primary button-animation"
               onClick={() => setShowCreateModal(true)}
             >
               <Plus size={20} />
@@ -262,13 +252,13 @@ const GoalManager = () => {
                     <h3>{goal.title}</h3>
                     <div className="goal-actions">
                       <button 
-                        className="edit-button haptic-trigger"
+                        className="edit-button button-animation"
                         onClick={() => handleEdit(goal)}
                       >
                         <Edit size={16} />
                       </button>
                       <button 
-                        className="delete-button haptic-trigger"
+                        className="delete-button button-animation"
                         onClick={() => deleteGoal(goal.id)}
                       >
                         <Trash2 size={16} />
@@ -331,7 +321,7 @@ const GoalManager = () => {
           <div className="modal">
             <div className="modal-header">
               <h2>{editingGoal ? 'Редактировать цель' : 'Новая цель'}</h2>
-              <button className="close-button haptic-trigger" onClick={handleCloseModal}>
+              <button className="close-button button-animation" onClick={handleCloseModal}>
                 <X size={20} />
               </button>
             </div>
@@ -391,10 +381,10 @@ const GoalManager = () => {
               </div>
 
               <div className="form-actions">
-                <button type="button" className="button secondary haptic-trigger" onClick={handleCloseModal}>
+                <button type="button" className="button secondary button-animation" onClick={handleCloseModal}>
                   Отмена
                 </button>
-                <button type="submit" className="button primary haptic-trigger" disabled={loading}>
+                <button type="submit" className="button primary button-animation" disabled={loading}>
                   {loading ? 'Сохранение...' : (editingGoal ? 'Обновить' : 'Создать')}
                 </button>
               </div>

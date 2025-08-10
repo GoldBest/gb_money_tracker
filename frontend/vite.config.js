@@ -24,8 +24,8 @@ export default defineConfig(({ command, mode }) => {
       allowedHosts: [
         'localhost',
         '127.0.0.1',
-        '.ngrok-free.app',
-        'b3cb74bc71fa.ngrok-free.app'
+        '*.ngrok-free.app',
+        '76497dd1bbc9.ngrok-free.app'
       ],
       proxy: {
         '/api': {

@@ -16,10 +16,10 @@ npm run dev
 
 Это запустит:
 - Backend на http://localhost:3001
-- Frontend на http://localhost:5173
+- Frontend на http://localhost:5176
 
 ### 3. Проверка работы
-- Откройте http://localhost:5173 в браузере
+- Откройте http://localhost:5176 в браузере
 - Добавьте тестовую транзакцию
 - Проверьте статистику
 

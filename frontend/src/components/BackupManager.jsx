@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Download, Upload, Database, FileText, Calendar, Trash2, RefreshCw } from 'lucide-react'
-import { hapticFeedback } from '../utils/haptic'
 import { useTelegram } from '../contexts/TelegramContext'
 
 const BackupManager = () => {
@@ -55,7 +54,6 @@ const BackupManager = () => {
       })
 
       if (response.ok) {
-        hapticFeedback.success()
         window.showTelegramAlert('Резервная копия создана успешно!')
         setShowCreateModal(false)
         setBackupName('')
@@ -66,7 +64,6 @@ const BackupManager = () => {
       }
     } catch (error) {
       console.error('Error creating backup:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при создании резервной копии')
     } finally {
       setLoading(false)
@@ -90,12 +87,10 @@ const BackupManager = () => {
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
         
-        hapticFeedback.success()
         window.showTelegramAlert('Резервная копия загружена!')
       }
     } catch (error) {
       console.error('Error downloading backup:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при загрузке резервной копии')
     }
   }
@@ -126,7 +121,6 @@ const BackupManager = () => {
           await new Promise(resolve => setTimeout(resolve, 100))
         }
         
-        hapticFeedback.success()
         window.showTelegramAlert('Данные восстановлены успешно! Приложение будет перезагружено.')
         
         setTimeout(() => {
@@ -137,7 +131,6 @@ const BackupManager = () => {
       }
     } catch (error) {
       console.error('Error restoring backup:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при восстановлении данных')
     } finally {
       setShowRestoreModal(false)
@@ -158,13 +151,11 @@ const BackupManager = () => {
       })
 
       if (response.ok) {
-        hapticFeedback.success()
         window.showTelegramAlert('Резервная копия удалена!')
         loadBackups()
       }
     } catch (error) {
       console.error('Error deleting backup:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при удалении резервной копии')
     }
   }
@@ -198,7 +189,6 @@ const BackupManager = () => {
           })
 
           if (response.ok) {
-            hapticFeedback.success()
             window.showTelegramAlert('Резервная копия импортирована успешно!')
             loadBackups()
           } else {
@@ -206,14 +196,12 @@ const BackupManager = () => {
           }
         } catch (error) {
           console.error('Error parsing backup file:', error)
-          hapticFeedback.error()
           window.showTelegramAlert('Ошибка при чтении файла резервной копии')
         }
       }
       reader.readAsText(file)
     } catch (error) {
       console.error('Error importing backup:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при импорте резервной копии')
     }
   }

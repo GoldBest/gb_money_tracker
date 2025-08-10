@@ -652,7 +652,7 @@
     transform: scale(0.95);
   }
   
-  /* Add haptic feedback simulation */
+  /* Active state animation */
   .nav-tab:active::after {
     content: '';
     position: absolute;
@@ -662,11 +662,11 @@
     bottom: 0;
     background: var(--accent-color);
     opacity: 0.1;
-    animation: haptic-pulse 0.15s ease;
+    animation: active-pulse 0.15s ease;
   }
 }
 
-@keyframes haptic-pulse {
+@keyframes active-pulse {
   0% { opacity: 0; }
   50% { opacity: 0.2; }
   100% { opacity: 0; }

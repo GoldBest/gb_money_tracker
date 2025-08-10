@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { AlertTriangle, Plus, Trash2, Edit, Bell, BellOff } from 'lucide-react'
 import { useTelegram } from '../contexts/TelegramContext'
-import { hapticFeedback } from '../utils/haptic'
-
 const BudgetAlertManager = () => {
   const { user } = useTelegram()
   const [alerts, setAlerts] = useState([])
@@ -60,7 +58,6 @@ const BudgetAlertManager = () => {
     if (!user) return
     
     if (!formData.category_id || !formData.limit) {
-      hapticFeedback.error()
       window.showTelegramAlert('Пожалуйста, заполните все поля')
       return
     }
@@ -80,7 +77,6 @@ const BudgetAlertManager = () => {
       })
 
       if (response.ok) {
-        hapticFeedback.success()
         window.showTelegramAlert('Уведомление о бюджете создано!')
         setShowCreateModal(false)
         setFormData({
@@ -95,7 +91,6 @@ const BudgetAlertManager = () => {
       }
     } catch (error) {
       console.error('Error creating alert:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при создании уведомления')
     } finally {
       setLoading(false)
@@ -106,7 +101,6 @@ const BudgetAlertManager = () => {
     if (!user || !editingAlert) return
     
     if (!formData.category_id || !formData.limit) {
-      hapticFeedback.error()
       window.showTelegramAlert('Пожалуйста, заполните все поля')
       return
     }
@@ -126,7 +120,6 @@ const BudgetAlertManager = () => {
       })
 
       if (response.ok) {
-        hapticFeedback.success()
         window.showTelegramAlert('Уведомление обновлено!')
         setEditingAlert(null)
         setFormData({
@@ -141,7 +134,6 @@ const BudgetAlertManager = () => {
       }
     } catch (error) {
       console.error('Error updating alert:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при обновлении уведомления')
     } finally {
       setLoading(false)
@@ -165,13 +157,11 @@ const BudgetAlertManager = () => {
       })
 
       if (response.ok) {
-        hapticFeedback.success()
         window.showTelegramAlert('Уведомление удалено!')
         loadAlerts()
       }
     } catch (error) {
       console.error('Error deleting alert:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при удалении уведомления')
     }
   }
@@ -192,13 +182,11 @@ const BudgetAlertManager = () => {
       })
 
       if (response.ok) {
-        hapticFeedback.success()
         window.showTelegramAlert(`Уведомление ${!enabled ? 'включено' : 'отключено'}!`)
         loadAlerts()
       }
     } catch (error) {
       console.error('Error toggling alert:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при изменении состояния уведомления')
     }
   }

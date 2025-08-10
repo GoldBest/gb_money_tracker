@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { hapticFeedback } from '../utils/haptic';
-
 const TelegramInfo = () => {
   const [versionInfo, setVersionInfo] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (window.Telegram?.WebApp) {
-      const info = hapticFeedback.getVersionInfo();
+      const info = {
+        version: window.Telegram.WebApp.version,
+        platform: window.Telegram.WebApp.platform,
+        hapticSupported: false
+      };
       setVersionInfo(info);
     }
   }, []);
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
-    hapticFeedback.light();
   };
 
   if (!versionInfo) return null;
@@ -49,7 +50,7 @@ const TelegramInfo = () => {
           <div>Haptic: {versionInfo.hapticSupported ? '✅' : '❌'}</div>
           <div style={{ marginTop: '4px' }}>
             <button 
-              onClick={() => hapticFeedback.light()}
+              onClick={() => {}}
               style={{
                 background: 'rgba(255, 255, 255, 0.2)',
                 border: 'none',

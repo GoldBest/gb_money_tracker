@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Bell, Settings, X, Check, AlertTriangle, Info } from 'lucide-react'
-import { hapticFeedback } from '../utils/haptic'
 import { getBaseURL } from '../config/api'
 import { useTelegram } from '../contexts/TelegramContext'
 
@@ -110,8 +109,7 @@ const NotificationManager = () => {
         setNotifications(notifications.map(n => 
           n.id === notificationId ? { ...n, read: true } : n
         ))
-        hapticFeedback.light()
-      }
+        }
     } catch (error) {
       console.error('Error marking notification as read:', error)
     }
@@ -131,8 +129,7 @@ const NotificationManager = () => {
 
       if (response.ok) {
         setNotifications(notifications.filter(n => n.id !== notificationId))
-        hapticFeedback.success()
-      }
+        }
     } catch (error) {
       console.error('Error deleting notification:', error)
     }
@@ -150,12 +147,10 @@ const NotificationManager = () => {
 
       if (response.ok) {
         setSettings(newSettings)
-        hapticFeedback.success()
         window.showTelegramAlert('Настройки уведомлений обновлены!')
       }
     } catch (error) {
       console.error('Error updating settings:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при обновлении настроек')
     }
   }

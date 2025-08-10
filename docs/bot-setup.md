@@ -79,7 +79,7 @@ npm run dev
 
 2. **Используйте ngrok для создания публичного URL**:
 ```bash
-ngrok http 5173
+ngrok http 5176
 ```
 
 3. **Настройте Vite для работы с ngrok** (уже сделано в `vite.config.js`):

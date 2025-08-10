@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTelegram } from '../contexts/TelegramContext'
 import { Download, FileText, FileSpreadsheet, Calendar, Filter, X } from 'lucide-react'
-import { hapticFeedback } from '../utils/haptic'
-
 const DataExporter = () => {
   const { user, api } = useTelegram()
   const [exporting, setExporting] = useState(false)
@@ -22,8 +20,6 @@ const DataExporter = () => {
 
     try {
       setExporting(true)
-      hapticFeedback.medium()
-
       // Собираем параметры экспорта
       const params = new URLSearchParams({
         user_id: user.id,
@@ -60,11 +56,9 @@ const DataExporter = () => {
       link.remove()
       window.URL.revokeObjectURL(url)
 
-      hapticFeedback.success()
       window.showTelegramAlert('Экспорт завершен успешно!')
     } catch (error) {
       console.error('Export error:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при экспорте данных')
     } finally {
       setExporting(false)
@@ -73,8 +67,7 @@ const DataExporter = () => {
 
   const handleOptionChange = (option, value) => {
     setExportOptions(prev => ({ ...prev, [option]: value }))
-    hapticFeedback.light()
-  }
+    }
 
   const resetOptions = () => {
     setExportOptions({
@@ -86,8 +79,7 @@ const DataExporter = () => {
       includeGoals: false,
       includeStats: true
     })
-    hapticFeedback.medium()
-  }
+    }
 
   const getFormatIcon = (format) => {
     return format === 'excel' ? <FileSpreadsheet size={20} /> : <FileText size={20} />
@@ -112,7 +104,7 @@ const DataExporter = () => {
             {['excel', 'csv'].map(format => (
               <button
                 key={format}
-                className={`format-option haptic-trigger ${exportOptions.format === format ? 'active' : ''}`}
+                className={`format-option button-animation ${exportOptions.format === format ? 'active' : ''}`}
                 onClick={() => handleOptionChange('format', format)}
               >
                 {getFormatIcon(format)}
@@ -206,7 +198,7 @@ const DataExporter = () => {
               return (
                 <button
                   key={period.days}
-                  className="period-button haptic-trigger"
+                  className="period-button button-animation"
                   onClick={() => {
                     handleOptionChange('dateFrom', dateFrom.toISOString().split('T')[0])
                     handleOptionChange('dateTo', new Date().toISOString().split('T')[0])
@@ -223,14 +215,14 @@ const DataExporter = () => {
       {/* Действия */}
       <div className="exporter-actions">
         <button
-          className="action-button secondary haptic-trigger"
+          className="action-button secondary button-animation"
           onClick={resetOptions}
         >
           Сбросить
         </button>
         
         <button
-          className="action-button primary haptic-trigger"
+          className="action-button primary button-animation"
           onClick={handleExport}
           disabled={exporting || (!exportOptions.includeTransactions && !exportOptions.includeCategories && !exportOptions.includeGoals && !exportOptions.includeStats)}
         >

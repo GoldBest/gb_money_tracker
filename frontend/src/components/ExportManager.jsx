@@ -10,8 +10,6 @@ import {
   TrendingDown,
   DollarSign
 } from 'lucide-react'
-import { hapticFeedback } from '../utils/haptic'
-
 const ExportManager = () => {
   const { user, api } = useTelegram()
   const [transactions, setTransactions] = useState([])
@@ -103,11 +101,9 @@ const ExportManager = () => {
 
       downloadFile(csvContent, `transactions_${dateRange}_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv')
       
-      hapticFeedback.success()
       window.showTelegramAlert('Данные успешно экспортированы в CSV!')
     } catch (error) {
       console.error('Error exporting to CSV:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при экспорте в CSV')
     } finally {
       setExporting(false)
@@ -142,11 +138,9 @@ const ExportManager = () => {
       const jsonContent = JSON.stringify(exportData, null, 2)
       downloadFile(jsonContent, `transactions_${dateRange}_${new Date().toISOString().split('T')[0]}.json`, 'application/json')
       
-      hapticFeedback.success()
       window.showTelegramAlert('Данные успешно экспортированы в JSON!')
     } catch (error) {
       console.error('Error exporting to JSON:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при экспорте в JSON')
     } finally {
       setExporting(false)
@@ -187,7 +181,6 @@ const ExportManager = () => {
         
         document.body.removeChild(element)
         
-        hapticFeedback.success()
         window.showTelegramAlert('PDF отчет успешно создан!')
       } catch (html2pdfError) {
         console.warn('html2pdf недоступен, используем fallback:', html2pdfError)
@@ -204,13 +197,11 @@ const ExportManager = () => {
         document.body.removeChild(link)
         URL.revokeObjectURL(url)
         
-        hapticFeedback.success()
         window.showTelegramAlert('HTML отчет создан! (PDF недоступен в этой среде)')
       }
       
     } catch (error) {
       console.error('Error exporting to PDF:', error)
-      hapticFeedback.error()
       window.showTelegramAlert('Ошибка при создании отчета')
     } finally {
       setExporting(false)
@@ -547,7 +538,7 @@ const ExportManager = () => {
 
       <div className="export-actions">
         <button
-          className="action-button primary haptic-trigger"
+          className="action-button primary button-animation"
           onClick={handleExport}
           disabled={exporting || (!exportInfo || exportInfo.total_transactions === 0)}
         >

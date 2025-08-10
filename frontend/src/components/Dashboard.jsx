@@ -5,7 +5,7 @@ import NotificationManager from './NotificationManager'
 import PullToRefresh from './PullToRefresh'
 import AnimatedCard from './AnimatedCard'
 import AnimatedButton from './AnimatedButton'
-import { hapticFeedback } from '../utils/haptic'
+
 
 const Dashboard = ({ onAddTransaction }) => {
   const { user, api } = useTelegram()
@@ -23,11 +23,9 @@ const Dashboard = ({ onAddTransaction }) => {
       setLoading(true)
       const response = await api.get(`/api/users/${user.id}/stats?period=month`)
       setStats(response.data)
-      hapticFeedback.success()
     } catch (error) {
       console.error('Error loading stats:', error)
       window.showTelegramAlert('Ошибка при загрузке статистики')
-      hapticFeedback.error()
     } finally {
       setLoading(false)
     }
@@ -95,7 +93,6 @@ const Dashboard = ({ onAddTransaction }) => {
               variant="primary"
               size="large"
               onClick={() => {
-                hapticFeedback.light();
                 onAddTransaction();
               }}
               icon={<Plus size={20} />}
@@ -169,7 +166,6 @@ const Dashboard = ({ onAddTransaction }) => {
           variant="primary"
           size="large"
           onClick={() => {
-            hapticFeedback.light();
             onAddTransaction();
           }}
           icon={<Plus size={20} />}

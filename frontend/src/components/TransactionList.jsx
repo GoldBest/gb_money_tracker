@@ -4,7 +4,7 @@ import { Trash2, Plus, Search, Filter, Edit } from 'lucide-react'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import PullToRefresh from './PullToRefresh'
-import { hapticFeedback } from '../utils/haptic'
+
 
 const TransactionList = ({ onEditTransaction }) => {
   const { user, api } = useTelegram()
@@ -31,10 +31,8 @@ const TransactionList = ({ onEditTransaction }) => {
       setLoading(true)
       const response = await api.get(`/api/users/${user.id}/transactions`)
       setTransactions(response.data)
-      hapticFeedback.success()
     } catch (error) {
       console.error('Error loading transactions:', error)
-      hapticFeedback.error()
     } finally {
       setLoading(false)
     }
@@ -62,7 +60,6 @@ const TransactionList = ({ onEditTransaction }) => {
   }
 
   const handleDelete = async (id) => {
-    hapticFeedback.medium();
     window.showTelegramConfirm(
       'Вы уверены, что хотите удалить эту транзакцию?',
       async (confirmed) => {
@@ -73,11 +70,9 @@ const TransactionList = ({ onEditTransaction }) => {
           await api.delete(`/api/transactions/${id}`)
           setTransactions(prev => prev.filter(t => t.id !== id))
           window.showTelegramAlert('Транзакция успешно удалена')
-          hapticFeedback.success()
         } catch (error) {
           console.error('Error deleting transaction:', error)
           window.showTelegramAlert('Ошибка при удалении транзакции')
-          hapticFeedback.error()
         } finally {
           setDeletingId(null)
         }
@@ -86,7 +81,6 @@ const TransactionList = ({ onEditTransaction }) => {
   }
 
   const handleEdit = (transaction) => {
-    hapticFeedback.light();
     if (onEditTransaction) {
       onEditTransaction(transaction)
     }
@@ -137,9 +131,8 @@ const TransactionList = ({ onEditTransaction }) => {
           </div>
           
           <button 
-            className="filter-toggle haptic-trigger"
+            className="filter-toggle button-animation"
             onClick={() => {
-              hapticFeedback.light();
               setShowFilters(!showFilters);
             }}
           >
@@ -163,8 +156,7 @@ const TransactionList = ({ onEditTransaction }) => {
             </div>
             
             {(searchTerm || filterType !== 'all') && (
-              <button className="clear-filters haptic-trigger" onClick={() => {
-                hapticFeedback.light();
+              <button className="clear-filters button-animation" onClick={() => {
                 clearFilters();
               }}>
                 Очистить фильтры
@@ -191,8 +183,7 @@ const TransactionList = ({ onEditTransaction }) => {
               }
             </p>
             {(searchTerm || filterType !== 'all') && (
-              <button className="button secondary haptic-trigger" onClick={() => {
-                hapticFeedback.light();
+              <button className="button secondary button-animation" onClick={() => {
                 clearFilters();
               }}>
                 Очистить фильтры
@@ -226,14 +217,14 @@ const TransactionList = ({ onEditTransaction }) => {
                   </div>
                   <div className="transaction-actions">
                     <button
-                      className="edit-button haptic-trigger"
+                      className="edit-button button-animation"
                       onClick={() => handleEdit(transaction)}
                       title="Редактировать"
                     >
                       <Edit size={16} />
                     </button>
                     <button
-                      className="delete-button haptic-trigger"
+                      className="delete-button button-animation"
                       onClick={() => handleDelete(transaction.id)}
                       disabled={deletingId === transaction.id}
                       title="Удалить"

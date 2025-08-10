@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Search, Filter, X, Calendar, Tag } from 'lucide-react'
-import { hapticFeedback } from '../utils/haptic'
+
 
 const SearchAndFilter = ({ onSearch, onFilter, categories = [] }) => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -24,7 +24,6 @@ const SearchAndFilter = ({ onSearch, onFilter, categories = [] }) => {
     const newFilters = { ...filters, [field]: value }
     setFilters(newFilters)
     onFilter(newFilters)
-    hapticFeedback.light()
   }
 
   const clearFilters = () => {
@@ -37,7 +36,6 @@ const SearchAndFilter = ({ onSearch, onFilter, categories = [] }) => {
       amountMax: ''
     })
     onFilter({})
-    hapticFeedback.medium()
   }
 
   const hasActiveFilters = Object.values(filters).some(value => value !== '')
@@ -56,10 +54,9 @@ const SearchAndFilter = ({ onSearch, onFilter, categories = [] }) => {
         />
         {searchQuery && (
           <button
-            className="clear-search haptic-trigger"
+            className="clear-search button-animation"
             onClick={() => {
               setSearchQuery('')
-              hapticFeedback.light()
             }}
           >
             <X size={16} />
@@ -69,10 +66,9 @@ const SearchAndFilter = ({ onSearch, onFilter, categories = [] }) => {
 
       {/* Кнопка фильтров */}
       <button
-        className={`filter-toggle haptic-trigger ${showFilters ? 'active' : ''}`}
+        className={`filter-toggle button-animation ${showFilters ? 'active' : ''}`}
         onClick={() => {
           setShowFilters(!showFilters)
-          hapticFeedback.light()
         }}
       >
         <Filter size={20} />
@@ -86,7 +82,7 @@ const SearchAndFilter = ({ onSearch, onFilter, categories = [] }) => {
             <h4>Фильтры</h4>
             {hasActiveFilters && (
               <button
-                className="clear-filters haptic-trigger"
+                className="clear-filters button-animation"
                 onClick={clearFilters}
               >
                 Очистить

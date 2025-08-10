@@ -33,15 +33,15 @@
 }
 
 /* Анимации для кнопок */
-.haptic-trigger {
+.button-animation {
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.haptic-trigger:active {
+.button-animation:active {
   transform: scale(0.95);
 }
 
-.haptic-trigger:hover {
+.button-animation:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
