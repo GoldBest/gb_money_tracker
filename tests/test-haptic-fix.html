@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест Haptic Feedback Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .success { background: #28a745; }
+        .warning { background: #ffc107; color: black; }
+        .error { background: #dc3545; }
+        .info {
+            background: #17a2b8;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Тест исправления Haptic Feedback</h1>
+        
+        <div class="info">
+            <strong>Проблема:</strong> В Telegram Web App версии 6.0 API HapticFeedback не поддерживается.<br>
+            <strong>Решение:</strong> Добавлен fallback на нативную вибрацию и улучшена обработка ошибок.
+        </div>
+
+        <div class="test-section">
+            <h3>📱 Информация о Telegram Web App</h3>
+            <div id="telegram-info">Загрузка...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Тест Haptic Feedback</h3>
+            <p>Нажмите кнопки для тестирования различных типов вибрации:</p>
+            
+            <button class="button" onclick="testHaptic('light')">Легкая вибрация</button>
+            <button class="button" onclick="testHaptic('medium')">Средняя вибрация</button>
+            <button class="button" onclick="testHaptic('heavy')">Сильная вибрация</button>
+            <br>
+            <button class="button success" onclick="testHaptic('success')">Успех</button>
+            <button class="button warning" onclick="testHaptic('warning')">Предупреждение</button>
+            <button class="button error" onclick="testHaptic('error')">Ошибка</button>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Проверка поддержки</h3>
+            <button class="button" onclick="checkSupport()">Проверить поддержку</button>
+            <div id="support-info"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 Лог операций</h3>
+            <div id="log" class="log"></div>
+            <button class="button" onclick="clearLog()">Очистить лог</button>
+        </div>
+    </div>
+
+    <script>
+        // Импортируем нашу утилиту haptic feedback
+        const hapticFeedback = {
+            isHapticSupported: () => {
+                return window.Telegram?.WebApp?.HapticFeedback && 
+                       typeof window.Telegram.WebApp.HapticFeedback.impactOccurred === 'function';
+            },
+
+            fallbackHaptic: () => {
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                    log('✅ Fallback: нативная вибрация');
+                } else {
+                    log('⚠️ Fallback: вибрация не поддерживается');
+                }
+            },
+
+            light: () => {
+                if (this.isHapticSupported()) {
+                    try {
+                        window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+                        log('✅ Haptic feedback light');
+                    } catch (error) {
+                        log('❌ Haptic feedback light failed: ' + error.message);
+                        this.fallbackHaptic();
+                    }
+                } else {
+                    log('⚠️ Haptic feedback недоступен, используем fallback');
+                    this.fallbackHaptic();
+                }
+            },
+
+            medium: () => {
+                if (this.isHapticSupported()) {
+                    try {
+                        window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+                        log('✅ Haptic feedback medium');
+                    } catch (error) {
+                        log('❌ Haptic feedback medium failed: ' + error.message);
+                        this.fallbackHaptic();
+                    }
+                } else {
+                    log('⚠️ Haptic feedback недоступен, используем fallback');
+                    this.fallbackHaptic();
+                }
+            },
+
+            heavy: () => {
+                if (this.isHapticSupported()) {
+                    try {
+                        window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+                        log('✅ Haptic feedback heavy');
+                    } catch (error) {
+                        log('❌ Haptic feedback heavy failed: ' + error.message);
+                        this.fallbackHaptic();
+                    }
+                } else {
+                    log('⚠️ Haptic feedback недоступен, используем fallback');
+                    this.fallbackHaptic();
+                }
+            },
+
+            success: () => {
+                if (this.isHapticSupported()) {
+                    try {
+                        window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+                        log('✅ Haptic feedback success');
+                    } catch (error) {
+                        log('❌ Haptic feedback success failed: ' + error.message);
+                        this.fallbackHaptic();
+                    }
+                } else {
+                    log('⚠️ Haptic feedback недоступен, используем fallback');
+                    this.fallbackHaptic();
+                }
+            },
+
+            warning: () => {
+                if (this.isHapticSupported()) {
+                    try {
+                        window.Telegram.WebApp.HapticFeedback.notificationOccurred('warning');
+                        log('✅ Haptic feedback warning');
+                    } catch (error) {
+                        log('❌ Haptic feedback warning failed: ' + error.message);
+                        this.fallbackHaptic();
+                    }
+                } else {
+                    log('⚠️ Haptic feedback недоступен, используем fallback');
+                    this.fallbackHaptic();
+                }
+            },
+
+            error: () => {
+                if (this.isHapticSupported()) {
+                    try {
+                        window.Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+                        log('✅ Haptic feedback error');
+                    } catch (error) {
+                        log('❌ Haptic feedback error failed: ' + error.message);
+                        this.fallbackHaptic();
+                    }
+                } else {
+                    log('⚠️ Haptic feedback недоступен, используем fallback');
+                    this.fallbackHaptic();
+                }
+            },
+
+            isSupported: () => this.isHapticSupported(),
+
+            getVersionInfo: () => {
+                if (window.Telegram?.WebApp) {
+                    return {
+                        version: window.Telegram.WebApp.version,
+                        platform: window.Telegram.WebApp.platform,
+                        hapticSupported: this.isHapticSupported()
+                    };
+                }
+                return null;
+            }
+        };
+
+        // Функции для тестирования
+        function testHaptic(type) {
+            log(`🧪 Тестируем: ${type}`);
+            
+            switch(type) {
+                case 'light':
+                    hapticFeedback.light();
+                    break;
+                case 'medium':
+                    hapticFeedback.medium();
+                    break;
+                case 'heavy':
+                    hapticFeedback.heavy();
+                    break;
+                case 'success':
+                    hapticFeedback.success();
+                    break;
+                case 'warning':
+                    hapticFeedback.warning();
+                    break;
+                case 'error':
+                    hapticFeedback.error();
+                    break;
+            }
+        }
+
+        function checkSupport() {
+            const info = hapticFeedback.getVersionInfo();
+            const supportDiv = document.getElementById('support-info');
+            
+            if (info) {
+                supportDiv.innerHTML = `
+                    <div class="info">
+                        <strong>Версия:</strong> ${info.version || 'Неизвестно'}<br>
+                        <strong>Платформа:</strong> ${info.platform || 'Неизвестно'}<br>
+                        <strong>Haptic Feedback:</strong> ${info.hapticSupported ? '✅ Поддерживается' : '❌ Не поддерживается'}
+                    </div>
+                `;
+            } else {
+                supportDiv.innerHTML = `
+                    <div class="info">
+                        <strong>Telegram Web App:</strong> ❌ Не обнаружен<br>
+                        <strong>Режим:</strong> Браузер (fallback)
+                    </div>
+                `;
+            }
+        }
+
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // Инициализация
+        window.addEventListener('load', () => {
+            // Mock Telegram Web App для тестирования
+            if (!window.Telegram?.WebApp) {
+                window.Telegram = {
+                    WebApp: {
+                        version: '6.0',
+                        platform: 'web',
+                        HapticFeedback: null // Симулируем отсутствие поддержки
+                    }
+                };
+                log('🔧 Создан mock Telegram Web App версии 6.0 без HapticFeedback');
+            }
+
+            // Отображаем информацию
+            const info = hapticFeedback.getVersionInfo();
+            const infoDiv = document.getElementById('telegram-info');
+            
+            if (info) {
+                infoDiv.innerHTML = `
+                    <div class="info">
+                        <strong>Версия:</strong> ${info.version}<br>
+                        <strong>Платформа:</strong> ${info.platform}<br>
+                        <strong>Haptic Feedback:</strong> ${info.hapticSupported ? '✅ Поддерживается' : '❌ Не поддерживается'}
+                    </div>
+                `;
+            }
+
+            log('🚀 Тест запущен');
+            log('💡 Нажмите кнопки для тестирования haptic feedback');
+        });
+    </script>
+</body>
+</html>

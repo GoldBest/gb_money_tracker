@@ -19,20 +19,34 @@ export const API_CONFIG = {
   TIMEOUT: import.meta.env.VITE_API_TIMEOUT || 10000
 }
 
+// Отладочная информация при загрузке модуля
+console.log('🔍 API_CONFIG loaded:', {
+  NGROK_BACKEND_URL: API_CONFIG.NGROK_BACKEND_URL,
+  LOCAL_BACKEND_URL: API_CONFIG.LOCAL_BACKEND_URL,
+  VITE_NGROK_BACKEND_URL: import.meta.env.VITE_NGROK_BACKEND_URL,
+  VITE_LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL
+})
+
 // Функция для определения baseURL
 export const getBaseURL = () => {
-  // Если мы в Telegram Web App, используем ngrok URL для бэкенда
-  if (window.Telegram?.WebApp) {
-    return API_CONFIG.NGROK_BACKEND_URL
-  }
+  const hostname = window.location.hostname;
+  const port = window.location.port;
+  const protocol = window.location.protocol;
   
-  // Если локальная разработка
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return API_CONFIG.LOCAL_BACKEND_URL
-  }
+  console.log('🔍 getBaseURL() called with:', {
+    hostname,
+    port,
+    protocol,
+    fullLocation: window.location.href,
+    hasTelegram: !!window.Telegram?.WebApp,
+    isNgrok: hostname.includes('ngrok-free.app'),
+    isLocalhost: hostname === 'localhost' || hostname === '127.0.0.1'
+  })
   
-  // По умолчанию используем ngrok URL для бэкенда
-  return API_CONFIG.NGROK_BACKEND_URL
+  // ВСЕГДА используем локальный бэкенд для разработки
+  // Независимо от того, как открыт фронтенд (localhost или ngrok)
+  console.log('🔍 Using LOCAL_BACKEND_URL:', API_CONFIG.LOCAL_BACKEND_URL)
+  return API_CONFIG.LOCAL_BACKEND_URL
 }
 
 // Функция для получения конфигурации в зависимости от окружения

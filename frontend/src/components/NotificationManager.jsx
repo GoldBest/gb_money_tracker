@@ -16,38 +16,81 @@ const NotificationManager = () => {
     unusualSpending: true
   })
 
+  // Отладочная информация
+  console.log('🔍 NotificationManager render:', { 
+    user: user?.id, 
+    baseURL: getBaseURL(),
+    location: window.location.href 
+  })
+
   useEffect(() => {
+    console.log('🔍 NotificationManager useEffect triggered, user:', user)
     if (user) {
+      console.log('🔍 User found, loading data...')
       loadNotifications()
       loadSettings()
+    } else {
+      console.log('🔍 No user yet, waiting...')
     }
   }, [user])
 
   const loadNotifications = async () => {
-    if (!user) return
-    
-    try {
-      const response = await fetch(`${getBaseURL()}/api/notifications?user_id=${user.id}`)
-      if (response.ok) {
-        const data = await response.json()
-        setNotifications(data.notifications || [])
+    if (user?.id) {
+      try {
+        const baseURL = getBaseURL()
+        const fullURL = `${baseURL}/api/notifications?user_id=${user.id}`
+        console.log('🔍 Loading notifications from:', fullURL)
+        console.log('🔍 User ID:', user.id)
+        
+        const response = await fetch(fullURL, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true'
+          }
+        })
+        console.log('🔍 Response status:', response.status)
+        console.log('🔍 Response headers:', Object.fromEntries(response.headers.entries()))
+        
+        if (response.ok) {
+          const data = await response.json()
+          console.log('🔍 Notifications data:', data)
+          setNotifications(data.notifications || []) // Extract notifications array
+        } else {
+          const errorText = await response.text()
+          console.error('❌ Error response:', errorText)
+        }
+      } catch (error) {
+        console.error('❌ Error loading notifications:', error)
       }
-    } catch (error) {
-      console.error('Error loading notifications:', error)
     }
   }
 
   const loadSettings = async () => {
-    if (!user) return
-    
-    try {
-      const response = await fetch(`${getBaseURL()}/api/notification-settings?user_id=${user.id}`)
-      if (response.ok) {
-        const data = await response.json()
-        setSettings(data.settings || [])
+    if (user?.id) {
+      try {
+        const baseURL = getBaseURL()
+        const fullURL = `${baseURL}/api/notification-settings?user_id=${user.id}`
+        console.log('🔍 Loading settings from:', fullURL)
+        console.log('🔍 User ID:', user.id)
+        
+        const response = await fetch(fullURL, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true'
+          }
+        })
+        console.log('🔍 Response status:', response.status)
+        console.log('🔍 Response headers:', Object.fromEntries(response.headers.entries()))
+        
+        if (response.ok) {
+          const data = await response.json()
+          console.log('🔍 Settings data:', data)
+          setSettings(data.settings || []) // Extract settings array
+        } else {
+          const errorText = await response.text()
+          console.error('❌ Error response:', errorText)
+        }
+      } catch (error) {
+        console.error('❌ Error loading settings:', error)
       }
-    } catch (error) {
-      console.error('Error loading settings:', error)
     }
   }
 

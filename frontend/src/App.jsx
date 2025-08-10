@@ -20,6 +20,7 @@ import AnimatedCard from './components/AnimatedCard'
 import AnimatedList from './components/AnimatedList'
 import AnimatedToast from './components/AnimatedToast'
 import AnimationDemo from './components/AnimationDemo'
+import TelegramInfo from './components/TelegramInfo'
 import { Moon, Sun, Plus } from 'lucide-react'
 import './App.css'
 import './mobile.css'
@@ -108,6 +109,9 @@ function AppContent() {
     <ErrorBoundary>
       <TelegramProvider>
         <div className="app">
+          {/* Информация о версии Telegram Web App */}
+          <TelegramInfo />
+          
           <header className="app-header">
             <h1>💰 GB Money Tracker</h1>
             <AnimatedButton

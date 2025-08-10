@@ -73,8 +73,8 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   const options = {
     body: event.data ? event.data.text() : 'Новое уведомление',
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    icon: '/icon-192.svg',
+    badge: '/icon-192.svg',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
@@ -84,12 +84,12 @@ self.addEventListener('push', (event) => {
       {
         action: 'explore',
         title: 'Открыть приложение',
-        icon: '/icon-192.png'
+        icon: '/icon-192.svg'
       },
       {
         action: 'close',
         title: 'Закрыть',
-        icon: '/icon-192.png'
+        icon: '/icon-192.svg'
       }
     ]
   }
