@@ -23,10 +23,7 @@ export default defineConfig(({ command, mode }) => {
       host: true,
       allowedHosts: [
         'localhost',
-        '127.0.0.1',
-        '*.ngrok-free.app',
-        '76497dd1bbc9.ngrok-free.app',
-        '7747cf0ecbb1.ngrok-free.app'
+        '127.0.0.1'
       ],
       proxy: {
         '/api': {
@@ -54,7 +51,7 @@ export default defineConfig(({ command, mode }) => {
       __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
       __ENVIRONMENT__: JSON.stringify(mode),
       __BACKEND_URL__: JSON.stringify(env.BACKEND_API_URL || 'http://localhost:3001'),
-      __NGROK_URL__: JSON.stringify(env.WEBAPP_URL || ''),
+      __WEBAPP_URL__: JSON.stringify(env.WEBAPP_URL || ''),
     }
   }
 })

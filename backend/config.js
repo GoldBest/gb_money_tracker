@@ -17,7 +17,7 @@ module.exports = {
   BOT_TOKEN: getEnv('BOT_TOKEN') || 'YOUR_BOT_TOKEN_HERE',
   
   // URL вашего Web App
-  WEBAPP_URL: getEnv('WEBAPP_URL') || 'https://f55e154b6f3a.ngrok-free.app',
+  WEBAPP_URL: getEnv('WEBAPP_URL') || 'http://localhost:5176',
   
   // URL для webhook (для продакшн)
   WEBHOOK_URL: getEnv('WEBHOOK_URL') || null,

@@ -66,12 +66,7 @@ tg-money-miniapp/
 Скрипты и конфигурация для развертывания в папке `deploy/`:
 - `setup-env.sh` - настройка окружения
 - `setup-bot.sh` - настройка Telegram бота
-- `start-ngrok.sh` - запуск ngrok для разработки
-- `ngrok.yml` - конфигурация ngrok
 
 ## Логи
 
-Логи приложения сохраняются в папке `logs/`:
-- `ngrok.log` - логи ngrok
-- `ngrok-backend.log` - логи ngrok для бэкенда
-- `ngrok-frontend.log` - логи ngrok для фронтенда
+Логи приложения сохраняются в папке `logs/`.

@@ -74,7 +74,7 @@ function isDevelopment() {
 
 /**
  * Получает конфигурацию для указанной части проекта
- * @param {string} part - Часть проекта (backend, frontend, ngrok)
+ * @param {string} part - Часть проекта (backend, frontend)
  * @returns {Object} Конфигурация
  */
 function getProjectConfig(part) {
@@ -96,12 +96,6 @@ function getProjectConfig(part) {
       backendUrl: getEnv('BACKEND_API_URL', 'http://localhost:3001'),
       frontendUrl: getEnv('FRONTEND_URL', 'http://localhost:5176'),
       nodeEnv: getEnv('NODE_ENV', 'development')
-    },
-    ngrok: {
-      authToken: getEnv('NGROK_AUTHTOKEN'),
-      domain: getEnv('NGROK_DOMAIN'),
-      frontendPort: getEnv('FRONTEND_PORT', '5176'),
-      backendPort: getEnv('PORT', '3001')
     }
   };
 

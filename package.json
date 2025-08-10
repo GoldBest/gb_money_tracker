@@ -12,8 +12,7 @@
     "test:bot": "node test-bot.js",
     "setup:bot": "./setup-bot.sh",
     "setup:env": "./setup-env.sh",
-    "update:ngrok": "node scripts/update-ngrok-config.js",
-    "start:ngrok": "./start-ngrok.sh",
+
     "build": "npm run build:frontend && npm run build:backend",
     "build:frontend": "npm --prefix frontend run build",
     "build:backend": "npm --prefix backend run build",

@@ -30,12 +30,7 @@ if [ ! -z "$bot_token" ]; then
     echo "✅ BOT_TOKEN обновлен"
 fi
 
-# NGROK_AUTHTOKEN
-read -p "🌐 Введите ngrok auth token (или нажмите Enter для пропуска): " ngrok_token
-if [ ! -z "$ngrok_token" ]; then
-    sed -i '' "s/NGROK_AUTHTOKEN=314LYEGUIzQbhy1afASkUxaL7vg_3hYAJpqD7WK12biYZ8rzq/NGROK_AUTHTOKEN=$ngrok_token/" .env
-    echo "✅ NGROK_AUTHTOKEN обновлен"
-fi
+
 
 # PORT
 read -p "🔌 Введите порт для backend (по умолчанию 3001): " port

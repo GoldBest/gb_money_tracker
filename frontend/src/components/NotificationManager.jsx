@@ -41,11 +41,7 @@ const NotificationManager = () => {
         console.log('🔍 Loading notifications from:', fullURL)
         console.log('🔍 User ID:', user.id)
         
-        const response = await fetch(fullURL, {
-          headers: {
-            'ngrok-skip-browser-warning': 'true'
-          }
-        })
+        const response = await fetch(fullURL)
         console.log('🔍 Response status:', response.status)
         console.log('🔍 Response headers:', Object.fromEntries(response.headers.entries()))
         
@@ -71,11 +67,7 @@ const NotificationManager = () => {
         console.log('🔍 Loading settings from:', fullURL)
         console.log('🔍 User ID:', user.id)
         
-        const response = await fetch(fullURL, {
-          headers: {
-            'ngrok-skip-browser-warning': 'true'
-          }
-        })
+        const response = await fetch(fullURL)
         console.log('🔍 Response status:', response.status)
         console.log('🔍 Response headers:', Object.fromEntries(response.headers.entries()))
         

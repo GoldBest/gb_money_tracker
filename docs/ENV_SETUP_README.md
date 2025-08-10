@@ -11,8 +11,7 @@ tg-money-miniapp/
 ├── setup-env.sh          # Скрипт настройки переменных
 ├── config/
 │   └── env-loader.js     # Утилита загрузки переменных
-└── scripts/
-    └── update-ngrok-config.js  # Скрипт обновления ngrok.yml
+
 ```
 
 ## 🚀 Быстрый старт
@@ -35,8 +34,7 @@ cp env.example .env
 # Telegram Bot токен (обязательно)
 BOT_TOKEN=your_actual_bot_token_here
 
-# Ngrok auth token (обязательно)
-NGROK_AUTHTOKEN=your_ngrok_auth_token_here
+
 
 # Порт для backend (по умолчанию 3001)
 PORT=3001
@@ -45,17 +43,13 @@ PORT=3001
 FRONTEND_PORT=5176
 ```
 
-### 3. Обновите ngrok конфигурацию
 
-```bash
-npm run update:ngrok
-```
 
 ## 🔑 Основные переменные
 
 ### Telegram Bot
 - `BOT_TOKEN` - Токен вашего Telegram бота
-- `WEBAPP_URL` - URL вашего Web App (заполняется автоматически ngrok)
+- `WEBAPP_URL` - URL вашего Web App
 - `WEBHOOK_URL` - URL для webhook (для продакшн)
 
 ### Сервер
@@ -63,9 +57,7 @@ npm run update:ngrok
 - `FRONTEND_PORT` - Порт для frontend (Vite)
 - `NODE_ENV` - Режим работы (development/production)
 
-### Ngrok
-- `NGROK_AUTHTOKEN` - Ngrok auth token
-- `NGROK_DOMAIN` - Ngrok домен (для платных планов)
+
 
 ### API
 - `BACKEND_API_URL` - URL для backend API
@@ -104,15 +96,7 @@ const backendUrl = __BACKEND_URL__;
 
 ## 🔄 Автоматическое обновление
 
-### Ngrok конфигурация
-
-```bash
-# Обновить ngrok.yml из .env
-npm run update:ngrok
-
-# Запустить ngrok
-npm run start:ngrok
-```
+### Переменные окружения
 
 ### Переменные окружения
 
@@ -134,8 +118,7 @@ npm run dev:frontend     # Только frontend
 npm run bot              # Запуск бота
 npm run setup:bot        # Настройка бота
 npm run setup:env        # Настройка переменных
-npm run update:ngrok     # Обновление ngrok.yml
-npm run start:ngrok      # Запуск ngrok
+
 
 # Сборка
 npm run build            # Сборка всего проекта
@@ -180,11 +163,7 @@ logs/
 2. Убедитесь, что синтаксис файла корректен
 3. Проверьте права доступа к файлу
 
-### Ngrok не работает
 
-1. Проверьте `NGROK_AUTHTOKEN` в `.env`
-2. Запустите `npm run update:ngrok`
-3. Проверьте, что порты не заняты
 
 ### Frontend не подключается к backend
 
@@ -195,6 +174,6 @@ logs/
 ## 📚 Дополнительные ресурсы
 
 - [Telegram Bot API](https://core.telegram.org/bots/api)
-- [Ngrok Documentation](https://ngrok.com/docs)
+
 - [Vite Environment Variables](https://vitejs.dev/guide/env-and-mode.html)
 - [Node.js Environment Variables](https://nodejs.org/api/process.html#processenv)

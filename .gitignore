@@ -11,7 +11,6 @@ node_modules/
 # Логи
 *.log
 logs/
-ngrok*.log
 
 # База данных
 *.db
@@ -35,6 +34,3 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
-
-# Ngrok
-ngrok.yml

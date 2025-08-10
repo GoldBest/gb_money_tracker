@@ -59,24 +59,7 @@ async function testFrontend() {
   }
 }
 
-async function testNgrokTunnels() {
-  console.log('\n🌍 Тестирую Ngrok туннели...');
-  
-  try {
-    // Frontend tunnel
-    const frontendTunnel = await axios.get('https://7747cf0ecbb1.ngrok-free.app');
-    console.log('✅ Frontend туннель работает');
-    
-    // Backend tunnel
-    const backendTunnel = await axios.get('https://f4fbe5647c02.ngrok-free.app/api/health');
-    console.log('✅ Backend туннель работает');
-    
-    return true;
-  } catch (error) {
-    console.log('❌ Ошибка в Ngrok туннелях:', error.message);
-    return false;
-  }
-}
+
 
 async function testTelegramBot() {
   console.log('\n🤖 Тестирую Telegram бота...');
@@ -103,7 +86,6 @@ async function runAllTests() {
   const results = {
     backend: await testBackendAPI(),
     frontend: await testFrontend(),
-    ngrok: await testNgrokTunnels(),
     telegram: await testTelegramBot()
   };
   
@@ -111,7 +93,6 @@ async function runAllTests() {
   console.log('=====================================');
   console.log(`Backend API: ${results.backend ? '✅' : '❌'}`);
   console.log(`Frontend: ${results.frontend ? '✅' : '❌'}`);
-  console.log(`Ngrok туннели: ${results.ngrok ? '✅' : '❌'}`);
   console.log(`Telegram бот: ${results.telegram ? '✅' : '❌'}`);
   
   const successCount = Object.values(results).filter(Boolean).length;

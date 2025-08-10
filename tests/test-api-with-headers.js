@@ -1,14 +1,13 @@
 const axios = require('axios');
 
-const API_URL = 'https://f44d02326756.ngrok-free.app';
+const API_URL = 'http://localhost:3001';
 
 async function testAPI() {
   try {
-    console.log('🧪 Тестируем API с заголовками для обхода ngrok...');
+    console.log('🧪 Тестируем API...');
     
     const response = await axios.get(`${API_URL}/api/health`, {
       headers: {
-        'ngrok-skip-browser-warning': 'true',
         'User-Agent': 'TelegramWebApp/1.0'
       },
       timeout: 10000
@@ -38,7 +37,6 @@ async function testPostAPI() {
       first_name: 'Test User'
     }, {
       headers: {
-        'ngrok-skip-browser-warning': 'true',
         'User-Agent': 'TelegramWebApp/1.0',
         'Content-Type': 'application/json'
       },

@@ -77,28 +77,11 @@ cd frontend
 npm run dev
 ```
 
-2. **Используйте ngrok для создания публичного URL**:
-```bash
-ngrok http 5176
-```
+2. **Для локальной разработки используйте localhost:5176**
 
-3. **Настройте Vite для работы с ngrok** (уже сделано в `vite.config.js`):
-```javascript
-server: {
-  host: true,
-  allowedHosts: [
-    'localhost',
-    '127.0.0.1',
-    '.ngrok-free.app',
-    '.ngrok.io',
-  ],
-  hmr: {
-    clientPort: 443,
-  },
-}
-```
+3. **Для продакшн настройте ваш домен**
 
-4. **Используйте полученный URL в настройках бота** (например: `https://7c07ad83e4d0.ngrok-free.app`)
+4. **Используйте URL в настройках бота**
 
 5. **Обновите URL в коде бота**
 

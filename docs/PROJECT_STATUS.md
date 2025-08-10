@@ -24,11 +24,11 @@
 - **Команды**: `/start`, `/help`, `/status`, `/balance`
 - **Web App**: Интегрирован с frontend
 
-### ✅ Ngrok Tunnel
-- **Frontend URL**: https://7747cf0ecbb1.ngrok-free.app
-- **Backend URL**: https://f4fbe5647c02.ngrok-free.app
+### ✅ Локальная разработка
+- **Frontend URL**: http://localhost:5176
+- **Backend URL**: http://localhost:3001
 - **Статус**: Активен
-- **Назначение**: Публичный доступ к приложению
+- **Назначение**: Локальная разработка и тестирование
 
 ### ✅ База данных
 - **Тип**: SQLite
@@ -72,9 +72,9 @@ http://localhost:5176
 ### 3. Telegram Bot
 Найдите `@gb_money_tracker_bot` и отправьте `/start`
 
-### 4. Через Ngrok
-- **Frontend**: https://7747cf0ecbb1.ngrok-free.app
-- **Backend API**: https://f4fbe5647c02.ngrok-free.app
+### 4. Через локальную сеть
+- **Frontend**: http://localhost:5176
+- **Backend API**: http://localhost:3001
 
 ## 📁 Структура проекта
 
@@ -90,7 +90,7 @@ tg-money-miniapp/
 ## 🚨 Известные ограничения
 
 - **Токен бота**: Требует настройки через @BotFather
-- **Ngrok**: URL может измениться при перезапуске
+- **Локальная разработка**: Требует запуска frontend и backend
 - **База данных**: SQLite для разработки, PostgreSQL для продакшн
 
 ## 🚀 Готовность к деплою
@@ -120,8 +120,8 @@ tg-money-miniapp/
 
 - **Frontend**: http://localhost:5176
 - **Backend API**: http://localhost:3001
-- **Ngrok Frontend**: https://7747cf0ecbb1.ngrok-free.app
-- **Ngrok Backend**: https://f4fbe5647c02.ngrok-free.app
+- **Локальная разработка**: http://localhost:5176
+- **Локальный API**: http://localhost:3001
 - **Telegram Bot**: @gb_money_tracker_bot
 
 ---
