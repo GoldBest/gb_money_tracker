@@ -1,10 +1,13 @@
 // API Configuration
+// Примечание: В frontend мы не можем напрямую читать .env файл,
+// поэтому используем переменные, которые будут установлены при сборке
+
 export const API_CONFIG = {
-  // Ngrok URL для бэкенда
-  NGROK_BACKEND_URL: 'https://1b0966126d83.ngrok-free.app',
+  // Ngrok URL для бэкенда (будет заменен при сборке)
+  NGROK_BACKEND_URL: import.meta.env.VITE_NGROK_BACKEND_URL || 'https://1b0966126d83.ngrok-free.app',
   
   // Локальный URL для разработки
-  LOCAL_BACKEND_URL: 'http://localhost:3001',
+  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'http://localhost:3001',
   
   // Заголовки для обхода предупреждений ngrok
   HEADERS: {
@@ -14,7 +17,7 @@ export const API_CONFIG = {
   },
   
   // Таймаут для запросов
-  TIMEOUT: 10000
+  TIMEOUT: import.meta.env.VITE_API_TIMEOUT || 10000
 }
 
 // Функция для определения baseURL
@@ -32,3 +35,16 @@ export const getBaseURL = () => {
   // По умолчанию используем ngrok URL для бэкенда
   return API_CONFIG.NGROK_BACKEND_URL
 }
+
+// Функция для получения конфигурации в зависимости от окружения
+export const getApiConfig = () => {
+  const isDev = import.meta.env.DEV;
+  const isProd = import.meta.env.PROD;
+  
+  return {
+    baseURL: getBaseURL(),
+    timeout: API_CONFIG.TIMEOUT,
+    headers: API_CONFIG.HEADERS,
+    environment: isDev ? 'development' : isProd ? 'production' : 'unknown'
+  };
+};

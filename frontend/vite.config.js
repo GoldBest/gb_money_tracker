@@ -1,20 +1,57 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
-// https://vite.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  server: {
-    host: true, // Разрешаем доступ с внешних IP
-    port: 5173,
-    allowedHosts: [
-      'localhost',
-      '127.0.0.1',
-      '.ngrok-free.app', // Разрешаем все ngrok домены
-      '.ngrok.io', // Альтернативный ngrok домен
-    ],
-    hmr: {
-      clientPort: 443, // Для HTTPS через ngrok
+// https://vitejs.dev/config/
+export default defineConfig(({ command, mode }) => {
+  // Загружаем переменные окружения из корневого .env файла
+  const env = loadEnv(mode, '../../', '');
+  
+  return {
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
     },
-  },
+    // Передаем переменные окружения в frontend
+    define: {
+      'process.env': env
+    },
+    // Настройки для переменных окружения
+    envPrefix: 'VITE_',
+    // Загружаем переменные из корневого .env
+    envDir: '../../',
+    server: {
+      port: parseInt(env.FRONTEND_PORT) || 5176,
+      host: true,
+      proxy: {
+        '/api': {
+          target: env.BACKEND_API_URL || 'http://localhost:3001',
+          changeOrigin: true,
+          secure: false,
+        }
+      }
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: mode === 'development',
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            telegram: ['telegram-web-app']
+          }
+        }
+      }
+    },
+    // Переменные окружения для frontend
+    define: {
+      __APP_VERSION__: JSON.stringify(env.npm_package_version || '1.0.0'),
+      __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+      __ENVIRONMENT__: JSON.stringify(mode),
+      __BACKEND_URL__: JSON.stringify(env.BACKEND_API_URL || 'http://localhost:3001'),
+      __NGROK_URL__: JSON.stringify(env.WEBAPP_URL || ''),
+    }
+  }
 })

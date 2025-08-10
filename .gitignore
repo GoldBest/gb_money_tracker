@@ -1,1 +1,40 @@
-node_modules
+# Зависимости
+node_modules/
+*/node_modules/
+
+# Переменные окружения
+.env
+.env.local
+.env.*.local
+.env.backup.*
+
+# Логи
+*.log
+logs/
+ngrok*.log
+
+# База данных
+*.db
+*.sqlite
+*.sqlite3
+
+# Сборка
+dist/
+build/
+*/dist/
+*/build/
+
+# Временные файлы
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ngrok
+ngrok.yml
