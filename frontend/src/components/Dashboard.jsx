@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useTelegram } from '../contexts/TelegramContext'
-import { Plus, TrendingUp, TrendingDown } from 'lucide-react'
+import { Plus, TrendingUp, TrendingDown, DollarSign, Wallet } from 'lucide-react'
 import NotificationManager from './NotificationManager'
 import PullToRefresh from './PullToRefresh'
+import AnimatedCard from './AnimatedCard'
+import AnimatedButton from './AnimatedButton'
 import { hapticFeedback } from '../utils/haptic'
 
 const Dashboard = ({ onAddTransaction }) => {
@@ -52,18 +54,57 @@ const Dashboard = ({ onAddTransaction }) => {
     return (
       <PullToRefresh onRefresh={loadStats}>
         <div className="dashboard">
-          <div className="empty-state">
-            <div className="empty-icon">💰</div>
-            <h3>Добро пожаловать в Money Tracker!</h3>
-            <p>Начните отслеживать свои финансы, добавив первую транзакцию</p>
-            <button className="action-button primary haptic-trigger" onClick={() => {
-              hapticFeedback.light();
-              onAddTransaction();
-            }}>
-              <Plus size={20} />
+          <AnimatedCard
+            variant="gradient"
+            hoverEffect="glow"
+            icon="💰"
+            title="Добро пожаловать в GB Money Tracker!"
+            className="welcome-card"
+          >
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Для вас созданы базовые категории доходов и расходов
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <AnimatedCard
+                variant="glass"
+                hoverEffect="scale"
+                icon="📈"
+                title="Доходы"
+                className="info-card"
+              >
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Зарплата, подработка, инвестиции, подарки
+                </p>
+              </AnimatedCard>
+              
+              <AnimatedCard
+                variant="glass"
+                hoverEffect="scale"
+                icon="📉"
+                title="Расходы"
+                className="info-card"
+              >
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Продукты, транспорт, коммунальные, развлечения
+                </p>
+              </AnimatedCard>
+            </div>
+            
+            <AnimatedButton
+              variant="primary"
+              size="large"
+              onClick={() => {
+                hapticFeedback.light();
+                onAddTransaction();
+              }}
+              icon={<Plus size={20} />}
+              fullWidth
+              className="welcome-button"
+            >
               Добавить первую транзакцию
-            </button>
-          </div>
+            </AnimatedButton>
+          </AnimatedCard>
           
           <NotificationManager />
         </div>
@@ -74,67 +115,70 @@ const Dashboard = ({ onAddTransaction }) => {
   return (
     <PullToRefresh onRefresh={loadStats}>
       <div className="dashboard">
-        <div className="balance-card">
-          <h2>Баланс</h2>
-          <div className={`balance-amount ${balance >= 0 ? 'positive' : 'negative'}`}>
+        <AnimatedCard
+          variant="gradient"
+          hoverEffect="glow"
+          icon={<DollarSign className="w-8 h-8" />}
+          title="Баланс"
+          className="balance-card"
+        >
+          <div className={`text-4xl font-bold text-center ${balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
             {balance >= 0 ? '+' : ''}{balance.toLocaleString('ru-RU')} ₽
           </div>
-        </div>
+        </AnimatedCard>
 
         <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon positive">
-              <TrendingUp size={24} />
+          <AnimatedCard
+            variant="elevated"
+            hoverEffect="lift"
+            icon={<TrendingUp className="w-6 h-6 text-green-500" />}
+            title="Доходы"
+            className="stat-card"
+          >
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+              +{totalIncome.toLocaleString('ru-RU')} ₽
             </div>
-            <div className="stat-content">
-              <div className="stat-label">Доходы</div>
-              <div className="stat-value">{totalIncome.toLocaleString('ru-RU')} ₽</div>
-            </div>
-          </div>
+          </AnimatedCard>
 
-          <div className="stat-card">
-            <div className="stat-icon negative">
-              <TrendingDown size={24} />
+          <AnimatedCard
+            variant="elevated"
+            hoverEffect="lift"
+            icon={<TrendingDown className="w-6 h-6 text-red-500" />}
+            title="Расходы"
+            className="stat-card"
+          >
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+              -{totalExpense.toLocaleString('ru-RU')} ₽
             </div>
-            <div className="stat-content">
-              <div className="stat-label">Расходы</div>
-              <div className="stat-value">{totalExpense.toLocaleString('ru-RU')} ₽</div>
+          </AnimatedCard>
+
+          <AnimatedCard
+            variant="elevated"
+            hoverEffect="lift"
+            icon={<Wallet className="w-6 h-6 text-blue-500" />}
+            title="Транзакции"
+            className="stat-card"
+          >
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {totalTransactions}
             </div>
-          </div>
+          </AnimatedCard>
         </div>
 
-        <div className="quick-actions">
-          <button className="action-button primary haptic-trigger" onClick={() => {
+        <AnimatedButton
+          variant="primary"
+          size="large"
+          onClick={() => {
             hapticFeedback.light();
             onAddTransaction();
-          }}>
-            <Plus size={20} />
-            Добавить транзакцию
-          </button>
-        </div>
-
-        {stats?.categoryStats && stats.categoryStats.length > 0 && (
-          <div className="recent-categories">
-            <h3>Топ категорий расходов</h3>
-            <div className="category-list">
-              {stats.categoryStats.slice(0, 5).map((category, index) => (
-                <div key={index} className="category-item">
-                  <div 
-                    className="category-color" 
-                    style={{ backgroundColor: category.color }}
-                  />
-                  <div className="category-info">
-                    <div className="category-name">{category.name}</div>
-                    <div className="category-amount">
-                      {category.total.toLocaleString('ru-RU')} ₽
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
+          }}
+          icon={<Plus size={20} />}
+          fullWidth
+          className="add-transaction-button"
+        >
+          Добавить транзакцию
+        </AnimatedButton>
+        
         <NotificationManager />
       </div>
     </PullToRefresh>

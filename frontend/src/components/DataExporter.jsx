@@ -52,7 +52,7 @@ const DataExporter = () => {
       link.href = url
       
       const timestamp = new Date().toISOString().split('T')[0]
-      const filename = `money_tracker_${timestamp}.${exportOptions.format === 'excel' ? 'xlsx' : 'csv'}`
+              const filename = `gb_money_tracker_${timestamp}.${exportOptions.format === 'excel' ? 'xlsx' : 'csv'}`
       
       link.setAttribute('download', filename)
       document.body.appendChild(link)

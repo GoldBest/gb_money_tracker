@@ -140,16 +140,42 @@ const CategoryManager = () => {
           <div className="empty-icon">🏷️</div>
           <h3>У вас пока нет категорий</h3>
           <p>Создайте категории для лучшей организации транзакций</p>
-          <button 
-            className="action-button primary haptic-trigger"
-            onClick={() => {
-              hapticFeedback.light();
-              setShowForm(true);
-            }}
-          >
-            <Plus size={16} />
-            Создать первую категорию
-          </button>
+          <div className="empty-state-actions">
+            <button 
+              className="action-button primary haptic-trigger"
+              onClick={() => {
+                hapticFeedback.light();
+                setShowForm(true);
+              }}
+            >
+              <Plus size={16} />
+              Создать первую категорию
+            </button>
+            <button 
+              className="action-button secondary haptic-trigger"
+              onClick={async () => {
+                try {
+                  hapticFeedback.light();
+                  const response = await api.post(`/api/users/${user.id}/categories/default`);
+                  if (response.data.success) {
+                    hapticFeedback.success();
+                    window.showTelegramAlert(response.data.message);
+                    loadCategories(); // Перезагружаем категории
+                  }
+                } catch (error) {
+                  console.error('Error creating default categories:', error);
+                  hapticFeedback.error();
+                  if (error.response?.data?.message) {
+                    window.showTelegramAlert(error.response.data.message);
+                  } else {
+                    window.showTelegramAlert('Ошибка при создании базовых категорий');
+                  }
+                }
+              }}
+            >
+              🎯 Создать базовые категории
+            </button>
+          </div>
         </div>
       ) : (
         <div className="categories-grid">

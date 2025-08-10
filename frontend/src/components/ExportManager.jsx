@@ -305,7 +305,7 @@ const ExportManager = () => {
           </div>
 
           <div class="footer">
-            <p>Отчет создан в Money Tracker Mini App</p>
+            <p>Отчет создан в GB Money Tracker Mini App</p>
             <p>Всего транзакций: ${transactions.length}</p>
           </div>
         </body>

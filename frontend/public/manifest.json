@@ -1,6 +1,6 @@
 {
-  "name": "Money Tracker - Управление финансами",
-  "short_name": "Money Tracker",
+  "name": "GB Money Tracker - Управление финансами",
+  "short_name": "GB Money Tracker",
   "description": "Приложение для управления личными финансами с интеграцией Telegram",
   "start_url": "/",
   "display": "standalone",

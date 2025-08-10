@@ -704,3 +704,7 @@ t=2025-08-10T03:22:11+0300 lvl=info msg="join connections" obj=join id=7d4df33cd
 t=2025-08-10T03:22:11+0300 lvl=info msg="join connections" obj=join id=bb8469c4cc01 l=[::1]:5173 r=149.202.43.196:35120
 t=2025-08-10T03:25:31+0300 lvl=info msg="join connections" obj=join id=635e75a4853d l=[::1]:3001 r=149.202.43.196:36088
 t=2025-08-10T03:25:31+0300 lvl=info msg="join connections" obj=join id=af0919ebf0eb l=[::1]:3001 r=149.202.43.196:36088
+t=2025-08-10T03:27:59+0300 lvl=info msg="join connections" obj=join id=a06534de082e l=[::1]:3001 r=149.202.43.196:57342
+t=2025-08-10T03:27:59+0300 lvl=info msg="join connections" obj=join id=4a0de0c3a2f1 l=[::1]:3001 r=149.202.43.196:57342
+t=2025-08-10T03:34:17+0300 lvl=info msg="join connections" obj=join id=7c03d9c9e7b8 l=[::1]:3001 r=[2001:41d0:401:3200::3fac]:38450
+t=2025-08-10T03:34:17+0300 lvl=info msg="join connections" obj=join id=04669c03d970 l=[::1]:3001 r=[2001:41d0:401:3200::3fac]:38450

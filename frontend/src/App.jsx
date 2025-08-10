@@ -15,15 +15,22 @@ import BudgetAlertManager from './components/BudgetAlertManager'
 import NotificationManager from './components/NotificationManager'
 import DataExporter from './components/DataExporter'
 import AnimatedTransition from './components/AnimatedTransition'
+import AnimatedButton from './components/AnimatedButton'
+import AnimatedCard from './components/AnimatedCard'
+import AnimatedList from './components/AnimatedList'
+import AnimatedToast from './components/AnimatedToast'
+import AnimationDemo from './components/AnimationDemo'
 import { Moon, Sun, Plus } from 'lucide-react'
 import './App.css'
 import './mobile.css'
+import './styles/animations.css'
 
 function AppContent() {
   const { isDark, toggleTheme } = useTheme()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState(null)
+  const [toasts, setToasts] = useState([])
 
   const tabs = [
     { id: 'dashboard', label: 'Главная', icon: '📊' },
@@ -34,7 +41,8 @@ function AppContent() {
     { id: 'budgets', label: 'Бюджеты', icon: '💰' },
     { id: 'notifications', label: 'Уведомления', icon: '🔔' },
     { id: 'backup', label: 'Резервные копии', icon: '💾' },
-    { id: 'export', label: 'Экспорт', icon: '📤' }
+    { id: 'export', label: 'Экспорт', icon: '📤' },
+    { id: 'demo', label: 'Демо', icon: '🎨' }
   ]
 
   // Keyboard shortcuts
@@ -83,7 +91,17 @@ function AppContent() {
   const handleTransactionSuccess = () => {
     setShowTransactionForm(false)
     setEditingTransaction(null)
+    showToast('Транзакция успешно сохранена!', 'success')
     // Здесь можно добавить обновление данных
+  }
+
+  const showToast = (message, type = 'info') => {
+    const id = Date.now()
+    setToasts(prev => [...prev, { id, message, type }])
+  }
+
+  const removeToast = (id) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id))
   }
 
   return (
@@ -92,81 +110,141 @@ function AppContent() {
         <div className="app">
           <header className="app-header">
             <h1>💰 GB Money Tracker</h1>
-            <button 
-              className="theme-toggle"
+            <AnimatedButton
+              variant="outline"
+              size="small"
               onClick={toggleTheme}
               title={`Переключить на ${isDark ? 'светлую' : 'темную'} тему`}
-            >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+              className="theme-toggle"
+              icon={isDark ? <Sun size={20} /> : <Moon size={20} />}
+            />
           </header>
 
           <main className="app-main">
-            <AnimatedTransition isVisible={activeTab === 'dashboard'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'dashboard'} 
+              direction="right"
+              animationType="fade"
+              duration={0.4}
+            >
               {activeTab === 'dashboard' && (
                 <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
               )}
             </AnimatedTransition>
             
-            <AnimatedTransition isVisible={activeTab === 'transactions'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'transactions'} 
+              direction="right"
+              animationType="slide"
+              duration={0.3}
+            >
               {activeTab === 'transactions' && (
                 <TransactionList onEditTransaction={handleEditTransaction} />
               )}
             </AnimatedTransition>
             
-            <AnimatedTransition isVisible={activeTab === 'statistics'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'statistics'} 
+              direction="right"
+              animationType="scale"
+              duration={0.4}
+            >
               {activeTab === 'statistics' && (
                 <Statistics />
               )}
             </AnimatedTransition>
 
-            <AnimatedTransition isVisible={activeTab === 'goals'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'goals'} 
+              direction="right"
+              animationType="parallax"
+              duration={0.5}
+            >
               {activeTab === 'goals' && (
                 <GoalManager />
               )}
             </AnimatedTransition>
 
-            <AnimatedTransition isVisible={activeTab === 'categories'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'categories'} 
+              direction="right"
+              animationType="slide"
+              duration={0.3}
+            >
               {activeTab === 'categories' && (
                 <CategoryManager />
               )}
             </AnimatedTransition>
 
-            <AnimatedTransition isVisible={activeTab === 'budgets'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'budgets'} 
+              direction="right"
+              animationType="fade"
+              duration={0.4}
+            >
               {activeTab === 'budgets' && (
                 <BudgetAlertManager />
               )}
             </AnimatedTransition>
 
-            <AnimatedTransition isVisible={activeTab === 'notifications'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'notifications'} 
+              direction="right"
+              animationType="scale"
+              duration={0.4}
+            >
               {activeTab === 'notifications' && (
                 <NotificationManager />
               )}
             </AnimatedTransition>
 
-            <AnimatedTransition isVisible={activeTab === 'backup'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'backup'} 
+              direction="right"
+              animationType="slide"
+              duration={0.3}
+            >
               {activeTab === 'backup' && (
                 <BackupManager />
               )}
             </AnimatedTransition>
 
-            <AnimatedTransition isVisible={activeTab === 'export'} direction="right">
+            <AnimatedTransition 
+              isVisible={activeTab === 'export'} 
+              direction="right"
+              animationType="fade"
+              duration={0.4}
+            >
               {activeTab === 'export' && (
                 <DataExporter />
+              )}
+            </AnimatedTransition>
+
+            <AnimatedTransition 
+              isVisible={activeTab === 'demo'} 
+              direction="right"
+              animationType="parallax"
+              duration={0.5}
+            >
+              {activeTab === 'demo' && (
+                <AnimationDemo />
               )}
             </AnimatedTransition>
           </main>
 
           <nav className="app-nav">
-            {tabs.map(tab => (
-              <button
+            {tabs.map((tab, index) => (
+              <AnimatedButton
                 key={tab.id}
-                className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
+                variant={activeTab === tab.id ? 'primary' : 'secondary'}
+                size="small"
                 onClick={() => setActiveTab(tab.id)}
+                className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
+                icon={<span className="nav-icon">{tab.icon}</span>}
+                iconPosition="left"
               >
-                <span className="nav-icon">{tab.icon}</span>
                 <span className="nav-label">{tab.label}</span>
-              </button>
+              </AnimatedButton>
             ))}
           </nav>
 
@@ -186,14 +264,27 @@ function AppContent() {
           )}
 
           {/* Floating Action Button for mobile */}
-          <button
-            className="floating-action-button"
+          <AnimatedButton
+            variant="primary"
+            size="large"
             onClick={() => setShowTransactionForm(true)}
             title="Добавить транзакцию"
             aria-label="Добавить транзакцию"
+            className="floating-action-button"
           >
             <Plus size={24} />
-          </button>
+          </AnimatedButton>
+
+          {/* Toast уведомления */}
+          {toasts.map(toast => (
+            <AnimatedToast
+              key={toast.id}
+              message={toast.message}
+              type={toast.type}
+              onClose={() => removeToast(toast.id)}
+              position="top-right"
+            />
+          ))}
         </div>
       </TelegramProvider>
     </ErrorBoundary>

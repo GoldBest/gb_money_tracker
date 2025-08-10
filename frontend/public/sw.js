@@ -1,4 +1,4 @@
-const CACHE_NAME = 'money-tracker-v1.0.0'
+const CACHE_NAME = 'gb-money-tracker-v1.0.0'
 const urlsToCache = [
   '/',
   '/index.html',
@@ -90,7 +90,7 @@ self.addEventListener('push', (event) => {
   }
 
   event.waitUntil(
-    self.registration.showNotification('Money Tracker', options)
+            self.registration.showNotification('GB Money Tracker', options)
   )
 })
 
