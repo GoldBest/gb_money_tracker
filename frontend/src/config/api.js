@@ -4,10 +4,10 @@
 
 export const API_CONFIG = {
   // URL для бэкенда (будет заменен при сборке)
-  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'https://gb-money-tracker-production.up.railway.app',
+  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'https://bashful-square-production.up.railway.app',
   
   // Локальный URL для разработки
-  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'https://gb-money-tracker-production.up.railway.app',
+  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'https://bashful-square-production.up.railway.app',
   
   // Заголовки для API запросов
   HEADERS: {
