@@ -35,6 +35,5 @@ Thumbs.db
 *.swp
 *.swo
 
-# Yandex Cloud credentials
-yandex-cloud-key.json
+# Production credentials
 .env.production

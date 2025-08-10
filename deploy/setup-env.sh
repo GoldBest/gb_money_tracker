@@ -10,11 +10,11 @@ if [ -f ".env" ]; then
 fi
 
 # Копируем пример в .env
-if [ -f "env.example" ]; then
-    cp env.example .env
-    echo "✅ Файл .env создан из env.example"
+if [ -f "config/env.example" ]; then
+    cp config/env.example .env
+    echo "✅ Файл .env создан из config/env.example"
 else
-    echo "❌ Файл env.example не найден!"
+    echo "❌ Файл config/env.example не найден!"
     exit 1
 fi
 

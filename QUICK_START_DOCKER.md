@@ -70,7 +70,7 @@ tg-money-miniapp/
 ## 📚 Документация
 
 - **Локальная разработка**: [docs/DOCKER_DEVELOPMENT.md](docs/DOCKER_DEVELOPMENT.md)
-- **Продакшн деплой**: [docs/YANDEX_DEPLOYMENT_GUIDE.md](docs/YANDEX_DEPLOYMENT_GUIDE.md)
+- **Продакшн деплой**: [docs/DOCKER_DEVELOPMENT.md](docs/DOCKER_DEVELOPMENT.md)
 
 ## 🎯 Готово!
 

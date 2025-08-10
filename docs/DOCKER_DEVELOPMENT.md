@@ -298,6 +298,6 @@ DATABASE_URL=your_prod_db_url BOT_TOKEN=your_bot_token docker-compose -f docker-
 После настройки локальной среды:
 1. **Настройте Telegram бота** - [BOT_SETUP_README.md](BOT_SETUP_README.md)
 2. **Протестируйте приложение** - [TESTING_INSTRUCTIONS.md](TESTING_INSTRUCTIONS.md)
-3. **Подготовьтесь к деплою** - [YANDEX_DEPLOYMENT_GUIDE.md](YANDEX_DEPLOYMENT_GUIDE.md)
+3. **Подготовьтесь к деплою** - [PRODUCTION_DEPLOYMENT_PLAN.md](PRODUCTION_DEPLOYMENT_PLAN.md)
 
 **Удачи с разработкой! 🚀**

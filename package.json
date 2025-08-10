@@ -9,7 +9,7 @@
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:bot": "npm --prefix backend run dev:bot",
     "bot": "npm --prefix backend run bot",
-    "test:bot": "node test-bot.js",
+
     "setup:bot": "./setup-bot.sh",
     "setup:env": "./setup-env.sh",
 

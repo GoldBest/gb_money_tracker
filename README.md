@@ -82,9 +82,9 @@ npm run dev:frontend
 
 ## 🚀 Развертывание
 
-### ☁️ Yandex Cloud (рекомендуется для России)
-- **Быстрый старт**: [QUICK_YANDEX_DEPLOY.md](QUICK_YANDEX_DEPLOY.md)
-- **Подробное руководство**: [docs/YANDEX_DEPLOYMENT_GUIDE.md](docs/YANDEX_DEPLOYMENT_GUIDE.md)
+### 🚀 Развертывание
+- **Локальная разработка**: [QUICK_START_DOCKER.md](QUICK_START_DOCKER.md)
+- **Docker развертывание**: [docs/DOCKER_DEVELOPMENT.md](docs/DOCKER_DEVELOPMENT.md)
 
 ### 🔧 Локальная разработка
 Скрипты и конфигурация для развертывания в папке `deploy/`:
@@ -165,7 +165,7 @@ tg-money-miniapp/
 1. **Запустите Docker**: `npm run docker:dev`
 2. **Настройте Telegram бота**: [docs/BOT_SETUP_README.md](docs/BOT_SETUP_README.md)
 3. **Протестируйте приложение**: [docs/TESTING_INSTRUCTIONS.md](docs/TESTING_INSTRUCTIONS.md)
-4. **Подготовьтесь к деплою**: [docs/YANDEX_DEPLOYMENT_GUIDE.md](docs/YANDEX_DEPLOYMENT_GUIDE.md)
+4. **Подготовьтесь к деплою**: [docs/DOCKER_DEVELOPMENT.md](docs/DOCKER_DEVELOPMENT.md)
 
 ## 🤝 Вклад в проект
 

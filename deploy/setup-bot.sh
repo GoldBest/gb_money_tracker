@@ -5,10 +5,10 @@ echo "=========================================="
 echo ""
 
 # Проверяем, есть ли уже .env файл
-if [ -f "../backend/.env" ]; then
+if [ -f "../.env" ]; then
     echo "✅ Файл .env уже существует"
     echo "📝 Текущие настройки:"
-    cat backend/.env
+    cat ../.env
     echo ""
     read -p "Хотите обновить настройки? (y/n): " update_env
     if [ "$update_env" != "y" ]; then
@@ -50,7 +50,7 @@ fi
 
 # Создаем .env файл
 echo "📝 Создаю файл .env..."
-cat > ../backend/.env << EOF
+cat > ../.env << EOF
 # Telegram Bot Configuration
 BOT_TOKEN=$bot_token
 WEBAPP_URL=$webapp_url
