@@ -75,7 +75,7 @@ echo "🔧 Создаем .env для production..."
 cat > .env << EOF
 # Production Environment
 NODE_ENV=production
-BOT_TOKEN=your_bot_token_here
+BOT_TOKEN=YOUR_BOT_TOKEN_HERE
 
 # Database
 DATABASE_URL=postgresql://gbuser:SecurePass123@rc1a-v0qg4dfjnrbn7kqm.mdb.yandexcloud.net:6432/gbmoneytracker

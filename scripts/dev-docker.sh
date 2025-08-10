@@ -35,7 +35,7 @@ if [ ! -f ".env" ]; then
         cat > .env << EOF
 # Local Development Environment
 NODE_ENV=development
-BOT_TOKEN=test_token_for_local_testing
+BOT_TOKEN=your_bot_token_here
 DATABASE_URL=postgresql://postgres:postgres@postgres:5432/gbmoneytracker
 EOF
         echo "✅ Создан базовый .env файл"

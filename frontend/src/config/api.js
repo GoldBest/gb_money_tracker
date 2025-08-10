@@ -4,10 +4,10 @@
 
 export const API_CONFIG = {
   // URL для бэкенда (будет заменен при сборке)
-  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001',
+  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'https://gbmt.gbdev.ru',
   
   // Локальный URL для разработки
-  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'http://localhost:3001',
+  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'https://gbmt.gbdev.ru',
   
   // Заголовки для API запросов
   HEADERS: {

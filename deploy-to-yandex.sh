@@ -50,8 +50,8 @@ echo "🔧 Создаю .env.example для production..."
 cat > .env.production.example << EOF
 # Production Environment Variables
 NODE_ENV=production
-BOT_TOKEN=your_bot_token_here
-DATABASE_URL=postgresql://username:password@host:port/database
+BOT_TOKEN=YOUR_BOT_TOKEN_HERE
+DATABASE_URL=postgresql://username:YOUR_PASSWORD_HERE@host:port/database
 
 # Yandex Cloud Variables
 YC_FOLDER_ID=your_folder_id

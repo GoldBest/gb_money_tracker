@@ -108,10 +108,10 @@ echo "🔧 Создаю .env для production..."
 cat > .env.production << EOF
 # Yandex Cloud Production Environment
 NODE_ENV=production
-BOT_TOKEN=your_bot_token_here
+BOT_TOKEN=YOUR_BOT_TOKEN_HERE
 
 # Database (заполните после создания БД)
-DATABASE_URL=postgresql://username:password@host:6432/gbmoneytracker
+DATABASE_URL=postgresql://username:YOUR_PASSWORD_HERE@host:6432/gbmoneytracker
 
 # Yandex Cloud
 YC_FOLDER_ID=$FOLDER_ID

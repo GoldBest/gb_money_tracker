@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_DB: gbmoneytracker
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: your_postgres_password_here
     ports:
       - "5433:5432"
     volumes:
@@ -25,7 +25,7 @@ services:
       NODE_ENV: development
       PORT: 3001
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/gbmoneytracker
-      BOT_TOKEN: test_token_for_local_testing
+      BOT_TOKEN: your_bot_token_here
     ports:
       - "3002:3001"
     depends_on:
