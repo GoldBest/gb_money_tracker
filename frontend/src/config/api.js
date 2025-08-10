@@ -1,7 +1,7 @@
 // API Configuration
 export const API_CONFIG = {
   // Ngrok URL для бэкенда
-  NGROK_BACKEND_URL: 'https://669e2796539e.ngrok-free.app',
+  NGROK_BACKEND_URL: 'https://1b0966126d83.ngrok-free.app',
   
   // Локальный URL для разработки
   LOCAL_BACKEND_URL: 'http://localhost:3001',
