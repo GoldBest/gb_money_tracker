@@ -22,10 +22,10 @@ services:
       dockerfile: Dockerfile
     container_name: gb-money-tracker-backend
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       PORT: 3001
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/gbmoneytracker
-      BOT_TOKEN: ${BOT_TOKEN}
+      BOT_TOKEN: test_token_for_local_testing
     ports:
       - "3002:3001"
     depends_on:

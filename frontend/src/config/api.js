@@ -7,7 +7,7 @@ export const API_CONFIG = {
   NGROK_BACKEND_URL: import.meta.env.VITE_NGROK_BACKEND_URL || 'https://c93fb5a36884.ngrok-free.app',
   
   // Локальный URL для разработки
-  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'http://localhost:3001',
+  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'http://localhost:3002',
   
   // Заголовки для обхода предупреждений ngrok
   HEADERS: {

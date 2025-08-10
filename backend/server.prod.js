@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors({
   origin: [
     'http://localhost:5176',
+    'http://localhost:8081',
     'https://gb-money-tracker-frontend.onrender.com',
     'https://*.onrender.com'
   ],
@@ -43,6 +44,51 @@ app.get('/api/health', (req, res) => {
     port: PORT,
     environment: process.env.NODE_ENV || 'development'
   });
+});
+
+// Get or create user
+app.post('/api/users', async (req, res) => {
+  try {
+    const { telegram_id, username, first_name } = req.body;
+    
+    // Check if user exists
+    let userResult = await pool.query(
+      'SELECT * FROM users WHERE telegram_id = $1',
+      [telegram_id]
+    );
+    
+    let user = userResult.rows[0];
+    
+    if (!user) {
+      // Create new user
+      const newUserResult = await pool.query(
+        'INSERT INTO users (telegram_id, username, first_name) VALUES ($1, $2, $3) RETURNING *',
+        [telegram_id, username, first_name]
+      );
+      user = newUserResult.rows[0];
+      
+      // Create default categories for new user
+      const defaultCategories = [
+        { name: 'Продукты', type: 'expense', color: '#EF4444' },
+        { name: 'Транспорт', type: 'expense', color: '#F59E0B' },
+        { name: 'Развлечения', type: 'expense', color: '#8B5CF6' },
+        { name: 'Зарплата', type: 'income', color: '#10B981' },
+        { name: 'Подработка', type: 'income', color: '#06B6D4' }
+      ];
+      
+      for (const category of defaultCategories) {
+        await pool.query(
+          'INSERT INTO categories (name, type, color, user_id) VALUES ($1, $2, $3, $4)',
+          [category.name, category.type, category.color, user.id]
+        );
+      }
+    }
+    
+    res.json(user);
+  } catch (error) {
+    console.error('Ошибка при получении/создании пользователя:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Get user categories
