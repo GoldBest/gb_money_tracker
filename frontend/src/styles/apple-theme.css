@@ -1,4 +1,4 @@
-/* Apple-style theme for GB Money Tracker */
+/* Apple-style theme for GB Money Tracker - Minimal & Clean */
 
 :root {
   /* Light theme colors */
@@ -6,41 +6,41 @@
   --apple-bg-secondary: #f5f5f7;
   --apple-bg-tertiary: #fafafa;
   --apple-bg-card: #ffffff;
-  --apple-bg-modal: rgba(255, 255, 255, 0.95);
-  --apple-bg-overlay: rgba(0, 0, 0, 0.4);
+  --apple-bg-modal: rgba(255, 255, 255, 0.98);
+  --apple-bg-overlay: rgba(0, 0, 0, 0.3);
   
   --apple-text-primary: #1d1d1f;
   --apple-text-secondary: #86868b;
   --apple-text-tertiary: #a1a1a6;
   --apple-text-inverse: #ffffff;
   
-  --apple-border-primary: #d2d2d7;
-  --apple-border-secondary: #e5e5e7;
-  --apple-border-tertiary: #f2f2f2;
+  --apple-border-primary: #e5e5e7;
+  --apple-border-secondary: #f2f2f2;
+  --apple-border-tertiary: #fafafa;
   
   --apple-accent-blue: #007aff;
-  --apple-accent-green: #34c759;
-  --apple-accent-red: #ff3b30;
-  --apple-accent-orange: #ff9500;
-  --apple-accent-purple: #af52de;
-  --apple-accent-pink: #ff2d92;
-  --apple-accent-yellow: #ffcc00;
+  --apple-accent-green: #30d158;
+  --apple-accent-red: #ff453a;
+  --apple-accent-orange: #ff9f0a;
+  --apple-accent-purple: #bf5af2;
+  --apple-accent-pink: #ff375f;
+  --apple-accent-yellow: #ffd60a;
   
-  --apple-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --apple-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --apple-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-  --apple-shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+  --apple-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --apple-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --apple-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --apple-shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.12);
   
-  --apple-radius-sm: 8px;
-  --apple-radius-md: 12px;
-  --apple-radius-lg: 16px;
-  --apple-radius-xl: 20px;
+  --apple-radius-sm: 6px;
+  --apple-radius-md: 10px;
+  --apple-radius-lg: 14px;
+  --apple-radius-xl: 18px;
   
-  --apple-spacing-xs: 4px;
-  --apple-spacing-sm: 8px;
-  --apple-spacing-md: 16px;
-  --apple-spacing-lg: 24px;
-  --apple-spacing-xl: 32px;
+  --apple-spacing-xs: 6px;
+  --apple-spacing-sm: 12px;
+  --apple-spacing-md: 20px;
+  --apple-spacing-lg: 28px;
+  --apple-spacing-xl: 36px;
   --apple-spacing-2xl: 48px;
 }
 
@@ -49,8 +49,8 @@
   --apple-bg-secondary: #1c1c1e;
   --apple-bg-tertiary: #2c2c2e;
   --apple-bg-card: #1c1c1e;
-  --apple-bg-modal: rgba(28, 28, 30, 0.95);
-  --apple-bg-overlay: rgba(0, 0, 0, 0.6);
+  --apple-bg-modal: rgba(28, 28, 30, 0.98);
+  --apple-bg-overlay: rgba(0, 0, 0, 0.5);
   
   --apple-text-primary: #ffffff;
   --apple-text-secondary: #98989d;
@@ -61,10 +61,10 @@
   --apple-border-secondary: #48484a;
   --apple-border-tertiary: #2c2c2e;
   
-  --apple-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --apple-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --apple-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
-  --apple-shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+  --apple-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --apple-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --apple-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --apple-shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 /* Base styles */
@@ -80,10 +80,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--apple-bg-secondary);
   color: var(--apple-text-primary);
-  font-size: 17px;
-  line-height: 1.47059;
+  font-size: 16px;
+  line-height: 1.4;
   font-weight: 400;
-  letter-spacing: -0.022em;
+  letter-spacing: -0.01em;
 }
 
 /* App layout */
@@ -107,9 +107,9 @@ body {
 }
 
 .app-header h1 {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 600;
-  letter-spacing: -0.003em;
+  letter-spacing: -0.01em;
   text-align: center;
   color: var(--apple-text-primary);
 }
@@ -123,12 +123,12 @@ body {
   border-radius: var(--apple-radius-sm);
   padding: var(--apple-spacing-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .theme-toggle:active {
   background: var(--apple-bg-tertiary);
-  transform: scale(1.05);
+  transform: scale(0.95);
 }
 
 /* Navigation */
@@ -155,7 +155,7 @@ body {
   border: none;
   color: var(--apple-text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   position: relative;
   min-width: 80px;
   border-radius: 0;
@@ -177,21 +177,21 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 20px;
+  width: 24px;
   height: 2px;
   background: var(--apple-accent-blue);
   border-radius: 1px;
 }
 
 .nav-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   margin-bottom: var(--apple-spacing-xs);
   opacity: 0.8;
 }
 
 .nav-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.01em;
 }
@@ -212,7 +212,7 @@ body {
   border: 1px solid var(--apple-border-secondary);
   padding: var(--apple-spacing-lg);
   box-shadow: var(--apple-shadow-sm);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .apple-card:active {
@@ -237,14 +237,14 @@ body {
 }
 
 .balance-card h2 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   opacity: 0.9;
   margin-bottom: var(--apple-spacing-sm);
 }
 
 .balance-amount {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: var(--apple-spacing-sm);
@@ -261,7 +261,7 @@ body {
 /* Stats grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: var(--apple-spacing-md);
   margin: var(--apple-spacing-lg) 0;
 }
@@ -272,31 +272,31 @@ body {
   border: 1px solid var(--apple-border-secondary);
   padding: var(--apple-spacing-md);
   text-align: center;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .stat-card:active {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--apple-shadow-md);
 }
 
 .stat-icon {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   margin: 0 auto var(--apple-spacing-sm);
   opacity: 0.8;
   color: var(--apple-accent-blue);
 }
 
 .stat-value {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--apple-text-primary);
   margin-bottom: var(--apple-spacing-xs);
 }
 
 .stat-label {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--apple-text-secondary);
   font-weight: 500;
 }
@@ -310,12 +310,12 @@ body {
   padding: var(--apple-spacing-sm) var(--apple-spacing-md);
   border-radius: var(--apple-radius-sm);
   border: none;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   text-decoration: none;
-  min-height: 44px;
+  min-height: 40px;
 }
 
 .apple-button.primary {
@@ -325,7 +325,7 @@ body {
 
 .apple-button.primary:active {
   background: #0056d6;
-  transform: scale(1.02);
+  transform: scale(0.98);
 }
 
 .apple-button.secondary {
@@ -350,14 +350,14 @@ body {
 
 .apple-button.large {
   padding: var(--apple-spacing-md) var(--apple-spacing-lg);
-  font-size: 18px;
-  min-height: 52px;
+  font-size: 17px;
+  min-height: 48px;
 }
 
 .apple-button.small {
   padding: var(--apple-spacing-xs) var(--apple-spacing-sm);
-  font-size: 15px;
-  min-height: 36px;
+  font-size: 14px;
+  min-height: 32px;
 }
 
 .apple-button.full-width {
@@ -371,7 +371,7 @@ body {
 
 .apple-form-group label {
   display: block;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--apple-text-primary);
   margin-bottom: var(--apple-spacing-xs);
@@ -382,16 +382,16 @@ body {
   padding: var(--apple-spacing-sm) var(--apple-spacing-md);
   border: 1px solid var(--apple-border-primary);
   border-radius: var(--apple-radius-sm);
-  font-size: 17px;
+  font-size: 16px;
   background: var(--apple-bg-card);
   color: var(--apple-text-primary);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .apple-input:focus {
   outline: none;
   border-color: var(--apple-accent-blue);
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
 }
 
 .apple-select {
@@ -399,7 +399,7 @@ body {
   padding: var(--apple-spacing-sm) var(--apple-spacing-md);
   border: 1px solid var(--apple-border-primary);
   border-radius: var(--apple-radius-sm);
-  font-size: 17px;
+  font-size: 16px;
   background: var(--apple-bg-card);
   color: var(--apple-text-primary);
   cursor: pointer;
@@ -412,7 +412,7 @@ body {
   border-radius: var(--apple-radius-md);
   padding: var(--apple-spacing-md);
   margin-bottom: var(--apple-spacing-sm);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .transaction-item:active {
@@ -432,14 +432,14 @@ body {
 }
 
 .transaction-description {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--apple-text-primary);
   margin-bottom: var(--apple-spacing-xs);
 }
 
 .transaction-category {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--apple-text-secondary);
   display: flex;
   align-items: center;
@@ -447,7 +447,7 @@ body {
 }
 
 .transaction-amount {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
   text-align: right;
 }
@@ -484,13 +484,13 @@ body {
   max-width: 90vw;
   max-height: 90vh;
   overflow: auto;
-  animation: modalSlideIn 0.3s ease-out;
+  animation: modalSlideIn 0.25s ease-out;
 }
 
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.9) translateY(20px);
+    transform: scale(0.95) translateY(10px);
   }
   to {
     opacity: 1;
@@ -507,7 +507,7 @@ body {
 }
 
 .modal-header h2 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--apple-text-primary);
 }
@@ -519,7 +519,7 @@ body {
   cursor: pointer;
   padding: var(--apple-spacing-sm);
   border-radius: var(--apple-radius-sm);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .close-button:active {
@@ -577,10 +577,10 @@ body {
 }
 
 .loading-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid var(--apple-border-secondary);
-  border-top: 3px solid var(--apple-accent-blue);
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--apple-border-secondary);
+  border-top: 2px solid var(--apple-accent-blue);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: var(--apple-spacing-md);
@@ -599,14 +599,14 @@ body {
 }
 
 .empty-state h3 {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--apple-text-primary);
   margin-bottom: var(--apple-spacing-sm);
 }
 
 .empty-state p {
-  font-size: 16px;
+  font-size: 15px;
   margin-bottom: var(--apple-spacing-lg);
 }
 

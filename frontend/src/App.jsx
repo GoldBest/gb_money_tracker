@@ -26,6 +26,21 @@ import ApplePageTransition, {
   AppleAnimatedCounter,
   useAppleAnimation 
 } from './components/ApplePageTransition'
+import { 
+  AppleButton, 
+  AppleInput, 
+  AppleCard, 
+  AppleStaggeredList as NewAppleStaggeredList,
+  AppleAnimatedCounter as NewAppleAnimatedCounter,
+  useAppleAnimation as useNewAppleAnimation 
+} from './components/AppleMicroInteractions'
+import { 
+  AppleSkeleton,
+  AppleSkeletonBalance,
+  AppleSkeletonStats,
+  AppleSkeletonTransactions,
+  useSkeleton
+} from './components/AppleSkeleton'
 
 import { 
   Moon, 
@@ -47,6 +62,7 @@ import './mobile.css'
 import './styles/animations.css'
 import './styles/apple-animations.css'
 import './styles/apple-transitions.css'
+import './styles/apple-micro-interactions.css'
 
 function AppContent() {
   const { isDark, toggleTheme } = useTheme()

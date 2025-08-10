@@ -1,0 +1,548 @@
+/* Apple-style Micro-interactions CSS */
+
+/* Улучшенные кнопки */
+.apple-button {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--apple-radius-sm);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.apple-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.apple-button:active::before {
+  width: 200px;
+  height: 200px;
+}
+
+.apple-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.apple-button.loading {
+  cursor: wait;
+}
+
+/* Варианты кнопок */
+.apple-button-primary {
+  background: var(--apple-accent-blue);
+  color: var(--apple-text-inverse);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
+.apple-button-primary:hover {
+  background: #0056d6;
+  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.4);
+}
+
+.apple-button-secondary {
+  background: var(--apple-bg-secondary);
+  color: var(--apple-text-primary);
+  border: 1px solid var(--apple-border-primary);
+}
+
+.apple-button-secondary:hover {
+  background: var(--apple-bg-tertiary);
+  border-color: var(--apple-border-secondary);
+}
+
+.apple-button-success {
+  background: var(--apple-accent-green);
+  color: var(--apple-text-inverse);
+  box-shadow: 0 2px 8px rgba(48, 209, 88, 0.3);
+}
+
+.apple-button-danger {
+  background: var(--apple-accent-red);
+  color: var(--apple-text-inverse);
+  box-shadow: 0 2px 8px rgba(255, 69, 58, 0.3);
+}
+
+.apple-button-ghost {
+  background: transparent;
+  color: var(--apple-accent-blue);
+}
+
+.apple-button-ghost:hover {
+  background: rgba(0, 122, 255, 0.1);
+}
+
+/* Размеры кнопок */
+.apple-button-small {
+  padding: 8px 16px;
+  font-size: 14px;
+  min-height: 32px;
+}
+
+.apple-button-medium {
+  padding: 12px 20px;
+  font-size: 16px;
+  min-height: 40px;
+}
+
+.apple-button-large {
+  padding: 16px 24px;
+  font-size: 17px;
+  min-height: 48px;
+}
+
+/* Улучшенные input поля */
+.apple-input-container {
+  position: relative;
+  margin-bottom: var(--apple-spacing-md);
+}
+
+.apple-input-wrapper {
+  position: relative;
+  border: 1px solid var(--apple-border-primary);
+  border-radius: var(--apple-radius-sm);
+  background: var(--apple-bg-card);
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.apple-input-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--apple-accent-blue) 0%, var(--apple-accent-purple) 100%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: -1;
+}
+
+.apple-input-wrapper:focus-within::before {
+  opacity: 0.1;
+}
+
+.apple-input-label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: var(--apple-text-secondary);
+  font-size: 16px;
+  font-weight: 400;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background: var(--apple-bg-card);
+  padding: 0 4px;
+  z-index: 1;
+}
+
+.apple-input-field {
+  width: 100%;
+  padding: 16px 12px 8px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: var(--apple-text-primary);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.apple-input-field::placeholder {
+  color: var(--apple-text-tertiary);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.apple-input-field:focus::placeholder {
+  opacity: 1;
+}
+
+.apple-input-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Состояния input */
+.apple-input-wrapper.error {
+  border-color: var(--apple-accent-red);
+  box-shadow: 0 0 0 2px rgba(255, 69, 58, 0.1);
+}
+
+.apple-input-wrapper.success {
+  border-color: var(--apple-accent-green);
+  box-shadow: 0 0 0 2px rgba(48, 209, 88, 0.1);
+}
+
+.apple-input-wrapper:focus-within {
+  border-color: var(--apple-accent-blue);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.1);
+}
+
+/* Сообщения об ошибках и успехе */
+.input-error {
+  color: var(--apple-accent-red);
+  font-size: 13px;
+  margin-top: 4px;
+  padding: 0 12px;
+}
+
+.input-success {
+  color: var(--apple-accent-green);
+  font-size: 16px;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.required {
+  color: var(--apple-accent-red);
+  margin-left: 2px;
+}
+
+/* Улучшенные карточки */
+.apple-card {
+  position: relative;
+  background: var(--apple-bg-card);
+  border-radius: var(--apple-radius-lg);
+  border: 1px solid var(--apple-border-secondary);
+  box-shadow: var(--apple-shadow-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.apple-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--apple-accent-blue), transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.apple-card:hover::before {
+  opacity: 1;
+}
+
+.apple-card.elevated {
+  box-shadow: var(--apple-shadow-lg);
+}
+
+.apple-card.outlined {
+  border: 2px solid var(--apple-border-primary);
+}
+
+.apple-card.gradient {
+  background: linear-gradient(135deg, var(--apple-accent-blue) 0%, var(--apple-accent-purple) 100%);
+  color: var(--apple-text-inverse);
+  border: none;
+}
+
+/* Skeleton анимации */
+.apple-skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+.apple-skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Skeleton компоненты */
+.apple-skeleton-balance {
+  padding: var(--apple-spacing-lg);
+  background: var(--apple-bg-card);
+  border-radius: var(--apple-radius-lg);
+  border: 1px solid var(--apple-border-secondary);
+}
+
+.apple-skeleton-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--apple-spacing-md);
+  margin: var(--apple-spacing-lg) 0;
+}
+
+.stat-skeleton-item {
+  text-align: center;
+  padding: var(--apple-spacing-md);
+}
+
+.apple-skeleton-transactions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--apple-spacing-sm);
+}
+
+.transaction-skeleton-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--apple-spacing-md);
+  background: var(--apple-bg-card);
+  border-radius: var(--apple-radius-md);
+  border: 1px solid var(--apple-border-secondary);
+}
+
+.transaction-skeleton-left {
+  display: flex;
+  align-items: center;
+}
+
+.transaction-skeleton-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.apple-skeleton-form {
+  padding: var(--apple-spacing-lg);
+}
+
+.form-field-skeleton {
+  margin-bottom: var(--apple-spacing-md);
+}
+
+.form-buttons-skeleton {
+  display: flex;
+  gap: var(--apple-spacing-md);
+  justify-content: flex-end;
+  margin-top: var(--apple-spacing-lg);
+}
+
+.apple-skeleton-table {
+  background: var(--apple-bg-card);
+  border-radius: var(--apple-radius-md);
+  border: 1px solid var(--apple-border-secondary);
+  overflow: hidden;
+}
+
+.table-header-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 1fr);
+  gap: var(--apple-spacing-md);
+  padding: var(--apple-spacing-md);
+  background: var(--apple-bg-secondary);
+  border-bottom: 1px solid var(--apple-border-secondary);
+}
+
+.table-row-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 1fr);
+  gap: var(--apple-spacing-md);
+  padding: var(--apple-spacing-md);
+  border-bottom: 1px solid var(--apple-border-secondary);
+}
+
+.apple-skeleton-chart {
+  padding: var(--apple-spacing-lg);
+  background: var(--apple-bg-card);
+  border-radius: var(--apple-radius-lg);
+  border: 1px solid var(--apple-border-secondary);
+}
+
+.chart-legend-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--apple-spacing-sm);
+}
+
+.apple-skeleton-navigation {
+  display: flex;
+  gap: 0;
+  background: var(--apple-bg-primary);
+  border-bottom: 1px solid var(--apple-border-secondary);
+}
+
+.nav-tab-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--apple-spacing-md) var(--apple-spacing-lg);
+  min-width: 80px;
+}
+
+.apple-skeleton-modal {
+  background: var(--apple-bg-modal);
+  border-radius: var(--apple-radius-xl);
+  border: 1px solid var(--apple-border-secondary);
+  box-shadow: var(--apple-shadow-xl);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.modal-header-skeleton {
+  padding: var(--apple-spacing-lg);
+  border-bottom: 1px solid var(--apple-border-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body-skeleton {
+  padding: var(--apple-spacing-lg);
+}
+
+.modal-footer-skeleton {
+  padding: var(--apple-spacing-lg);
+  border-top: 1px solid var(--apple-border-secondary);
+  display: flex;
+  gap: var(--apple-spacing-md);
+  justify-content: flex-end;
+}
+
+.apple-skeleton-empty-state {
+  text-align: center;
+  padding: var(--apple-spacing-2xl);
+}
+
+/* Анимированные счетчики */
+.apple-animated-counter {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--apple-text-primary);
+}
+
+/* Staggered списки */
+.apple-staggered-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--apple-spacing-sm);
+}
+
+/* Responsive дизайн */
+@media (max-width: 768px) {
+  .apple-button {
+    min-height: 44px; /* Apple рекомендует минимум 44px для touch */
+  }
+  
+  .apple-input-field {
+    font-size: 16px; /* Предотвращает zoom на iOS */
+  }
+  
+  .apple-skeleton-stats {
+    grid-template-columns: 1fr;
+    gap: var(--apple-spacing-sm);
+  }
+  
+  .form-buttons-skeleton {
+    flex-direction: column;
+  }
+  
+  .modal-footer-skeleton {
+    flex-direction: column;
+  }
+}
+
+/* Темная тема */
+.dark .apple-skeleton {
+  background: linear-gradient(90deg, var(--apple-bg-secondary) 25%, var(--apple-bg-tertiary) 50%, var(--apple-bg-secondary) 75%);
+}
+
+.dark .apple-skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+}
+
+/* Анимации для улучшенного UX */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Применение анимаций */
+.apple-card.animate-in {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.apple-button.animate-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+.apple-input-container.animate-in {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Hover эффекты для desktop */
+@media (hover: hover) {
+  .apple-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--apple-shadow-md);
+  }
+  
+  .apple-button:hover {
+    transform: translateY(-1px);
+  }
+  
+  .apple-input-wrapper:hover {
+    border-color: var(--apple-border-secondary);
+  }
+}
+
+/* Touch оптимизации */
+@media (hover: none) {
+  .apple-card:active {
+    transform: scale(0.98);
+  }
+  
+  .apple-button:active {
+    transform: scale(0.95);
+  }
+}
