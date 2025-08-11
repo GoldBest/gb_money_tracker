@@ -44,6 +44,7 @@ async function createTables() {
         type TEXT NOT NULL CHECK(type IN ('income', 'expense')),
         category_id INTEGER REFERENCES categories(id),
         user_id INTEGER REFERENCES users(id),
+        date DATE DEFAULT CURRENT_DATE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);

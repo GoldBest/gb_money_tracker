@@ -29,4 +29,4 @@ USER nodejs
 EXPOSE 3001
 
 # Запускаем приложение
-CMD ["node", "server.prod.js"]
+CMD ["node", "server.js"]
