@@ -4,10 +4,10 @@
 
 export const API_CONFIG = {
   // URL для бэкенда (будет заменен при сборке)
-  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3001',
+  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'https://bashful-square-production.up.railway.app',
   
   // Локальный URL для разработки
-  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3001',
+  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'http://localhost:3001',
   
   // Заголовки для API запросов
   HEADERS: {

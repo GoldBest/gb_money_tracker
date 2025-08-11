@@ -4,8 +4,8 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
-  // Загружаем переменные окружения из корневого .env файла
-  const env = loadEnv(mode, '../../', '');
+  // Загружаем переменные окружения
+  const env = loadEnv(mode, process.cwd(), '');
   
   return {
     plugins: [react()],
@@ -16,8 +16,6 @@ export default defineConfig(({ command, mode }) => {
     },
     // Передаем переменные окружения в frontend
     envPrefix: 'VITE_',
-    // Загружаем переменные из корневого .env
-    envDir: '../../',
     server: {
       port: parseInt(env.FRONTEND_PORT) || 5176,
       host: true,
@@ -46,7 +44,6 @@ export default defineConfig(({ command, mode }) => {
     },
     // Переменные окружения для frontend
     define: {
-      'process.env': env,
       __APP_VERSION__: JSON.stringify(env.npm_package_version || '1.0.0'),
       __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
       __ENVIRONMENT__: JSON.stringify(mode),

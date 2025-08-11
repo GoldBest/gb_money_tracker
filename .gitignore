@@ -37,3 +37,4 @@ Thumbs.db
 
 # Production credentials
 .env.production
+.vercel
