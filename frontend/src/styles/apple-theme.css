@@ -128,7 +128,7 @@ body {
 
 .theme-toggle:active {
   background: var(--apple-bg-tertiary);
-  transform: scale(0.95);
+  transform: scale(0.98);
 }
 
 /* Navigation */
@@ -164,6 +164,7 @@ body {
 .nav-tab:active {
   color: var(--apple-text-primary);
   background: var(--apple-bg-secondary);
+  transform: scale(0.98);
 }
 
 .nav-tab.active {
@@ -217,7 +218,7 @@ body {
 
 .apple-card:active {
   box-shadow: var(--apple-shadow-md);
-  transform: translateY(-1px);
+  transform: scale(0.99);
 }
 
 .apple-card.compact {
@@ -276,7 +277,7 @@ body {
 }
 
 .stat-card:active {
-  transform: translateY(-1px);
+  transform: scale(0.99);
   box-shadow: var(--apple-shadow-md);
 }
 
@@ -336,6 +337,7 @@ body {
 
 .apple-button.secondary:active {
   background: var(--apple-bg-tertiary);
+  transform: scale(0.98);
 }
 
 .apple-button.success {
@@ -418,6 +420,7 @@ body {
 .transaction-item:active {
   border-color: var(--apple-border-primary);
   box-shadow: var(--apple-shadow-sm);
+  transform: scale(0.99);
 }
 
 .transaction-main {
@@ -525,6 +528,7 @@ body {
 .close-button:active {
   background: var(--apple-bg-secondary);
   color: var(--apple-text-primary);
+  transform: scale(0.98);
 }
 
 .modal-body {

@@ -48,8 +48,8 @@
 .button:active,
 .action-button:active,
 .nav-tab:active {
-  transform: scale(0.95);
-  opacity: 0.8;
+  transform: scale(0.98);
+  opacity: 0.9;
 }
 
 /* Primary button */
@@ -63,7 +63,7 @@
 .button.primary:active,
 .action-button.primary:active {
   box-shadow: var(--shadow-sm);
-  transform: scale(0.95) translateY(1px);
+  transform: scale(0.98);
 }
 
 /* Secondary button */
@@ -96,7 +96,7 @@
 .balance-card:active,
 .category-item:active,
 .transaction-item:active {
-  transform: scale(0.98);
+  transform: scale(0.99);
   box-shadow: var(--shadow-md);
 }
 
@@ -121,7 +121,7 @@ select:focus {
   outline: none;
   border-color: var(--accent-color);
   box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.1);
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 /* ===== TOUCH-FRIENDLY NAVIGATION ===== */

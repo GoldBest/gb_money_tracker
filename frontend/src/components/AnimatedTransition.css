@@ -38,11 +38,11 @@
 }
 
 .button-animation:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
 }
 
 .button-animation:active {
-  transform: translateY(-1px);
+  transform: scale(0.98);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -56,7 +56,7 @@
 .stat-card:active,
 .balance-card:active,
 .category-item:active {
-  transform: translateY(-2px);
+  transform: scale(0.99);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
@@ -130,7 +130,7 @@
 }
 
 .nav-tab.active {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 /* Анимации для форм */
@@ -143,7 +143,7 @@
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 /* Анимации для списков */
@@ -173,13 +173,11 @@
 }
 
 .action-button:active {
-  transform: translateY(-2px);
+  transform: scale(0.98);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.action-button:active {
-  transform: translateY(0);
-}
+/* Убираем дублирующийся стиль */
 
 /* Анимации для иконок */
 .icon {
@@ -187,7 +185,7 @@
 }
 
 .icon:active {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 /* Анимации для переключения тем */
@@ -196,7 +194,7 @@
 }
 
 .theme-toggle:active {
-  transform: rotate(180deg);
+  transform: rotate(180deg) scale(0.98);
 }
 
 

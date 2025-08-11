@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'http://localhost:3002';
 
 async function testExportAPI() {
   try {

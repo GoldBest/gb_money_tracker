@@ -19,28 +19,6 @@ import AnimatedButton from './components/AnimatedButton'
 import AnimatedCard from './components/AnimatedCard'
 import AnimatedList from './components/AnimatedList'
 import AnimatedToast from './components/AnimatedToast'
-import ApplePageTransition, { 
-  AppleTabTransition, 
-  AppleStaggeredList, 
-  AppleFadeIn, 
-  AppleAnimatedCounter,
-  useAppleAnimation 
-} from './components/ApplePageTransition'
-import { 
-  AppleButton, 
-  AppleInput, 
-  AppleCard, 
-  AppleStaggeredList as NewAppleStaggeredList,
-  AppleAnimatedCounter as NewAppleAnimatedCounter,
-  useAppleAnimation as useNewAppleAnimation 
-} from './components/AppleMicroInteractions'
-import { 
-  AppleSkeleton,
-  AppleSkeletonBalance,
-  AppleSkeletonStats,
-  AppleSkeletonTransactions,
-  useSkeleton
-} from './components/AppleSkeleton'
 
 import { 
   Moon, 
@@ -57,12 +35,8 @@ import {
   Download,
   Settings
 } from 'lucide-react'
-import './styles/apple-theme.css'
+import './App.css'
 import './mobile.css'
-import './styles/animations.css'
-import './styles/apple-animations.css'
-import './styles/apple-transitions.css'
-import './styles/apple-micro-interactions.css'
 
 function AppContent() {
   const { isDark, toggleTheme } = useTheme()
@@ -98,51 +72,34 @@ function AppContent() {
       }
       
       // Ctrl/Cmd + 1-4 - переключение основных табов
-      if ((event.ctrlKey || event.metaKey) && ['1', '2', '3', '4'].includes(event.key)) {
+      if ((event.ctrlKey || event.metaKey) && event.key >= '1' && event.key <= '4') {
         event.preventDefault()
         const tabIndex = parseInt(event.key) - 1
         if (tabs[tabIndex]) {
           setActiveTab(tabs[tabIndex].id)
-          setActiveSubTab(null)
-        }
-      }
-      
-      // Ctrl/Cmd + T - переключение темы
-      if ((event.ctrlKey || event.metaKey) && event.key === 't') {
-        event.preventDefault()
-        toggleTheme()
-      }
-      
-      // Escape - закрыть модальные окна
-      if (event.key === 'Escape') {
-        if (showTransactionForm) {
-          setShowTransactionForm(false)
-        }
-        if (editingTransaction) {
-          setEditingTransaction(null)
         }
       }
     }
 
     document.addEventListener('keydown', handleKeyPress)
     return () => document.removeEventListener('keydown', handleKeyPress)
-  }, [showTransactionForm, editingTransaction, tabs, toggleTheme])
+  }, [])
 
   const handleEditTransaction = (transaction) => {
     setEditingTransaction(transaction)
+    setShowTransactionForm(false)
   }
 
   const handleTransactionSuccess = () => {
     setShowTransactionForm(false)
     setEditingTransaction(null)
-    showToast('Транзакция успешно сохранена!', 'success')
-    // Здесь можно добавить обновление данных
+    showToast('Транзакция сохранена успешно!', 'success')
   }
 
   const showToast = (message, type = 'info') => {
     const id = Date.now()
     setToasts(prev => [...prev, { id, message, type }])
-    setTimeout(() => removeToast(id), 5000)
+    setTimeout(() => removeToast(id), 3000)
   }
 
   const removeToast = (id) => {
@@ -162,32 +119,59 @@ function AppContent() {
     switch (activeTab) {
       case 'dashboard':
         return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+      
       case 'transactions':
-        return <TransactionList onEditTransaction={handleEditTransaction} />
+        return (
+          <div>
+            <div className="list-header">
+              <h2>Транзакции</h2>
+              <button 
+                className="action-button primary"
+                onClick={() => setShowTransactionForm(true)}
+              >
+                <Plus size={18} />
+                Добавить
+              </button>
+            </div>
+            <TransactionList onEditTransaction={handleEditTransaction} />
+          </div>
+        )
+      
       case 'statistics':
         return <Statistics />
+      
       case 'settings':
-        if (activeSubTab) {
-          switch (activeSubTab) {
-            case 'goals':
-              return <GoalManager onBack={() => setActiveSubTab(null)} />
-            case 'categories':
-              return <CategoryManager onBack={() => setActiveSubTab(null)} />
-            case 'budgets':
-              return <BudgetAlertManager onBack={() => setActiveSubTab(null)} />
-            case 'notifications':
-              return <NotificationManager onBack={() => setActiveSubTab(null)} />
-            case 'backup':
-              return <BackupManager onBack={() => setActiveSubTab(null)} />
-            case 'export':
-              return <ExportManager onBack={() => setActiveSubTab(null)} />
-            default:
-              return <SettingsMenu subTabs={settingsSubTabs} onSubTabChange={handleSubTabChange} activeSubTab={activeSubTab} />
-          }
-        }
-        return <SettingsMenu subTabs={settingsSubTabs} onSubTabChange={handleSubTabChange} activeSubTab={activeSubTab} />
+        return (
+          <SettingsMenu 
+            subTabs={settingsSubTabs} 
+            onSubTabChange={handleSubTabChange} 
+            activeSubTab={activeSubTab} 
+          />
+        )
+      
       default:
         return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+    }
+  }
+
+  const renderSubContent = () => {
+    if (!activeSubTab) return null
+
+    switch (activeSubTab) {
+      case 'goals':
+        return <GoalManager />
+      case 'categories':
+        return <CategoryManager />
+      case 'budgets':
+        return <BudgetAlertManager />
+      case 'notifications':
+        return <NotificationManager />
+      case 'backup':
+        return <BackupManager />
+      case 'export':
+        return <ExportManager />
+      default:
+        return null
     }
   }
 
@@ -195,96 +179,75 @@ function AppContent() {
     <div className={`app ${isDark ? 'dark' : ''}`}>
       <header className="app-header">
         <h1>GB Money Tracker</h1>
-        <button 
-          className="theme-toggle" 
-          onClick={toggleTheme}
-          aria-label="Переключить тему"
-        >
+        <button className="theme-toggle" onClick={toggleTheme}>
           {isDark ? <Sun size={20} /> : <Moon size={20} />}
         </button>
       </header>
 
+      <main className="app-main">
+        <AnimatedTransition>
+          {activeSubTab ? (
+            <div>
+              <button 
+                className="back-button"
+                onClick={() => setActiveSubTab(null)}
+              >
+                ← Назад
+              </button>
+              {renderSubContent()}
+            </div>
+          ) : (
+            renderContent()
+          )}
+        </AnimatedTransition>
+      </main>
+
       <nav className="app-nav">
         <div className="nav-tabs">
-          {tabs.map((tab) => (
+          {tabs.map(tab => (
             <button
               key={tab.id}
               className={`nav-tab ${activeTab === tab.id ? 'active' : ''}`}
               onClick={() => handleTabChange(tab.id)}
             >
-              <span className="nav-icon">{tab.icon}</span>
-              <span className="nav-label">{tab.label}</span>
+              <div className="nav-icon">{tab.icon}</div>
+              <div className="nav-label">{tab.label}</div>
             </button>
           ))}
         </div>
       </nav>
-
-      <main className="app-main">
-        <AppleTabTransition 
-          key={activeTab + (activeSubTab || '')}
-          activeTab={activeTab}
-          tabId={activeTab}
-          direction="right"
-          duration={300}
-        >
-          {renderContent()}
-        </AppleTabTransition>
-      </main>
-
-
 
       {/* Transaction Form Modal */}
       {showTransactionForm && (
         <div className="modal-overlay" onClick={() => setShowTransactionForm(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Новая транзакция</h2>
-              <button 
-                className="close-button" 
-                onClick={() => setShowTransactionForm(false)}
-                aria-label="Закрыть"
-              >
-                <Plus size={20} style={{ transform: 'rotate(45deg)' }} />
+              <h2>{editingTransaction ? 'Редактировать транзакцию' : 'Новая транзакция'}</h2>
+              <button className="close-button" onClick={() => setShowTransactionForm(false)}>
+                ✕
               </button>
             </div>
             <div className="modal-body">
-              <TransactionForm 
-                onSubmit={handleTransactionSuccess}
-                onCancel={() => setShowTransactionForm(false)}
-              />
+              {editingTransaction ? (
+                <TransactionEditForm
+                  transaction={editingTransaction}
+                  onSuccess={handleTransactionSuccess}
+                  onCancel={() => setShowTransactionForm(false)}
+                />
+              ) : (
+                <TransactionForm
+                  onSuccess={handleTransactionSuccess}
+                  onCancel={() => setShowTransactionForm(false)}
+                />
+              )}
             </div>
           </div>
         </div>
       )}
 
-      {/* Edit Transaction Modal */}
-      {editingTransaction && (
-        <div className="modal-overlay" onClick={() => setEditingTransaction(null)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2>Редактировать транзакцию</h2>
-              <button 
-                className="close-button" 
-                onClick={() => setEditingTransaction(null)}
-                aria-label="Закрыть"
-              >
-                <Plus size={20} style={{ transform: 'rotate(45deg)' }} />
-              </button>
-            </div>
-            <div className="modal-body">
-              <TransactionEditForm 
-                transaction={editingTransaction}
-                onSubmit={handleTransactionSuccess}
-                onCancel={() => setEditingTransaction(null)}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Toasts */}
+      {/* Toast notifications */}
       <div className="toast-container">
-        {toasts.map((toast) => (
+        {toasts.map(toast => (
           <AnimatedToast
             key={toast.id}
             message={toast.message}
@@ -297,7 +260,6 @@ function AppContent() {
   )
 }
 
-// Компонент меню настроек
 function SettingsMenu({ subTabs, onSubTabChange, activeSubTab }) {
   return (
     <div className="settings-menu">
@@ -307,7 +269,7 @@ function SettingsMenu({ subTabs, onSubTabChange, activeSubTab }) {
       </div>
       
       <div className="settings-grid">
-        {subTabs.map((subTab) => (
+        {subTabs.map(subTab => (
           <button
             key={subTab.id}
             className={`settings-item ${activeSubTab === subTab.id ? 'active' : ''}`}
@@ -326,15 +288,14 @@ function SettingsMenu({ subTabs, onSubTabChange, activeSubTab }) {
   )
 }
 
-// Функция для получения описания настроек
 function getSettingsDescription(subTabId) {
   const descriptions = {
-    goals: 'Управление финансовыми целями',
-    categories: 'Настройка категорий транзакций',
-    budgets: 'Управление бюджетами и уведомлениями',
-    notifications: 'Настройка уведомлений',
-    backup: 'Резервное копирование данных',
-    export: 'Экспорт данных в различные форматы'
+    goals: 'Установите финансовые цели и отслеживайте прогресс',
+    categories: 'Настройте категории доходов и расходов',
+    budgets: 'Установите лимиты по категориям',
+    notifications: 'Настройте уведомления и напоминания',
+    backup: 'Создавайте резервные копии данных',
+    export: 'Экспортируйте данные в различных форматах'
   }
   return descriptions[subTabId] || ''
 }
@@ -342,11 +303,11 @@ function getSettingsDescription(subTabId) {
 function App() {
   return (
     <ErrorBoundary>
-      <TelegramProvider>
-        <ThemeProvider>
+      <ThemeProvider>
+        <TelegramProvider>
           <AppContent />
-        </ThemeProvider>
-      </TelegramProvider>
+        </TelegramProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   )
 }

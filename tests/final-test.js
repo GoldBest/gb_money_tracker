@@ -2,8 +2,8 @@
 
 const axios = require('axios');
 
-const BASE_URL = 'http://localhost:3001';
-const FRONTEND_URL = 'http://localhost:5176';
+const BASE_URL = 'http://localhost:3002';
+const FRONTEND_URL = 'http://localhost:8081';
 
 console.log('🧪 Начинаю финальное тестирование приложения...\n');
 

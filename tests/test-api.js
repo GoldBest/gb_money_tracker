@@ -1,7 +1,7 @@
 // Тестирование API endpoints
 const axios = require('axios');
 
-const BASE_URL = 'http://localhost:3001/api';
+const BASE_URL = 'http://localhost:3002/api';
 
 // Тестовые данные
 const testUser = {
