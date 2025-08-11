@@ -41,9 +41,9 @@ export const getBaseURL = () => {
     isLocalhost: hostname === 'localhost' || hostname === '127.0.0.1'
   })
   
-  // Используем локальный бэкенд для разработки
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    console.log('🔍 Using LOCAL_BACKEND_URL for development')
+  // Используем локальный бэкенд для разработки и Docker
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || port === '8081') {
+    console.log('🔍 Using LOCAL_BACKEND_URL for development/Docker')
     return API_CONFIG.LOCAL_BACKEND_URL
   }
   

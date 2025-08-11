@@ -39,12 +39,17 @@ import './App.css'
 import './mobile.css'
 
 function AppContent() {
+  console.log('🚀 AppContent component rendering...')
+  
   const { isDark, toggleTheme } = useTheme()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [activeSubTab, setActiveSubTab] = useState(null)
   const [showTransactionForm, setShowTransactionForm] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState(null)
   const [toasts, setToasts] = useState([])
+  
+  console.log('🎨 Theme state:', { isDark })
+  console.log('📱 Active tab:', activeTab)
 
   const tabs = [
     { id: 'dashboard', label: 'Главная', icon: <BarChart3 size={20} /> },
@@ -116,11 +121,20 @@ function AppContent() {
   }
 
   const renderContent = () => {
+    console.log('🎯 renderContent called with activeTab:', activeTab)
+    
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+        console.log('📊 Rendering Dashboard component')
+        try {
+          return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+        } catch (error) {
+          console.error('❌ Error rendering Dashboard:', error)
+          return <div>Ошибка загрузки Dashboard: {error.message}</div>
+        }
       
       case 'transactions':
+        console.log('📝 Rendering Transactions component')
         return (
           <div>
             <div className="list-header">
@@ -138,9 +152,11 @@ function AppContent() {
         )
       
       case 'statistics':
+        console.log('📈 Rendering Statistics component')
         return <Statistics />
       
       case 'settings':
+        console.log('⚙️ Rendering Settings component')
         return (
           <SettingsMenu 
             subTabs={settingsSubTabs} 
@@ -150,7 +166,13 @@ function AppContent() {
         )
       
       default:
-        return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+        console.log('🔄 Rendering default Dashboard component')
+        try {
+          return <Dashboard onAddTransaction={() => setShowTransactionForm(true)} />
+        } catch (error) {
+          console.error('❌ Error rendering default Dashboard:', error)
+          return <div>Ошибка загрузки Dashboard: {error.message}</div>
+        }
     }
   }
 
@@ -175,6 +197,8 @@ function AppContent() {
     }
   }
 
+  console.log('🎨 Rendering main app structure...')
+  
   return (
     <div className={`app ${isDark ? 'dark' : ''}`}>
       <header className="app-header">
