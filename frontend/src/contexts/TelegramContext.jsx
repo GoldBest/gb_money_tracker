@@ -34,16 +34,26 @@ apiClient.interceptors.response.use(
     console.error('Base URL:', error.config?.baseURL)
     
     if (error.response?.status === 500) {
-      window.showTelegramAlert('Ошибка сервера. Попробуйте позже.')
+      if (window.showTelegramAlert) {
+        window.showTelegramAlert('Ошибка сервера. Попробуйте позже.')
+      }
     } else if (error.response?.status === 404) {
-      window.showTelegramAlert('Ресурс не найден.')
+      if (window.showTelegramAlert) {
+        window.showTelegramAlert('Ресурс не найден.')
+      }
     } else if (error.code === 'ECONNABORTED') {
-      window.showTelegramAlert('Превышено время ожидания. Проверьте соединение.')
+      if (window.showTelegramAlert) {
+        window.showTelegramAlert('Превышено время ожидания. Проверьте соединение.')
+      }
     } else if (!error.response) {
       if (error.code === 'ERR_NETWORK') {
-        window.showTelegramAlert('Ошибка сети. Проверьте интернет соединение.')
+        if (window.showTelegramAlert) {
+          window.showTelegramAlert('Ошибка сети. Проверьте интернет соединение.')
+        }
       } else {
-        window.showTelegramAlert(`Ошибка соединения: ${error.message}`)
+        if (window.showTelegramAlert) {
+          window.showTelegramAlert(`Ошибка соединения: ${error.message}`)
+        }
       }
     }
     
@@ -79,6 +89,14 @@ export const TelegramProvider = ({ children }) => {
       window.showTelegramAlert = (message) => {
         console.log('Mock Telegram Alert:', message)
         alert(message)
+      }
+      
+      // Mock showTelegramConfirm function
+      window.showTelegramConfirm = (message, callback) => {
+        console.log('Mock Telegram Confirm:', message)
+        const result = confirm(message)
+        if (callback) callback(result)
+        return result
       }
       
 
@@ -126,6 +144,23 @@ export const TelegramProvider = ({ children }) => {
     try {
       setLoading(true)
       setError(null)
+      
+      // Для разработки без backend, создаем mock пользователя
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('🔧 Development mode: using mock user')
+        const mockUser = {
+          id: 1,
+          telegram_id: telegramUser.id.toString(),
+          username: telegramUser.username,
+          first_name: telegramUser.first_name,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+        setUser(mockUser)
+        setRetryCount(0)
+        setLoading(false)
+        return
+      }
       
       const response = await apiClient.post('/api/users', {
         telegram_id: telegramUser.id.toString(),

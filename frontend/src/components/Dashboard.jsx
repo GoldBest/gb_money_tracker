@@ -26,11 +26,30 @@ const Dashboard = ({ onAddTransaction }) => {
   const loadStats = async () => {
     try {
       setLoading(true)
+      
+      // Для разработки без backend, используем mock данные
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('🔧 Development mode: using mock stats')
+        const mockStats = {
+          balance: 0,
+          total_income: 0,
+          total_expense: 0,
+          total_transactions: 0
+        }
+        setStats(mockStats)
+        setLoading(false)
+        return
+      }
+      
       const response = await api.get(`/api/users/${user.id}/stats?period=month`)
       setStats(response.data)
     } catch (error) {
       console.error('Error loading stats:', error)
-      window.showTelegramAlert('Ошибка при загрузке статистики')
+      if (window.showTelegramAlert) {
+        window.showTelegramAlert('Ошибка при загрузке статистики')
+      } else {
+        console.error('Ошибка при загрузке статистики')
+      }
     } finally {
       setLoading(false)
     }

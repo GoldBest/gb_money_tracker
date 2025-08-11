@@ -4,10 +4,10 @@
 
 export const API_CONFIG = {
   // URL для бэкенда (будет заменен при сборке)
-  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || 'https://bashful-square-production.up.railway.app',
+  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3001',
   
   // Локальный URL для разработки
-  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || 'https://bashful-square-production.up.railway.app',
+  LOCAL_BACKEND_URL: import.meta.env.VITE_LOCAL_BACKEND_URL || import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3001',
   
   // Заголовки для API запросов
   HEADERS: {
@@ -40,6 +40,12 @@ export const getBaseURL = () => {
     hasTelegram: !!window.Telegram?.WebApp,
     isLocalhost: hostname === 'localhost' || hostname === '127.0.0.1'
   })
+  
+  // Используем локальный бэкенд для разработки
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    console.log('🔍 Using LOCAL_BACKEND_URL for development')
+    return API_CONFIG.LOCAL_BACKEND_URL
+  }
   
   // Используем production бэкенд для Railway
   console.log('🔍 Using PRODUCTION_BACKEND_URL:', API_CONFIG.BACKEND_URL)

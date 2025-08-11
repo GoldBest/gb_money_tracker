@@ -48,7 +48,11 @@ const TransactionForm = ({ onSubmit, onCancel }) => {
     e.preventDefault()
     
     if (!formData.amount || !formData.category_id) {
-      window.showTelegramAlert('Пожалуйста, заполните все обязательные поля')
+      if (window.showTelegramAlert) {
+        window.showTelegramAlert('Пожалуйста, заполните все обязательные поля')
+      } else {
+        alert('Пожалуйста, заполните все обязательные поля')
+      }
       return
     }
 
@@ -66,17 +70,23 @@ const TransactionForm = ({ onSubmit, onCancel }) => {
         
         // Показываем предупреждения пользователю
         const warningMessages = response.data.budgetWarnings.map(w => w.message).join('\n\n')
-        window.showTelegramAlert(`Транзакция создана, но есть предупреждения:\n\n${warningMessages}`)
+        if (window.showTelegramAlert) {
+          window.showTelegramAlert(`Транзакция создана, но есть предупреждения:\n\n${warningMessages}`)
+        }
         
         // Показываем предупреждения пользователю
       } else {
-        window.showTelegramAlert('Транзакция успешно создана!')
+        if (window.showTelegramAlert) {
+          window.showTelegramAlert('Транзакция успешно создана!')
+        }
       }
       
       onSubmit()
     } catch (error) {
       console.error('Error creating transaction:', error)
-      window.showTelegramAlert('Ошибка при создании транзакции')
+      if (window.showTelegramAlert) {
+        window.showTelegramAlert('Ошибка при создании транзакции')
+      }
     } finally {
       setLoading(false)
     }
@@ -88,14 +98,21 @@ const TransactionForm = ({ onSubmit, onCancel }) => {
 
   const handleClose = () => {
     if (hasChanges) {
-      window.showTelegramConfirm(
-        'У вас есть несохраненные изменения. Закрыть форму?',
-        (confirmed) => {
-          if (confirmed) {
-            onCancel()
+      if (window.showTelegramConfirm) {
+        window.showTelegramConfirm(
+          'У вас есть несохраненные изменения. Закрыть форму?',
+          (confirmed) => {
+            if (confirmed) {
+              onCancel()
+            }
           }
+        )
+      } else {
+        // Fallback для разработки
+        if (confirm('У вас есть несохраненные изменения. Закрыть форму?')) {
+          onCancel()
         }
-      )
+      }
     } else {
       onCancel()
     }
